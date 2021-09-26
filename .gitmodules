@@ -1,0 +1,6 @@
+[submodule "ClHcaSharp"]
+	path = ClHcaSharp
+	url = https://github.com/MarshmallowAndroid/ClHcaSharp.git
+[submodule "AssetStudio"]
+	path = AssetStudio
+	url = https://github.com/Perfare/AssetStudio.git

@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AssetStudio\AssetStudio\AssetStudio.csproj" />
+    <ProjectReference Include="..\ClHcaSharp\ClHcaSharp\ClHcaSharp.csproj" />
     <ProjectReference Include="..\CriAcb\CriAcb.csproj" />
   </ItemGroup>
 
