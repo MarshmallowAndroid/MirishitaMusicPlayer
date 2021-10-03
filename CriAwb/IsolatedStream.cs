@@ -7,16 +7,16 @@ namespace CriAwb
 {
     public class IsolatedStream : Stream
     {
-        Stream sourceStream;
-        long realPosition;
-        long internalPosition;
+        private readonly Stream sourceStream;
+        private readonly long basePosition;
+        private readonly object positionLock = new();
 
-        object positionLock = new();
+        private long internalPosition;
 
         public IsolatedStream(Stream sourceStream, long offset, long length)
         {
             this.sourceStream = sourceStream;
-            realPosition = offset;
+            basePosition = offset;
             internalPosition = 0;
 
             Length = length;
@@ -43,8 +43,8 @@ namespace CriAwb
             {
                 lock (positionLock)
                 {
-                    long checkValue = value + realPosition;
-                    if (value < 0 || value >= Length) throw new ArgumentOutOfRangeException();
+                    long checkValue = value;
+                    if (value < 0 || value >= Length) throw new ArgumentOutOfRangeException(nameof(value));
                     internalPosition = value;
                     sourceStream.Position = checkValue;
                 }
@@ -61,7 +61,7 @@ namespace CriAwb
             lock (positionLock)
             {
                 long restore = sourceStream.Position;
-                sourceStream.Position = realPosition + internalPosition;
+                sourceStream.Position = basePosition + internalPosition;
                 int read = sourceStream.Read(buffer, offset, count);
                 internalPosition += read;
                 sourceStream.Position = restore;
@@ -85,7 +85,7 @@ namespace CriAwb
                         break;
                     case SeekOrigin.End:
                         internalPosition = Length;
-                        if (realPosition - offset < realPosition) throw new ArgumentOutOfRangeException();
+                        if (basePosition - offset < basePosition) throw new ArgumentOutOfRangeException();
                         internalPosition -= offset;
                         break;
                     default:
