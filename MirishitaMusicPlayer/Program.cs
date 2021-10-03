@@ -281,6 +281,12 @@ namespace MirishitaMusicPlayer
                         case ConsoleKey.RightArrow:
                             voiceMixer.Seek(3.0f);
                             break;
+                        case ConsoleKey.LeftArrow:
+                            mainScenarioIndex = 0;
+                            orientScenarioIndex = 0;
+                            muteIndex = 0;
+                            voiceMixer.Seek(-3.0f);
+                            break;
                         default:
                             break;
                     }
@@ -456,7 +462,7 @@ namespace MirishitaMusicPlayer
                                     //@"                   " + "\n" +
                                     //@" -----        -----" + "\n" +
                                     @"                   " + "\n" +
-                                    @" \___/        \___/" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                    @" \___/        \___/" + "\n" +
                                     @"                   " + "    Eye close: " + currentOrientScenario.EyeClose + " \n" +
                                     @"                   " + "\n");
 
@@ -564,7 +570,7 @@ namespace MirishitaMusicPlayer
                                 mouthStringBuilder.Append(
                                    @"                    " + "\n" +
                                    @"   /\/\/\/\/\/\/\   " + "\n" +
-                                   @"                    " + "    Unknown mouth shape: " + currentMainScenario.Param + "\n" +
+                                   @"                    " + "    Unknown shape: " + currentMainScenario.Param + "        \n" +
                                    @"                    " + "\n" +
                                    @"                    " + "\n" +
                                    @"                    " + "\n");
