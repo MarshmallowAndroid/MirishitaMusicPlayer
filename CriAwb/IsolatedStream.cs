@@ -11,6 +11,8 @@ namespace CriAwb
         long realPosition;
         long internalPosition;
 
+        object positionLock = new();
+
         public IsolatedStream(Stream sourceStream, long offset, long length)
         {
             this.sourceStream = sourceStream;
@@ -30,13 +32,22 @@ namespace CriAwb
 
         public override long Position
         {
-            get => internalPosition;
+            get
+            {
+                lock (positionLock)
+                {
+                    return internalPosition;
+                }
+            }
             set
             {
-                long checkValue = value + realPosition;
-                if (value < 0 || value >= Length) throw new ArgumentOutOfRangeException();
-                internalPosition = value;
-                sourceStream.Position = checkValue;
+                lock (positionLock)
+                {
+                    long checkValue = value + realPosition;
+                    if (value < 0 || value >= Length) throw new ArgumentOutOfRangeException();
+                    internalPosition = value;
+                    sourceStream.Position = checkValue;
+                }
             }
         }
 
@@ -47,36 +58,42 @@ namespace CriAwb
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            long restore = sourceStream.Position;
-            sourceStream.Position = realPosition + internalPosition;
-            int read = sourceStream.Read(buffer, offset, count);
-            internalPosition += read;
-            sourceStream.Position = restore;
-            return read;
+            lock (positionLock)
+            {
+                long restore = sourceStream.Position;
+                sourceStream.Position = realPosition + internalPosition;
+                int read = sourceStream.Read(buffer, offset, count);
+                internalPosition += read;
+                sourceStream.Position = restore;
+                return read;
+            }
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            switch (origin)
+            lock (positionLock)
             {
-                case SeekOrigin.Begin:
-                    internalPosition = 0;
-                    internalPosition += offset;
-                    break;
-                case SeekOrigin.Current:
-                    if (offset >= Length) throw new ArgumentOutOfRangeException();
-                    internalPosition += offset;
-                    break;
-                case SeekOrigin.End:
-                    internalPosition = Length;
-                    if (realPosition - offset < realPosition) throw new ArgumentOutOfRangeException();
-                    internalPosition -= offset;
-                    break;
-                default:
-                    break;
-            }
+                switch (origin)
+                {
+                    case SeekOrigin.Begin:
+                        internalPosition = 0;
+                        internalPosition += offset;
+                        break;
+                    case SeekOrigin.Current:
+                        if (offset >= Length) throw new ArgumentOutOfRangeException();
+                        internalPosition += offset;
+                        break;
+                    case SeekOrigin.End:
+                        internalPosition = Length;
+                        if (realPosition - offset < realPosition) throw new ArgumentOutOfRangeException();
+                        internalPosition -= offset;
+                        break;
+                    default:
+                        break;
+                }
 
-            return internalPosition;
+                return internalPosition;
+            }
         }
 
         public override void SetLength(long value)
