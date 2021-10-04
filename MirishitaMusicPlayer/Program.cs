@@ -251,9 +251,9 @@ namespace MirishitaMusicPlayer
 
             bool queueErase = false;
 
-            int mainScenarioIndex = 0;
-            int orientScenarioIndex = 0;
             int muteIndex = 0;
+            int orientScenarioIndex = 0;
+            int mainScenarioIndex = 0;
             int eventIndex = 0;
 
             if (voiceCount < 1)
@@ -263,16 +263,19 @@ namespace MirishitaMusicPlayer
                 Console.Write(" [ VOICE CONTROL UNAVAILABLE ]");
             }
 
+            double secondsElapsed = 0;
+
             while (!voiceMixer.HasEnded)
             {
+                bool seeked = false;
                 if (Console.KeyAvailable)
                 {
                     switch (Console.ReadKey(true).Key)
                     {
                         case ConsoleKey.R:
-                            mainScenarioIndex = 0;
-                            orientScenarioIndex = 0;
                             muteIndex = 0;
+                            orientScenarioIndex = 0;
+                            mainScenarioIndex = 0;
                             voiceMixer.Reset();
                             break;
                         case ConsoleKey.Spacebar:
@@ -280,18 +283,47 @@ namespace MirishitaMusicPlayer
                             break;
                         case ConsoleKey.RightArrow:
                             voiceMixer.Seek(3.0f);
+                            seeked = true;
                             break;
                         case ConsoleKey.LeftArrow:
-                            mainScenarioIndex = 0;
-                            orientScenarioIndex = 0;
-                            muteIndex = 0;
                             voiceMixer.Seek(-3.0f);
+                            seeked = true;
                             break;
                         default:
                             break;
                     }
                 }
 
+                secondsElapsed = voiceMixer.CurrentTime.TotalSeconds;
+
+                if (seeked)
+                {
+                    muteIndex = 0;
+                    orientScenarioIndex = 0;
+                    mainScenarioIndex = 0;
+
+                    secondsElapsed = voiceMixer.CurrentTime.TotalSeconds;
+
+                    while (secondsElapsed >= (muteScenarios[muteIndex].Tick / ticksPerSecond))
+                    {
+                        if (muteIndex < muteScenarios.Count - 1) muteIndex++;
+                        else break;
+                    }
+                    while (secondsElapsed >= (orientScenario.Scenario[orientScenarioIndex].Tick / ticksPerSecond))
+                    {
+                        if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
+                        else break;
+                    }
+                    while (secondsElapsed >= (mainScenario.Scenario[mainScenarioIndex].Tick / ticksPerSecond))
+                    {
+                        if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
+                        else break;
+                    }
+
+                    muteIndex--;
+                    orientScenarioIndex--;
+                    mainScenarioIndex--;
+                }
 
                 if (paused)
                 {
@@ -300,9 +332,6 @@ namespace MirishitaMusicPlayer
                 }
                 else
                     wasapiOut.Play();
-
-
-                double secondsElapsed = voiceMixer.CurrentTime.TotalSeconds;
 
                 Console.CursorLeft = 0;
                 Console.CursorTop = timeCursorTop;
@@ -333,16 +362,9 @@ namespace MirishitaMusicPlayer
                     {
                         if (currentOrientScenario.Idol == 0)
                         {
-                            //Console.WriteLine(current.Idol + ": Expression = " + current.Param + ", Blink = " + current.EyeClose);
-                            //if (eyesCursorTop < 0) eyesCursorTop = Console.CursorTop;
                             Console.CursorLeft = 0;
                             Console.CursorTop = eyesCursorTop;
 
-                            //Console.WriteLine(currentOrientScenario.Idol);
-
-                            //Console.WriteLine("Parameter: " + currentYoko.Param + "    ");
-                            //Console.WriteLine("Type: " + current.Type + ", Parameter: " + current.Param + "        ");
-                            //Console.WriteLine();
                             StringBuilder eyesStringBuilder = new();
 
                             switch (currentOrientScenario.Param)
@@ -373,7 +395,7 @@ namespace MirishitaMusicPlayer
                                         @"   ___        ___  " + "\n" +
                                         @" --              --" + "\n" +
                                         @"  ___          ___ " + "\n" +
-                                        @" /   \        /   \" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                        @" -   -        -   -" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
                                         @"                   " + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
                                         @"                   " + "\n");
                                     break;
@@ -406,6 +428,15 @@ namespace MirishitaMusicPlayer
                                         @" -----        -----" + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
                                         @"                   " + "\n");
                                     break;
+                                case 20:
+                                    eyesStringBuilder.Append(
+                                        @"                   " + "\n" +
+                                        @" ___--        --___" + "\n" +
+                                        @"                   " + "\n" +
+                                        @" -___-        -___-" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                        @"                   " + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
+                                        @"                   " + "\n");
+                                    break;
                                 case 21:
                                     eyesStringBuilder.Append(
                                         @"                   " + "\n" +
@@ -418,10 +449,19 @@ namespace MirishitaMusicPlayer
                                 case 23:
                                     eyesStringBuilder.Append(
                                         @"                   " + "\n" +
-                                        @" ____-        -____" + "\n" +
+                                        @" ___--        --___" + "\n" +
                                         @"  ---          --- " + "\n" +
                                         @" | O |        | O |" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
                                         @" -----        -----" + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
+                                        @"                   " + "\n");
+                                    break;
+                                case 25:
+                                    eyesStringBuilder.Append(
+                                        @"                   " + "\n" +
+                                        @" ___--        --___" + "\n" +
+                                        @"                   " + "\n" +
+                                        @" -___-        -___-" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                        @"                   " + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
                                         @"                   " + "\n");
                                     break;
                                 case 26:
@@ -429,7 +469,7 @@ namespace MirishitaMusicPlayer
                                         @"   ___        ___  " + "\n" +
                                         @" --              --" + "\n" +
                                         @"  ___          --- " + "\n" +
-                                        @" /   \        | O |" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                        @" -   -        | O |" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
                                         @"              -----" + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
                                         @"                   " + "\n");
                                     break;
@@ -438,7 +478,7 @@ namespace MirishitaMusicPlayer
                                         @"   ___        ___  " + "\n" +
                                         @" --              --" + "\n" +
                                         @"  ---          ___ " + "\n" +
-                                        @" | O |        /   \" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
+                                        @" | O |        -   -" + "    Expression ID: " + currentOrientScenario.Param + "        \n" +
                                         @" -----             " + "    Eye close: " + currentOrientScenario.EyeClose + "\n" +
                                         @"                   " + "\n");
                                     break;
@@ -462,7 +502,7 @@ namespace MirishitaMusicPlayer
                                     //@"                   " + "\n" +
                                     //@" -----        -----" + "\n" +
                                     @"                   " + "\n" +
-                                    @" \___/        \___/" + "\n" +
+                                    @" -___-        -___-" + "\n" +
                                     @"                   " + "    Eye close: " + currentOrientScenario.EyeClose + " \n" +
                                     @"                   " + "\n");
 
@@ -730,7 +770,7 @@ namespace MirishitaMusicPlayer
                 "050jul" => "Julia",
                 "051tmg" => "Tsumugi Shiraishi",
                 "052kao" => "Kaori Sakuramori",
-                _ => "Unknown idol.",
+                _ => "Unknown",
             };
         }
 
