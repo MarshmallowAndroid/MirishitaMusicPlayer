@@ -292,6 +292,11 @@ namespace MirishitaMusicPlayer
                         default:
                             break;
                     }
+
+                    if (paused)
+                        wasapiOut.Pause();
+                    else
+                        wasapiOut.Play();
                 }
 
                 secondsElapsed = voiceMixer.CurrentTime.TotalSeconds;
@@ -323,15 +328,9 @@ namespace MirishitaMusicPlayer
                     muteIndex--;
                     orientScenarioIndex--;
                     mainScenarioIndex--;
-                }
 
-                if (paused)
-                {
-                    wasapiOut.Pause();
-                    continue;
+                    seeked = false;
                 }
-                else
-                    wasapiOut.Play();
 
                 Console.CursorLeft = 0;
                 Console.CursorTop = timeCursorTop;
@@ -606,14 +605,32 @@ namespace MirishitaMusicPlayer
                                     @"                   " + "\n" +
                                     @"                   " + "\n");
                                 break;
-                            default:
+                            case 56:
                                 mouthStringBuilder.Append(
-                                   @"                    " + "\n" +
-                                   @"   /\/\/\/\/\/\/\   " + "\n" +
-                                   @"                    " + "    Unknown shape: " + currentMainScenario.Param + "        \n" +
-                                   @"                    " + "\n" +
-                                   @"                    " + "\n" +
-                                   @"                    " + "\n");
+                                    @" __________________" + "\n" +
+                                    @" |\______________/|" + "\n" +
+                                    @" \/______________\/" + "    Sound: I, ID: " + currentMainScenario.Param + "        \n" +
+                                    @"                   " + "\n" +
+                                    @"                   " + "\n" +
+                                    @"                   " + "\n");
+                                break;
+                            case 59:
+                                mouthStringBuilder.Append(
+                                    @"     __________    " + "\n" +
+                                    @"     |\______/|    " + "\n" +
+                                    @"     | ______ |    " + "    Sound: O, ID: " + currentMainScenario.Param + "        \n" +
+                                    @"     |/______\|    " + "\n" +
+                                    @"                   " + "\n" +
+                                    @"                   " + "\n");
+                                break;
+                            default:
+                                 mouthStringBuilder.Append(
+                                    @"                   " + "\n" +
+                                    @"   /\/\/\/\/\/\/\  " + "\n" +
+                                    @"                   " + "    Unknown shape: " + currentMainScenario.Param + "        \n" +
+                                    @"                   " + "\n" +
+                                    @"                   " + "\n" +
+                                    @"                   " + "\n");
                                 break;
                         }
 
