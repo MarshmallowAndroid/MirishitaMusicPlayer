@@ -272,6 +272,9 @@ namespace MirishitaMusicPlayer
                 {
                     switch (Console.ReadKey(true).Key)
                     {
+                        case ConsoleKey.B:
+                            voiceMixer.MuteBackground = !voiceMixer.MuteBackground;
+                            break;
                         case ConsoleKey.R:
                             muteIndex = 0;
                             orientScenarioIndex = 0;

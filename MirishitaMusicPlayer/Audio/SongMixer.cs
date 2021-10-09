@@ -51,6 +51,8 @@ namespace MirishitaMusicPlayer.Audio
 
         public bool HasEnded { get; private set; }
 
+        public bool MuteBackground { get; set; }
+
         public byte[] VoiceControl { get; set; }
 
         public TimeSpan CurrentTime => backgroundWaveStream.CurrentTime;
@@ -72,6 +74,8 @@ namespace MirishitaMusicPlayer.Audio
 
         public void Seek(float seconds)
         {
+            // TODO: Simplify
+
             backgroundWaveStream.Position += (long)(seconds *
                 (backgroundWaveStream.WaveFormat.BitsPerSample / 8 *
                 backgroundWaveStream.WaveFormat.SampleRate *
@@ -130,28 +134,49 @@ namespace MirishitaMusicPlayer.Audio
                 buffer[i] *= multiplier;
             }
 
-            int read = backgroundSampleProvider.Read(buffer2, offset, count);
+            int finalRead;
 
+            // Read from background music
+            int backgroundRead = backgroundSampleProvider.Read(buffer2, offset, count);
+
+            // If available, read from extra (secondary) background music
+            int backgroundExRead = 0;
             if (backgroundExSampleProvider != null)
             {
-                backgroundExSampleProvider.Read(bufferEx, offset, count);
+                backgroundExRead = backgroundExSampleProvider.Read(bufferEx, offset, count);
             }
 
             float[] sourceBuffer;
 
+            // If the extra background music is specified and voice control is available and has 6 voices,
+            // use the extra background music instead of the original background music if the 6th voice
+            // is active.
+            //
+            // The 6th voice or extra background music is just a pre-mixed version of all the idols plus
+            // the background music.
             if (VoiceControl != null && VoiceControl.Length == 6 && VoiceControl[5] == 1 && backgroundExSampleProvider != null)
+            {
                 sourceBuffer = bufferEx;
+                finalRead = backgroundExRead;
+            }
             else
+            {
                 sourceBuffer = buffer2;
+                finalRead = backgroundRead;
+            }
 
+            // Plop the data into the output buffer
             for (int i = 0; i < count; i++)
             {
+                if (MuteBackground) break;
                 buffer[i] += sourceBuffer[i];
             }
 
-            if (read != count) HasEnded = true;
+            // Set our end flag to true
+            if (finalRead != count) HasEnded = true;
 
-            return read;
+            // Return bytes read
+            return finalRead;
         }
     }
 }
