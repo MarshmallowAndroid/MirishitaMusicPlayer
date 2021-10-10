@@ -80,12 +80,12 @@ namespace CriAwb
                         internalPosition += offset;
                         break;
                     case SeekOrigin.Current:
-                        if (offset >= Length) throw new ArgumentOutOfRangeException();
+                        if (offset >= Length) throw new ArgumentOutOfRangeException(nameof(offset));
                         internalPosition += offset;
                         break;
                     case SeekOrigin.End:
                         internalPosition = Length;
-                        if (basePosition - offset < basePosition) throw new ArgumentOutOfRangeException();
+                        if (basePosition - offset < basePosition) throw new ArgumentOutOfRangeException(nameof(offset));
                         internalPosition -= offset;
                         break;
                     default:
