@@ -60,6 +60,7 @@ namespace CriAwb
         {
             lock (positionLock)
             {
+                if (basePosition + internalPosition >= Length) return 0;
                 long restore = sourceStream.Position;
                 sourceStream.Position = basePosition + internalPosition;
                 int read = sourceStream.Read(buffer, offset, count);

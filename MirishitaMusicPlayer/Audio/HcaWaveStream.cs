@@ -42,7 +42,7 @@ namespace MirishitaMusicPlayer.Audio
 
         public override WaveFormat WaveFormat { get; }
 
-        public override long Length => info.BlockCount * info.SamplesPerBlock * info.ChannelCount * sizeof(short);
+        public override long Length => info.SampleCount * info.ChannelCount * sizeof(short);
 
         public override long Position
         {
@@ -50,14 +50,14 @@ namespace MirishitaMusicPlayer.Audio
             {
                 lock (positionLock)
                 {
-                    return samplePosition * info.ChannelCount * sizeof(short);
+                    return (samplePosition - info.EncoderDelay) * info.ChannelCount * sizeof(short);
                 }
             }
             set
             {
                 lock (positionLock)
                 {
-                    samplePosition = value / info.ChannelCount / sizeof(short);
+                    samplePosition = (value + info.EncoderDelay) / info.ChannelCount / sizeof(short);
 
                     currentBlock = (int)(samplePosition / info.SamplesPerBlock);
                     hcaFileStream.Position = dataStart + currentBlock * info.BlockSize;
@@ -74,7 +74,7 @@ namespace MirishitaMusicPlayer.Audio
 
                 for (int i = 0; i < count / info.ChannelCount / sizeof(short); i++)
                 {
-                    if (Position >= Length) break;
+                    if (Position >= Length - info.EncoderPadding) break;
                     if (samplePosition % info.SamplesPerBlock == 0) FillBuffer();
 
                     for (int j = 0; j < info.ChannelCount; j++)
@@ -103,8 +103,22 @@ namespace MirishitaMusicPlayer.Audio
 
         private void FillBuffer()
         {
-            decoder.DecodeBlock(hcaFileReader.ReadBytes(info.BlockSize));
-            decoder.ReadSamples16(sampleBuffer);
+            byte[] blockBytes = hcaFileReader.ReadBytes(info.BlockSize);
+            if (blockBytes.Length > 0)
+            {
+                decoder.DecodeBlock(blockBytes);
+                decoder.ReadSamples16(sampleBuffer);
+            }
+            else
+            {
+                for (int i = 0; i < sampleBuffer.Length; i++)
+                {
+                    for (int j = 0; j < sampleBuffer[i].Length; j++)
+                    {
+                        sampleBuffer[i][j] = 0;
+                    }
+                }
+            }
         }
     }
 }
