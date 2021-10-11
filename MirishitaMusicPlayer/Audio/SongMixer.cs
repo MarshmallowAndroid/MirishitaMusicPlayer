@@ -110,6 +110,11 @@ namespace MirishitaMusicPlayer.Audio
         {
             if (disposing) return 0;
 
+            for (int i = 0; i < count; i++)
+            {
+                buffer[i] = 0;
+            }
+
             float[] bufferMain = new float[count];
             float[] bufferEx = new float[count];
 
