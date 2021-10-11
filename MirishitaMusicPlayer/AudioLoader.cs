@@ -90,7 +90,7 @@ namespace MirishitaMusicPlayer
 
         public SongMixer SongMixer { get; private set; }
 
-        public WasapiOut OutputDevice { get; } = new();
+        public WaveOutEvent OutputDevice { get; } = new();
 
         public void Setup(Idol[] order = null, bool extraVoices = false)
         {
