@@ -20,9 +20,11 @@ namespace MirishitaMusicPlayer
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            if (args.Length > 0) Directory.SetCurrentDirectory(args[0]);
+            string filesPath;
 
-            string filesPath = Directory.GetCurrentDirectory();
+            if (args.Length > 0) filesPath = args[0];
+            else filesPath = Directory.GetCurrentDirectory();
+
             string songID;
 
             do
