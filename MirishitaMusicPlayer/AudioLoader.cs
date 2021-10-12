@@ -90,7 +90,7 @@ namespace MirishitaMusicPlayer
 
         public SongMixer SongMixer { get; private set; }
 
-        public WaveOutEvent OutputDevice { get; } = new();
+        public WaveOutEvent OutputDevice { get; } = new() { DesiredLatency = 75 };
 
         public void Setup(Idol[] order = null, bool extraVoices = false)
         {
@@ -125,6 +125,8 @@ namespace MirishitaMusicPlayer
 
             if (!string.IsNullOrEmpty(extraVoicePath) && extraVoices)
                 bgmExAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[^1]));
+
+            assetsManager.Clear();
 
             SongMixer = new(voiceAcbs, bgmAcb, bgmExAcb);
 
