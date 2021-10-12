@@ -34,6 +34,8 @@ namespace MirishitaMusicPlayer.Audio
 
             Loop = info.LoopEnabled;
             WaveFormat = new WaveFormat(info.SamplingRate, info.ChannelCount);
+
+            samplePosition = info.EncoderDelay;
         }
 
         public HcaInfo Info => info;
