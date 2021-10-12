@@ -54,6 +54,8 @@ namespace MirishitaMusicPlayer
             MuteScenarios = MainScenario.Scenario.Where(mutePredicate).ToList();
             if (MuteScenarios.Count < 1) MuteScenarios = OrientationScenario.Scenario.Where(mutePredicate).ToList();
 
+            VoiceCount = MuteScenarios[0].Mute.Length;
+
             //List<object> exist = new();
             //foreach (var scenario in tateScenario.Scenario.Where(s => s.Type == ScenarioType.Expression))
             //{
@@ -76,6 +78,8 @@ namespace MirishitaMusicPlayer
         public List<EventScenarioData> MuteScenarios { get; }
 
         public NoteScrObject Notes { get; }
+
+        public int VoiceCount { get; }
 
         public float TicksPerSecond => (float)(Notes.Ct[0].Tempo * (Notes.Ct[0].TSigNumerator + Notes.Ct[0].TSigDenominator));
     }
