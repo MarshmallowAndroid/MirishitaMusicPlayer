@@ -201,8 +201,11 @@ namespace MirishitaMusicPlayer.Audio
             disposing = true;
 
             backgroundWaveStream.Dispose();
-            foreach (var waveStream in voiceWaveStreams)
-                waveStream.Dispose();
+
+            if (voiceWaveStreams != null)
+                foreach (var waveStream in voiceWaveStreams)
+                    waveStream.Dispose();
+
             if (backgroundExWaveStream != null)
                 backgroundExWaveStream.Dispose();
         }
