@@ -227,7 +227,7 @@ namespace MirishitaMusicPlayer
 
                     Console.CursorLeft = 0;
                     Console.CursorTop = timeCursorTop;
-                    Console.WriteLine($" {secondsElapsed:f4}s elapsed");
+                    Console.WriteLine($" {secondsElapsed:f4}s elapsed    ");
 
                     EventScenarioData currentMuteScenario = muteScenarios[muteIndex];
                     if (secondsElapsed >= (currentMuteScenario.Tick / ticksPerSecond))
