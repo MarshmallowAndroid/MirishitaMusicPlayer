@@ -25,6 +25,11 @@ namespace MirishitaMusicPlayer.Audio
             AudioData = allData.ToArray();
         }
 
+        public CachedSound(HcaWaveStream hcaWaveStream)
+        {
+
+        }
+
         public WaveFormat WaveFormat { get; }
 
         public float[] AudioData { get; }

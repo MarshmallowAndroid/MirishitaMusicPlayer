@@ -10,6 +10,11 @@ namespace MirishitaMusicPlayer.Audio
 
         private readonly MixingSampleProvider mixer;
 
+        public RhythmPlayer()
+        {
+
+        }
+
         public RhythmPlayer(string tapPath, string flickPath)
         {
             tapSound = new(tapPath);
@@ -31,6 +36,8 @@ namespace MirishitaMusicPlayer.Audio
             mixer.AddMixerInput(new CachedSoundSampleProvider(flickSound));
         }
 
+
+
         public void Stop()
         {
             mixer.ReadFully = false;
@@ -44,7 +51,7 @@ namespace MirishitaMusicPlayer.Audio
 
             for (int i = 0; i < buffer.Length; i++)
             {
-                buffer[i] *= 0.0f;
+                buffer[i] *= 0.15f;
             }
 
             return read;

@@ -75,12 +75,12 @@ namespace MirishitaMusicPlayer
 
         public ScenarioScrObject OrientationScenario { get; }
 
-        public List<EventScenarioData> MuteScenarios { get; }
-
         public NoteScrObject Notes { get; }
+
+        public List<EventScenarioData> MuteScenarios { get; }
 
         public int VoiceCount { get; }
 
-        public float TicksPerSecond => (float)(Notes.Ct[0].Tempo * (Notes.Ct[0].TSigNumerator + Notes.Ct[0].TSigDenominator));
+        //public float TicksPerSecond => (float)(Notes.Ct[0].Tempo * (Notes.Ct[0].TSigNumerator + Notes.Ct[0].TSigDenominator));
     }
 }

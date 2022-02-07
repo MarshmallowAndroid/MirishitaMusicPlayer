@@ -15,7 +15,6 @@ namespace MirishitaMusicPlayer.Audio
 
         private readonly short[][] sampleBuffer;
 
-        private int currentBlock;
         private long samplePosition;
 
         public HcaWaveStream(Stream hcaFile, ulong key)
@@ -36,6 +35,7 @@ namespace MirishitaMusicPlayer.Audio
             WaveFormat = new WaveFormat(info.SamplingRate, info.ChannelCount);
 
             samplePosition = info.EncoderDelay;
+            FillBuffer(samplePosition);
         }
 
         public HcaInfo Info => info;
@@ -59,11 +59,10 @@ namespace MirishitaMusicPlayer.Audio
             {
                 lock (positionLock)
                 {
-                    samplePosition = (value + info.EncoderDelay) / info.ChannelCount / sizeof(short);
+                    samplePosition = value / info.ChannelCount / sizeof(short);
+                    samplePosition += info.EncoderDelay;
 
-                    currentBlock = (int)(samplePosition / info.SamplesPerBlock);
-                    hcaFileStream.Position = dataStart + currentBlock * info.BlockSize;
-                    FillBuffer();
+                    if (Position < Length) FillBuffer(samplePosition);
                 }
             }
         }
@@ -76,8 +75,14 @@ namespace MirishitaMusicPlayer.Audio
 
                 for (int i = 0; i < count / info.ChannelCount / sizeof(short); i++)
                 {
-                    if (Position >= Length - info.EncoderPadding) break;
-                    if (samplePosition % info.SamplesPerBlock == 0) FillBuffer();
+                    if (samplePosition - info.EncoderDelay >= info.LoopEndSample && Loop)
+                    {
+                        samplePosition = info.LoopStartSample + info.EncoderDelay;
+                        FillBuffer(samplePosition);
+                    }
+                    else if (Position >= Length) break;
+
+                    if (samplePosition % info.SamplesPerBlock == 0) FillBuffer(samplePosition);
 
                     for (int j = 0; j < info.ChannelCount; j++)
                     {
@@ -89,38 +94,50 @@ namespace MirishitaMusicPlayer.Audio
                     }
 
                     samplePosition++;
-
-                    if (samplePosition >= info.LoopEndSample + info.EncoderDelay && Loop)
-                    {
-                        hcaFileStream.Position = dataStart + info.LoopStartBlock * info.BlockSize;
-                        FillBuffer();
-
-                        samplePosition = info.LoopStartSample + info.EncoderDelay;
-                    }
                 }
 
                 return read;
             }
         }
 
-        private void FillBuffer()
+        private void FillBuffer(long sample)
         {
-            byte[] blockBytes = hcaFileReader.ReadBytes(info.BlockSize);
-            if (blockBytes.Length > 0)
+            int block = (int)(sample / info.SamplesPerBlock);
+            FillBuffer(block);
+        }
+
+        private void FillBuffer(int block)
+        {
+            if (block >= 0) hcaFileStream.Position = dataStart + block * info.BlockSize;
+
+            if (hcaFileStream.Position < hcaFileStream.Length)
             {
-                decoder.DecodeBlock(blockBytes);
+                decoder.DecodeBlock(hcaFileReader.ReadBytes(info.BlockSize));
                 decoder.ReadSamples16(sampleBuffer);
             }
-            else
-            {
-                for (int i = 0; i < sampleBuffer.Length; i++)
-                {
-                    for (int j = 0; j < sampleBuffer[i].Length; j++)
-                    {
-                        sampleBuffer[i][j] = 0;
-                    }
-                }
-            }
         }
+
+        //private void FillBuffer()
+        //{
+        //    if (hcaFileStream.Position >= hcaFileStream.Length)
+        //        hcaFileStream.Position = dataStart;
+
+        //    byte[] blockBytes = hcaFileReader.ReadBytes(info.BlockSize);
+        //    if (blockBytes.Length > 0)
+        //    {
+        //        decoder.DecodeBlock(blockBytes);
+        //        decoder.ReadSamples16(sampleBuffer);
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < sampleBuffer.Length; i++)
+        //        {
+        //            for (int j = 0; j < sampleBuffer[i].Length; j++)
+        //            {
+        //                sampleBuffer[i][j] = 0;
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

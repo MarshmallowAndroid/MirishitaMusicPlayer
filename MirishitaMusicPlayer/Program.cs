@@ -45,23 +45,30 @@ namespace MirishitaMusicPlayer
             ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
             AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
 
+            RhythmPlayer rhythm = new(
+                @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_tap.wav.bytes",
+                @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_flick.wav.bytes");
+
             ScenarioScrObject mainScenario = scenarios.MainScenario;
             ScenarioScrObject orientScenario = scenarios.OrientationScenario;
+
+            NoteScrObject notes = scenarios.Notes;
+            List<EventConductorData> conductors = notes.Ct.ToList();
 
             List<EventScenarioData> muteScenarios = mainScenario.Scenario.Where(s => s.Type == ScenarioType.Mute).ToList();
             if (muteScenarios.Count < 1) muteScenarios = orientScenario.Scenario.Where(s => s.Type == ScenarioType.Mute).ToList();
 
             WaveOutEvent outputDevice = audioLoader.OutputDevice;
 
-            float ticksPerSecond = scenarios.TicksPerSecond;
+            //float ticksPerSecond = scenarios.TicksPerSecond;
 
             int[] tracks = new int[]
             {
                 //1, 2,                   // 2Mix
                 //3, 4,                   // 2Mix+
                 //9, 10, 11, 12,          // 4Mix
-                25, 26, 27, 28, 29, 30, // 6Mix
-                //31, 32, 33, 34, 35, 36, // Million Mix
+                //25, 26, 27, 28, 29, 30, // 6Mix
+                31, 32, 33, 34, 35, 36, // Million Mix
             };
 
             int[] types = new int[]
@@ -79,13 +86,6 @@ namespace MirishitaMusicPlayer
             bool setup = false;
 
             int eventIndex = 0;
-
-            //if (voiceCount < 1)
-            //{
-            //    Console.CursorLeft = 0;
-            //    Console.CursorTop = voiceCursorTop;
-            //    Console.Write(" [ VOICE CONTROL UNAVAILABLE ]");
-            //}
 
             double secondsElapsed = 0;
 
@@ -117,7 +117,7 @@ namespace MirishitaMusicPlayer
                     }
                 }
 
-                audioLoader.Setup(order);
+                audioLoader.Setup(order, rhythmPlayer: rhythm);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
@@ -136,10 +136,13 @@ namespace MirishitaMusicPlayer
                 int eyesCursorTop = voiceCursorTop + 2;
                 int mouthCursorTop = eyesCursorTop + 6;
                 int lyricsCursorTop = mouthCursorTop + 7;
-                int rhythmCursorTop = -1;
+                int rhythmCursorTop = lyricsCursorTop + 5;
 
                 bool queueErase = false;
 
+                double ticksPerSecond = conductors[0].TicksPerSecond;
+
+                int conductorIndex = 0;
                 int muteIndex = 0;
                 int orientScenarioIndex = 0;
                 int mainScenarioIndex = 0;
@@ -202,17 +205,17 @@ namespace MirishitaMusicPlayer
 
                         secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
-                        while (secondsElapsed >= (muteScenarios[muteIndex].Tick / ticksPerSecond))
+                        while (secondsElapsed >= muteScenarios[muteIndex].AbsTime)
                         {
                             if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                             else break;
                         }
-                        while (secondsElapsed >= (orientScenario.Scenario[orientScenarioIndex].Tick / ticksPerSecond))
+                        while (secondsElapsed >= orientScenario.Scenario[orientScenarioIndex].AbsTime)
                         {
                             if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
                             else break;
                         }
-                        while (secondsElapsed >= (mainScenario.Scenario[mainScenarioIndex].Tick / ticksPerSecond))
+                        while (secondsElapsed >= mainScenario.Scenario[mainScenarioIndex].AbsTime)
                         {
                             if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                             else break;
@@ -229,8 +232,17 @@ namespace MirishitaMusicPlayer
                     Console.CursorTop = timeCursorTop;
                     Console.WriteLine($" {secondsElapsed:f4}s elapsed    ");
 
+                    EventConductorData currentConductor = conductors[conductorIndex];
+                    if (secondsElapsed >= currentConductor.AbsTime)
+                    {
+                        ticksPerSecond = currentConductor.TicksPerSecond;
+
+                        if (conductorIndex < conductors.Count - 1) conductorIndex++;
+                        currentConductor = conductors[conductorIndex];
+                    }
+
                     EventScenarioData currentMuteScenario = muteScenarios[muteIndex];
-                    if (secondsElapsed >= (currentMuteScenario.Tick / ticksPerSecond))
+                    if (secondsElapsed >= currentMuteScenario.AbsTime)
                     {
                         songMixer.VoiceControl = currentMuteScenario.Mute;
 
@@ -248,7 +260,8 @@ namespace MirishitaMusicPlayer
                     }
 
                     EventScenarioData currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
-                    while (secondsElapsed >= (currentOrientScenario.Tick / ticksPerSecond))
+                    //while (secondsElapsed >= currentOrientScenario.Tick / ticksPerSecond)
+                    while (secondsElapsed >= currentOrientScenario.AbsTime)
                     {
                         EyesVisualizer.Render(currentOrientScenario, eyesCursorTop);
 
@@ -258,114 +271,134 @@ namespace MirishitaMusicPlayer
                     }
 
                     EventScenarioData currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
-                    while (secondsElapsed >= (currentMainScenario.Tick / ticksPerSecond))
+                    //while (secondsElapsed >= currentMainScenario.Tick / ticksPerSecond)
+                    while (secondsElapsed >= currentMainScenario.AbsTime)
                     {
                         MouthVisualizer.Render(currentMainScenario, mouthCursorTop);
 
-                        if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
-                        {
-                            Console.CursorLeft = 0;
-                            Console.CursorTop = lyricsCursorTop;
+                        Console.CursorLeft = 0;
+                        Console.CursorTop = lyricsCursorTop;
 
-                            StringBuilder lyricsStringBuilder = new();
-                            lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
-                            Console.Write(lyricsStringBuilder.ToString());
+                        StringBuilder lyricsStringBuilder = new();
+                        lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
+                        Console.Write(lyricsStringBuilder.ToString());
 
-                            lyricsStringBuilder.Clear();
-                            lyricsStringBuilder.Append(' ' + currentMainScenario.Str);
+                        lyricsStringBuilder.Clear();
+                        lyricsStringBuilder.Append(" BPM: " + (int)(currentMainScenario.Tick / currentMainScenario.AbsTime / 8));
 
-                            Console.CursorLeft = 0;
-                            Console.CursorTop = lyricsCursorTop;
-                            Console.Write(lyricsStringBuilder.ToString());
-                        }
+                        Console.CursorLeft = 0;
+                        Console.CursorTop = lyricsCursorTop;
+                        Console.Write(lyricsStringBuilder.ToString());
+
+                        //if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
+                        //{
+                        //    Console.CursorLeft = 0;
+                        //    Console.CursorTop = lyricsCursorTop;
+
+                        //    StringBuilder lyricsStringBuilder = new();
+                        //    lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
+                        //    Console.Write(lyricsStringBuilder.ToString());
+
+                        //    lyricsStringBuilder.Clear();
+                        //    lyricsStringBuilder.Append(' ' + currentMainScenario.Str);
+
+                        //    Console.CursorLeft = 0;
+                        //    Console.CursorTop = lyricsCursorTop;
+                        //    Console.Write(lyricsStringBuilder.ToString());
+                        //}
 
                         if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                         else break;
                         currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
                     }
 
-                    //Event currentEvent = fumen.Events[eventIndex];
+                    continue;
+
+                    #region "Rhythm game" code
+                    EventNoteData currentEvent = notes.Evts[eventIndex];
+                    while (secondsElapsed >= currentEvent.AbsTime)
                     //while (secondsElapsed >= (currentEvent.Tick / ticksPerSecond))
-                    //{
-                    //    if (MatchesTrack(currentEvent.Track, tracks))
-                    //    {
-                    //        if (currentEvent.EndPosX >= 0 && currentEvent.Type >= 0)
-                    //        {
-                    //            if (rhythmCursorTop < 0) rhythmCursorTop = Console.CursorTop;
-                    //            Console.CursorTop = rhythmCursorTop;
+                    {
+                        if (MatchesTrack(currentEvent.Track, tracks))
+                        {
+                            if (currentEvent.EndPosX >= 0 && currentEvent.Type >= 0)
+                            {
+                                //if (rhythmCursorTop < 0) rhythmCursorTop = Console.CursorTop;
+                                //Console.CursorTop = rhythmCursorTop;
 
-                    //            if (queueErase)
-                    //            {
-                    //                Console.CursorTop = rhythmCursorTop;
-                    //                Console.CursorLeft = 0;
-                    //                StringBuilder erase = new();
+                                if (queueErase)
+                                {
+                                    Console.CursorTop = rhythmCursorTop;
+                                    Console.CursorLeft = 0;
+                                    StringBuilder erase = new();
 
-                    //                for (int i = 0; i < 6; i++)
-                    //                {
-                    //                    erase.Append(" ( ) ");
-                    //                }
-                    //                Console.Write(erase.ToString());
-                    //                Console.CursorLeft = 0;
+                                    for (int i = 0; i < 6; i++)
+                                    {
+                                        erase.Append(" [ ] ");
+                                    }
+                                    Console.Write(erase.ToString());
+                                    Console.CursorLeft = 0;
 
-                    //                queueErase = false;
-                    //            }
+                                    queueErase = false;
+                                }
 
-                    //            Console.CursorLeft = (int)currentEvent.EndPosX * 5;
-                    //            //Console.Write(currentEvent.startPosx);
-                    //            switch (currentEvent.Type)
-                    //            {
-                    //                case 0:
-                    //                    Console.Write(" (o)  ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 1:
-                    //                    Console.Write(" (@) ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 2:
-                    //                    Console.Write(" (◄) ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 3:
-                    //                    Console.Write(" (▲) ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 4:
-                    //                    Console.Write(" (►) ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 5:
-                    //                    Console.Write(" (|) ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 6:
-                    //                    Console.Write(" (%) ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 7:
-                    //                    Console.Write(" (█) ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 8:
-                    //                    Console.Write(" (A)  (P)  (P)  (E)  (A)  (L) ");
-                    //                    break;
-                    //                default:
-                    //                    Console.Write(" " + currentEvent.Type + " ");
-                    //                    break;
-                    //            }
-                    //        }
-                    //    }
+                                Console.CursorLeft = (int)currentEvent.EndPosX * 5;
+                                //Console.Write(currentEvent.EndPosX);
+                                switch (currentEvent.Type)
+                                {
+                                    case 0:
+                                        Console.Write(" [o] ");
+                                        rhythm.Tap();
+                                        break;
+                                    case 1:
+                                        Console.Write(" [@] ");
+                                        rhythm.Tap();
+                                        break;
+                                    case 2:
+                                        Console.Write(" [◄] ");
+                                        rhythm.Flick();
+                                        break;
+                                    case 3:
+                                        Console.Write(" [▲] ");
+                                        rhythm.Flick();
+                                        break;
+                                    case 4:
+                                        Console.Write(" [►] ");
+                                        rhythm.Flick();
+                                        break;
+                                    case 5:
+                                        Console.Write(" [|] ");
+                                        rhythm.Tap();
+                                        break;
+                                    case 6:
+                                        Console.Write(" [%] ");
+                                        rhythm.Tap();
+                                        break;
+                                    case 7:
+                                        Console.Write(" [█] ");
+                                        rhythm.Tap();
+                                        break;
+                                    case 8:
+                                        Console.Write(" [A]  [P]  [P]  [E]  [A]  [L] ");
+                                        break;
+                                    default:
+                                        Console.Write(" " + currentEvent.Type + " ");
+                                        break;
+                                }
+                            }
+                        }
 
-                    //    Event nextEvent = fumen.Events[eventIndex + 1];
-                    //    if (nextEvent.AbsoluteTime != currentEvent.AbsoluteTime)
-                    //    {
-                    //        //Console.WriteLine();
-                    //        queueErase = true;
-                    //    }
+                        EventNoteData nextEvent = notes.Evts[eventIndex + 1];
+                        if (nextEvent.AbsTime != currentEvent.AbsTime)
+                        {
+                            Console.WriteLine();
+                            queueErase = true;
+                        }
 
-                    //    if (eventIndex < fumen.Events.Length - 1) eventIndex++;
-                    //    currentEvent = fumen.Events[eventIndex];
-                    //}
+                        if (eventIndex < notes.Evts.Count - 1) eventIndex++;
+                        currentEvent = notes.Evts[eventIndex];
+                    }
+                    #endregion
 
                     Thread.Sleep(1);
                 }
@@ -374,6 +407,16 @@ namespace MirishitaMusicPlayer
             }
 
             //rhythm.Stop();
+        }
+
+        static bool MatchesTrack(int track, int[] tracks)
+        {
+            for (int i = 0; i < tracks.Length; i++)
+            {
+                if (track == tracks[i]) return true;
+            }
+
+            return false;
         }
     }
 }

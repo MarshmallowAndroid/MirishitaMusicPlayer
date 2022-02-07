@@ -31,6 +31,9 @@ namespace MirishitaMusicPlayer.Imas
                         case "type":
                             eventData.Type = (int)item.Value;
                             break;
+                        case "endPosx":
+                            eventData.EndPosX = (float)item.Value;
+                            break;
                         default:
                             break;
                     }
@@ -47,6 +50,12 @@ namespace MirishitaMusicPlayer.Imas
                 {
                     switch (item.Key)
                     {
+                        case "absTime":
+                            eventData.AbsTime = (double)item.Value;
+                            break;
+                        case "tick":
+                            eventData.Tick = (long)item.Value;
+                            break;
                         case "tempo":
                             eventData.Tempo = (double)item.Value;
                             break;

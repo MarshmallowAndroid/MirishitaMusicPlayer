@@ -2,6 +2,8 @@
 using CriAcb;
 using NAudio.Wave;
 using CriAwb;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
@@ -18,6 +20,15 @@ namespace MirishitaMusicPlayer.Audio
             acbReader = new(stream);
             awbReader = acbReader.GetAwb();
             waveStream = new HcaWaveStream(awbReader.GetWaveSubfileStream(awbReader.Waves[0]), 765765765765765);
+        }
+
+        public AcbWaveStream(Stream stream, string waveName)
+        {
+            acbReader = new(stream);
+            awbReader = acbReader.GetAwb();
+            waveStream = new HcaWaveStream(
+                awbReader.GetWaveSubfileStream(
+                    awbReader.Waves.FirstOrDefault()), 765765765765765);
         }
 
         public override WaveFormat WaveFormat => waveStream.WaveFormat;

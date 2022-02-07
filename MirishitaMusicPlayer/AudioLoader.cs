@@ -92,7 +92,7 @@ namespace MirishitaMusicPlayer
 
         public WaveOutEvent OutputDevice { get; } = new() { DesiredLatency = 75 };
 
-        public void Setup(Idol[] order = null, bool extraVoices = false)
+        public void Setup(Idol[] order = null, bool extraVoices = false, RhythmPlayer rhythmPlayer = null)
         {
             OutputDevice.Stop();
             if (SongMixer != null) SongMixer.Dispose();
@@ -130,7 +130,7 @@ namespace MirishitaMusicPlayer
 
             SongMixer = new(voiceAcbs, bgmAcb, bgmExAcb);
 
-            OutputDevice.Init(SongMixer);
+            OutputDevice.Init(new MixingSampleProvider(new ISampleProvider[] { SongMixer, rhythmPlayer }));
         }
 
         static Stream GetStreamFromAsset(SerializedFile file)
