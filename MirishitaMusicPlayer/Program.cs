@@ -276,36 +276,22 @@ namespace MirishitaMusicPlayer
                     {
                         MouthVisualizer.Render(currentMainScenario, mouthCursorTop);
 
-                        Console.CursorLeft = 0;
-                        Console.CursorTop = lyricsCursorTop;
+                        if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
+                        {
+                            Console.CursorLeft = 0;
+                            Console.CursorTop = lyricsCursorTop;
 
-                        StringBuilder lyricsStringBuilder = new();
-                        lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
-                        Console.Write(lyricsStringBuilder.ToString());
+                            StringBuilder lyricsStringBuilder = new();
+                            lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
+                            Console.Write(lyricsStringBuilder.ToString());
 
-                        lyricsStringBuilder.Clear();
-                        lyricsStringBuilder.Append(" BPM: " + (int)(currentMainScenario.Tick / currentMainScenario.AbsTime / 8));
+                            lyricsStringBuilder.Clear();
+                            lyricsStringBuilder.Append(' ' + currentMainScenario.Str);
 
-                        Console.CursorLeft = 0;
-                        Console.CursorTop = lyricsCursorTop;
-                        Console.Write(lyricsStringBuilder.ToString());
-
-                        //if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
-                        //{
-                        //    Console.CursorLeft = 0;
-                        //    Console.CursorTop = lyricsCursorTop;
-
-                        //    StringBuilder lyricsStringBuilder = new();
-                        //    lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
-                        //    Console.Write(lyricsStringBuilder.ToString());
-
-                        //    lyricsStringBuilder.Clear();
-                        //    lyricsStringBuilder.Append(' ' + currentMainScenario.Str);
-
-                        //    Console.CursorLeft = 0;
-                        //    Console.CursorTop = lyricsCursorTop;
-                        //    Console.Write(lyricsStringBuilder.ToString());
-                        //}
+                            Console.CursorLeft = 0;
+                            Console.CursorTop = lyricsCursorTop;
+                            Console.Write(lyricsStringBuilder.ToString());
+                        }
 
                         if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                         else break;
