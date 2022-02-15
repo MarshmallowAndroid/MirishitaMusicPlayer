@@ -42,16 +42,20 @@ namespace MirishitaMusicPlayer.Audio
                 }
             }
 
-            if (voiceSampleProviders.Count > 0)
-                voiceChannelCount = voiceSampleProviders[0].WaveFormat.Channels;
+            // For converting mono voices to stereo
 
+            if (voiceSampleProviders.Count > 0)
+                voiceChannelCount = voiceSampleProviders[0].WaveFormat.Channels; // Get the channel count of the voices
+            
             if (voiceChannelCount != 2)
-                channelDivide = 2;
+                channelDivide = 2; // Read half the bytes (count / 2), one half for each stereo channel
             else
-                channelDivide = 1;
+                channelDivide = 1; // Already stereo, do not divide
         }
 
         public bool HasEnded { get; private set; }
+
+        public bool MuteVoices { get; set; }
 
         public bool MuteBackground { get; set; }
 
@@ -118,13 +122,17 @@ namespace MirishitaMusicPlayer.Audio
             float[] bufferMain = new float[count];
             float[] bufferEx = new float[count];
 
-            int voicesEnabled = 0; // Number of real voices enabled,
-                                   // for cases where VoiceControl array is less than sample provider count
+            int voicesEnabled = 0; // Number of real voices enabled, for cases where
+                                   // the VoiceControl array is less than sample provider count
+                                   //
+                                   // Necessary for proper voice volume adjustment
 
             // Mix voices
             for (int i = 0; i < voiceSampleProviders.Count; i++)
             {
                 voiceSampleProviders[i].Read(bufferMain, offset, count / channelDivide);
+
+                if (MuteVoices) continue;
 
                 // Play the corresponding voice depending on if the idol at the specified
                 // index is active, or just play the entire thing if solo (one voice only)
@@ -132,6 +140,7 @@ namespace MirishitaMusicPlayer.Audio
                 {
                     int index = offset;
 
+                    // Mono to stereo conversion
                     for (int j = 0; j < count / channelDivide; j++)
                     {
                         for (int channel = 0; channel < channelDivide; channel++)

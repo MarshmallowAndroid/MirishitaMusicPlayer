@@ -60,6 +60,7 @@ If used in the Windows Terminal, the window must be resized to fit the contents 
 Otherwise, it will crash with an out-of-range exception due to the buffer size being too small.
 
 ### Keyboard shortcuts
+* `V` to mute the voices
 * `B` to mute the background music
 * `R` to reset to the beginning
 * `Space` to pause

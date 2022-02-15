@@ -36,7 +36,7 @@ namespace MirishitaMusicPlayer
                 if (Directory.GetFiles(filesPath, $"*_{songID}*").Length > 0)
                     break;
 
-                Console.Write("Unable to find song with the specified ID.");
+                Console.WriteLine("Unable to find song with the specified ID.");
                 Console.ReadKey(true);
             } while (true);
 
@@ -154,6 +154,9 @@ namespace MirishitaMusicPlayer
                     {
                         switch (Console.ReadKey(true).Key)
                         {
+                            case ConsoleKey.V:
+                                songMixer.MuteVoices = !songMixer.MuteVoices;
+                                break;
                             case ConsoleKey.B:
                                 songMixer.MuteBackground = !songMixer.MuteBackground;
                                 break;
@@ -282,6 +285,8 @@ namespace MirishitaMusicPlayer
                             Console.CursorTop = lyricsCursorTop;
 
                             StringBuilder lyricsStringBuilder = new();
+                            lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
+                            lyricsStringBuilder.Append('\n', 1);
                             lyricsStringBuilder.Append(' ', Console.WindowWidth - 2);
                             Console.Write(lyricsStringBuilder.ToString());
 
