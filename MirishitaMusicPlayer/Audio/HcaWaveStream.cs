@@ -112,8 +112,13 @@ namespace MirishitaMusicPlayer.Audio
 
             if (hcaFileStream.Position < hcaFileStream.Length)
             {
-                decoder.DecodeBlock(hcaFileReader.ReadBytes(info.BlockSize));
-                decoder.ReadSamples16(sampleBuffer);
+                byte[] blockBytes = hcaFileReader.ReadBytes(info.BlockSize);
+
+                if (blockBytes.Length > 0)
+                {
+                    decoder.DecodeBlock(blockBytes);
+                    decoder.ReadSamples16(sampleBuffer);
+                }
             }
         }
 
