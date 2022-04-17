@@ -81,6 +81,15 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
                                 @"                   " + "\n");
                             break;
+                        case 18:
+                            eyesStringBuilder.Append(
+                                @"                   " + "\n" +
+                                @" ___--        --___" + "\n" +
+                                @"  ___          ___ " + "\n" +
+                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
+                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @"                   " + "\n");
+                            break;
                         case 20:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -94,11 +103,12 @@ namespace MirishitaMusicPlayer
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
                                 @" --__-        -__--" + "\n" +
-                                @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @"  ___          ___ " + "\n" +
+                                @" -   -        -   -" + "    Expression ID: " + scenario.Param + "        \n" +
+                                @"                   " + "    Eye close: " + scenario.EyeClose + "\n" +
                                 @"                   " + "\n");
                             break;
+                        case 22:
                         case 23:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
