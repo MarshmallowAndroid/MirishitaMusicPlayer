@@ -46,7 +46,7 @@ namespace MirishitaMusicPlayer.Audio
 
             if (voiceSampleProviders.Count > 0)
                 voiceChannelCount = voiceSampleProviders[0].WaveFormat.Channels; // Get the channel count of the voices
-            
+
             if (voiceChannelCount != 2)
                 channelDivide = 2; // Read half the bytes (count / 2), one half for each stereo channel
             else
@@ -122,11 +122,6 @@ namespace MirishitaMusicPlayer.Audio
             float[] bufferMain = new float[count];
             float[] bufferEx = new float[count];
 
-            int voicesEnabled = 0; // Number of real voices enabled, for cases where
-                                   // the VoiceControl array is less than sample provider count
-                                   //
-                                   // Necessary for proper voice volume adjustment
-
             // Mix voices
             for (int i = 0; i < voiceSampleProviders.Count; i++)
             {
@@ -136,25 +131,29 @@ namespace MirishitaMusicPlayer.Audio
 
                 // Play the corresponding voice depending on if the idol at the specified
                 // index is active, or just play the entire thing if solo (one voice only)
-                if ((VoiceControl != null && VoiceControl[i] == 1) || (voiceSampleProviders.Count == 1))
-                {
-                    int index = offset;
+                int index = offset;
 
-                    // Mono to stereo conversion
-                    for (int j = 0; j < count / channelDivide; j++)
+                // Mono to stereo conversion
+                for (int j = 0; j < count / channelDivide; j++)
+                {
+                    for (int channel = 0; channel < channelDivide; channel++)
                     {
-                        for (int channel = 0; channel < channelDivide; channel++)
+                        if ((VoiceControl != null && VoiceControl[i] == 1) || (voiceSampleProviders.Count == 1))
                         {
                             buffer[index++] += bufferMain[j];
                         }
                     }
-
-                    voicesEnabled++;
                 }
             }
 
+
             // Adjust volume of voices
-            float multiplier = ((float)1 / (voicesEnabled + 1)) + 0.10f;
+            //
+            // We need the number of real voices enabled, for cases where
+            // the VoiceControl array is less than sample provider count
+            //
+            // Necessary for proper voice volume adjustment
+            float multiplier = ((float)1 / (GetEnabledVoiceCount() + 1)) + 0.10f;
             for (int i = 0; i < count; i++)
             {
                 buffer[i] *= multiplier;
@@ -217,6 +216,19 @@ namespace MirishitaMusicPlayer.Audio
 
             if (backgroundExWaveStream != null)
                 backgroundExWaveStream.Dispose();
+        }
+
+        private int GetEnabledVoiceCount()
+        {
+            if (VoiceControl == null) return 0;
+
+            int voicesEnabled = 0;
+            for (int i = 0; i < VoiceControl.Length; i++)
+            {
+                if (VoiceControl[i] == 1) voicesEnabled++;
+            }
+
+            return Math.Min(voicesEnabled, voiceSampleProviders.Count);
         }
     }
 }
