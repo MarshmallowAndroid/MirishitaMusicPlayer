@@ -116,10 +116,9 @@ namespace MirishitaMusicPlayer
                         int selectionIndex = int.Parse(orderInput[i]);
                         order[i] = audioLoader.Singers[selectionIndex];
                     }
-
-                    audioLoader.Setup(order, scenarios.VoiceCount > 5, rhythm);
                 }
 
+                audioLoader.Setup(order, scenarios.VoiceCount > 5, rhythm);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
