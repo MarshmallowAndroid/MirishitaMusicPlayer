@@ -104,13 +104,14 @@ namespace MirishitaMusicPlayer
 
                     Console.WriteLine();
 
-                    int validVoiceCount = scenarios.VoiceCount > 5 ? 5 : scenarios.VoiceCount;
+                    int validVoiceCount = Math.Min(scenarios.VoiceCount, 5);
 
                     Console.Write("Select in order (" + validVoiceCount + " max)" + ": ");
                     string[] orderInput = Console.ReadLine().Trim().Split(' ');
-                    order = new Idol[validVoiceCount];
+                    int validOrderCount = Math.Min(orderInput.Length, 5);
+                    order = new Idol[validOrderCount];
 
-                    for (int i = 0; i < validVoiceCount; i++)
+                    for (int i = 0; i < validOrderCount; i++)
                     {
                         int selectionIndex = int.Parse(orderInput[i]);
                         order[i] = audioLoader.Singers[selectionIndex];
