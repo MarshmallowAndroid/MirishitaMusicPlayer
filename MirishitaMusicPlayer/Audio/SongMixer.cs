@@ -79,7 +79,8 @@ namespace MirishitaMusicPlayer.Audio
         {
             backgroundWaveStream.Position = 0;
 
-            backgroundEx.Reset();
+            if (backgroundEx != null)
+                backgroundEx.Reset();
 
             foreach (var voice in voiceSampleProviders)
             {
@@ -102,7 +103,8 @@ namespace MirishitaMusicPlayer.Audio
                 backgroundWaveStream.WaveFormat.SampleRate *
                 backgroundWaveStream.WaveFormat.Channels));
 
-            backgroundEx.Seek(seconds);
+            if (backgroundEx != null)
+                backgroundEx.Seek(seconds);
 
             foreach (var voice in voiceSampleProviders)
             {
@@ -139,7 +141,6 @@ namespace MirishitaMusicPlayer.Audio
                     }
                 }
             }
-
 
             // Adjust volume of voices
             //
