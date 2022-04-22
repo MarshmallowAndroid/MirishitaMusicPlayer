@@ -27,15 +27,12 @@ namespace MirishitaMusicPlayer
         private AcbWaveStream[] voiceAcbs;
         private AcbWaveStream bgmExAcb;
 
+        private readonly List<EventScenarioData> muteScenarios;
+
         public AudioLoader(AssetsManager assetsManager, List<EventScenarioData> muteScenarios, string filesPath, string songID)
         {
             this.assetsManager = assetsManager;
-
-            int voiceCount = 0;
-            // Get the first mute event so we know how many voices are going to be singing
-            EventScenarioData firstMuteEvent = muteScenarios[0];
-            if (firstMuteEvent != null)
-                voiceCount = firstMuteEvent.Mute.Length;
+            this.muteScenarios = muteScenarios;
 
             // Get all the audio files for the song
             string[] audioFiles = Directory.GetFiles(filesPath, $"song3_{songID}*");
@@ -128,7 +125,7 @@ namespace MirishitaMusicPlayer
 
             assetsManager.Clear();
 
-            SongMixer = new(voiceAcbs, bgmAcb, bgmExAcb);
+            SongMixer = new(muteScenarios, voiceAcbs, bgmAcb, bgmExAcb);
 
             OutputDevice.Init(new MixingSampleProvider(new ISampleProvider[] { SongMixer, rhythmPlayer }));
         }

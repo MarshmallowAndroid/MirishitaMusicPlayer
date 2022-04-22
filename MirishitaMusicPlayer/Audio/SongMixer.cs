@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
 
 namespace MirishitaMusicPlayer.Audio
@@ -8,37 +9,46 @@ namespace MirishitaMusicPlayer.Audio
     {
         private readonly AcbWaveStream backgroundWaveStream;
         private readonly ISampleProvider backgroundSampleProvider;
-        private readonly AcbWaveStream backgroundExWaveStream;
-        private readonly ISampleProvider backgroundExSampleProvider;
 
-        private readonly IEnumerable<AcbWaveStream> voiceWaveStreams;
-        private readonly List<ISampleProvider> voiceSampleProviders;
+        private readonly List<VoiceTrack> voiceSampleProviders;
+        private readonly VoiceTrack backgroundEx;
+
         private readonly int voiceChannelCount;
 
         private readonly int channelDivide;
 
         private bool disposing;
 
-        public SongMixer(IEnumerable<AcbWaveStream> voiceAcbs, AcbWaveStream bgmAcb, AcbWaveStream bgmExAcb)
+        public SongMixer(
+            List<EventScenarioData> muteScenarios,
+            AcbWaveStream[] voiceAcbs,
+            AcbWaveStream bgmAcb,
+            AcbWaveStream bgmExAcb)
         {
             backgroundWaveStream = bgmAcb;
             backgroundSampleProvider = bgmAcb.ToSampleProvider();
 
             if (bgmExAcb != null)
-            {
-                backgroundExWaveStream = bgmExAcb;
-                backgroundExSampleProvider = bgmExAcb.ToSampleProvider();
-            }
+                backgroundEx = new VoiceTrack(bgmExAcb, muteScenarios, 5, true);
 
-            voiceWaveStreams = voiceAcbs;
             voiceSampleProviders = new();
 
             if (voiceAcbs != null)
             {
-                foreach (var voiceAcb in voiceAcbs)
+                int voiceIndex = 0;
+
+                if (voiceAcbs.Length > 1)
                 {
-                    if (voiceAcb != null)
-                        voiceSampleProviders.Add(voiceAcb.ToSampleProvider());
+                    foreach (var voiceAcb in voiceAcbs)
+                    {
+                        if (voiceAcb != null)
+                            voiceSampleProviders.Add(new VoiceTrack(voiceAcb, muteScenarios, voiceIndex++));
+                    }
+                }
+                else
+                {
+                    if (voiceAcbs[0] != null)
+                        voiceSampleProviders.Add(new VoiceTrack(voiceAcbs[0], muteScenarios, -1));
                 }
             }
 
@@ -69,14 +79,12 @@ namespace MirishitaMusicPlayer.Audio
         {
             backgroundWaveStream.Position = 0;
 
-            if (backgroundExWaveStream != null)
-                backgroundExWaveStream.Position = 0;
+            backgroundEx.Reset();
 
-            if (voiceWaveStreams != null)
-                foreach (var voiceWaveStream in voiceWaveStreams)
-                {
-                    voiceWaveStream.Position = 0;
-                }
+            foreach (var voice in voiceSampleProviders)
+            {
+                voice.Reset();
+            }
         }
 
         public void Seek(float seconds)
@@ -94,20 +102,12 @@ namespace MirishitaMusicPlayer.Audio
                 backgroundWaveStream.WaveFormat.SampleRate *
                 backgroundWaveStream.WaveFormat.Channels));
 
-            if (backgroundExWaveStream != null)
-                backgroundExWaveStream.Position += (long)(seconds *
-                (backgroundExWaveStream.WaveFormat.BitsPerSample / 8 *
-                backgroundExWaveStream.WaveFormat.SampleRate *
-                backgroundExWaveStream.WaveFormat.Channels));
+            backgroundEx.Seek(seconds);
 
-            if (voiceWaveStreams != null)
-                foreach (var voiceWaveStream in voiceWaveStreams)
-                {
-                    voiceWaveStream.Position += (long)(seconds *
-                        (voiceWaveStream.WaveFormat.BitsPerSample / 8 *
-                        voiceWaveStream.WaveFormat.SampleRate *
-                        voiceWaveStream.WaveFormat.Channels));
-                }
+            foreach (var voice in voiceSampleProviders)
+            {
+                voice.Seek(seconds);
+            }
         }
 
         public int Read(float[] buffer, int offset, int count)
@@ -129,19 +129,13 @@ namespace MirishitaMusicPlayer.Audio
 
                 if (MuteVoices) continue;
 
-                // Play the corresponding voice depending on if the idol at the specified
-                // index is active, or just play the entire thing if solo (one voice only)
-                int index = offset;
-
                 // Mono to stereo conversion
+                int index = offset;
                 for (int j = 0; j < count / channelDivide; j++)
                 {
                     for (int channel = 0; channel < channelDivide; channel++)
                     {
-                        if ((VoiceControl != null && VoiceControl[i] == 1) || (voiceSampleProviders.Count == 1))
-                        {
-                            buffer[index++] += bufferMain[j];
-                        }
+                        buffer[index++] += bufferMain[j];
                     }
                 }
             }
@@ -166,9 +160,9 @@ namespace MirishitaMusicPlayer.Audio
 
             // If available, read from extra (secondary) background music
             int backgroundExRead = 0;
-            if (backgroundExSampleProvider != null)
+            if (backgroundEx != null)
             {
-                backgroundExRead = backgroundExSampleProvider.Read(bufferEx, offset, count);
+                backgroundExRead = backgroundEx.Read(bufferEx, offset, count);
             }
 
             float[] sourceBuffer;
@@ -179,7 +173,7 @@ namespace MirishitaMusicPlayer.Audio
             //
             // The 6th voice or extra background music is just a pre-mixed version of all the idols plus
             // the background music.
-            if (VoiceControl != null && VoiceControl.Length == 6 && VoiceControl[5] == 1 && backgroundExSampleProvider != null)
+            if (backgroundEx != null && backgroundEx.Singing)
             {
                 sourceBuffer = bufferEx;
                 finalRead = backgroundExRead;
@@ -210,22 +204,22 @@ namespace MirishitaMusicPlayer.Audio
 
             backgroundWaveStream.Dispose();
 
-            if (voiceWaveStreams != null)
-                foreach (var waveStream in voiceWaveStreams)
-                    waveStream.Dispose();
+            backgroundEx.Dispose();
 
-            if (backgroundExWaveStream != null)
-                backgroundExWaveStream.Dispose();
+            foreach (var voice in voiceSampleProviders)
+            {
+                voice.Dispose();
+            }
         }
 
         private int GetEnabledVoiceCount()
         {
-            if (VoiceControl == null) return 0;
+            if (voiceSampleProviders == null) return 0;
 
             int voicesEnabled = 0;
-            for (int i = 0; i < VoiceControl.Length; i++)
+            for (int i = 0; i < voiceSampleProviders.Count; i++)
             {
-                if (VoiceControl[i] == 1) voicesEnabled++;
+                if (voiceSampleProviders[i].Singing) voicesEnabled++;
             }
 
             return Math.Min(voicesEnabled, voiceSampleProviders.Count);
