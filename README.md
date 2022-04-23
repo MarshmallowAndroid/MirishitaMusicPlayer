@@ -37,7 +37,8 @@ NOTE: Putting the same idol on different positions is not supported (for now at 
 
 Visualization for mute events, facial expression, lipsync, and lyrics will be shown during playback.
 
-For best results for lyrics, use the [Windows Terminal](https://github.com/microsoft/terminal) as it supports Unicode fallback with the Consolas/Cascadia fonts.
+For best results for lyrics, use the [Windows Terminal](https://github.com/microsoft/terminal) as it supports Asian characters along with the Consolas/Cascadia fonts.
+To force `cmd.exe` to do the same, see the **Font linking** section on [this](https://docs.microsoft.com/en-us/globalization/input/font-technology) page.
 ```
  104.9850s elapsed
 
