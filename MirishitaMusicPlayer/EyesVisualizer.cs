@@ -1,13 +1,10 @@
 ﻿using MirishitaMusicPlayer.Imas;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer
 {
-    static class EyesVisualizer
+    internal static class EyesVisualizer
     {
         public static void Render(EventScenarioData scenario, int line)
         {
@@ -31,6 +28,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 4:
                             eyesStringBuilder.Append(
                                 @"    __        __   " + "\n" +
@@ -40,6 +38,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 5:
                             eyesStringBuilder.Append(
                                 @"   ___        ___  " + "\n" +
@@ -49,6 +48,7 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 8:
                         case 9:
                             eyesStringBuilder.Append(
@@ -59,6 +59,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 10:
                         case 16:
                             eyesStringBuilder.Append(
@@ -69,6 +70,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 17:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -78,6 +80,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 18:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -87,6 +90,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 20:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -96,6 +100,7 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 21:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -105,6 +110,7 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 22:
                         case 23:
                             eyesStringBuilder.Append(
@@ -115,6 +121,7 @@ namespace MirishitaMusicPlayer
                                 @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 25:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -124,6 +131,7 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 26:
                             eyesStringBuilder.Append(
                                 @"   ___        ___  " + "\n" +
@@ -133,6 +141,7 @@ namespace MirishitaMusicPlayer
                                 @"              -----" + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         case 27:
                             eyesStringBuilder.Append(
                                 @"   ___        ___  " + "\n" +
@@ -142,6 +151,7 @@ namespace MirishitaMusicPlayer
                                 @" -----             " + "\n" +
                                 @"                   " + "\n");
                             break;
+
                         default:
                             eyesStringBuilder.Append(
                                 @"                   " + "\n" +
@@ -172,7 +182,6 @@ namespace MirishitaMusicPlayer
                     }
                 }
             }
-
         }
     }
 }

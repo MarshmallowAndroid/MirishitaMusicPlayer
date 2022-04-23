@@ -1,13 +1,10 @@
 ﻿using MirishitaMusicPlayer.Imas;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer
 {
-    static class MouthVisualizer
+    internal static class MouthVisualizer
     {
         public static void Render(EventScenarioData scenario, int line)
         {
@@ -26,6 +23,7 @@ namespace MirishitaMusicPlayer
                             @"   \____________/  " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 1:
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
@@ -35,6 +33,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 2:
                         mouthStringBuilder.Append(
                             @"       ______      " + "\n" +
@@ -44,6 +43,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 3:
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
@@ -53,6 +53,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 4:
                         mouthStringBuilder.Append(
                             @"     __________    " + "\n" +
@@ -62,6 +63,7 @@ namespace MirishitaMusicPlayer
                             @"     |________|    " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 54:
                         mouthStringBuilder.Append(
                             @"                   " + "\n" +
@@ -71,6 +73,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 56:
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
@@ -80,6 +83,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     case 59:
                         mouthStringBuilder.Append(
                             @"     __________    " + "\n" +
@@ -89,6 +93,7 @@ namespace MirishitaMusicPlayer
                             @"                   " + "\n" +
                             @"                   " + "\n");
                         break;
+
                     default:
                         mouthStringBuilder.Append(
                            @"                    " + "\n" +

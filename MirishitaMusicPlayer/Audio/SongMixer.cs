@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MirishitaMusicPlayer.Imas;
+﻿using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
+using System;
+using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    class SongMixer : ISampleProvider, IDisposable
+    internal class SongMixer : ISampleProvider, IDisposable
     {
         private readonly AcbWaveStream backgroundWaveStream;
         private readonly ISampleProvider backgroundSampleProvider;

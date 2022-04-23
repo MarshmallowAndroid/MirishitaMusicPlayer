@@ -1,23 +1,19 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using System.Text;
-using System.Linq;
-using System.Threading;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using AssetStudio;
-using MirishitaMusicPlayer.Imas;
+﻿using AssetStudio;
 using MirishitaMusicPlayer.Audio;
-using System.Diagnostics;
+using MirishitaMusicPlayer.Imas;
+using NAudio.Wave;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
 
 namespace MirishitaMusicPlayer
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -152,36 +148,44 @@ namespace MirishitaMusicPlayer
                             case ConsoleKey.V:
                                 songMixer.MuteVoices = !songMixer.MuteVoices;
                                 break;
+
                             case ConsoleKey.B:
                                 songMixer.MuteBackground = !songMixer.MuteBackground;
                                 break;
+
                             case ConsoleKey.Q:
                                 outputDevice.Stop();
                                 quit = true;
                                 break;
+
                             case ConsoleKey.R:
                                 muteIndex = 0;
                                 orientScenarioIndex = 0;
                                 mainScenarioIndex = 0;
                                 songMixer.Reset();
                                 break;
+
                             case ConsoleKey.S:
                                 setup = true;
                                 break;
+
                             case ConsoleKey.Spacebar:
                                 if (outputDevice.PlaybackState == PlaybackState.Playing)
                                     outputDevice.Pause();
                                 else if (outputDevice.PlaybackState == PlaybackState.Paused)
                                     outputDevice.Play();
                                 break;
+
                             case ConsoleKey.LeftArrow:
                                 songMixer.Seek(-3.0f);
                                 seeked = true;
                                 break;
+
                             case ConsoleKey.RightArrow:
                                 songMixer.Seek(3.0f);
                                 seeked = true;
                                 break;
+
                             default:
                                 break;
                         }
@@ -296,6 +300,7 @@ namespace MirishitaMusicPlayer
                     //continue;
 
                     #region "Rhythm game" code
+
                     //EventNoteData currentEvent = notes.Evts[eventIndex];
                     //while (secondsElapsed >= currentEvent.AbsTime)
                     ////while (secondsElapsed >= (currentEvent.Tick / ticksPerSecond))
@@ -379,7 +384,8 @@ namespace MirishitaMusicPlayer
                     //    if (eventIndex < notes.Evts.Count - 1) eventIndex++;
                     //    currentEvent = notes.Evts[eventIndex];
                     //}
-                    #endregion
+
+                    #endregion "Rhythm game" code
 
                     Thread.Sleep(1);
                 }
@@ -390,7 +396,7 @@ namespace MirishitaMusicPlayer
             //rhythm.Stop();
         }
 
-        static bool MatchesTrack(int track, int[] tracks)
+        private static bool MatchesTrack(int track, int[] tracks)
         {
             for (int i = 0; i < tracks.Length; i++)
             {

@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using ClHcaSharp;
 using NAudio.Wave;
-using ClHcaSharp;
+using System.IO;
 
 namespace MirishitaMusicPlayer.Audio
 {

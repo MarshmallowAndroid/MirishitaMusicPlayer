@@ -1,6 +1,6 @@
 ﻿namespace MirishitaMusicPlayer
 {
-    class Idol
+    internal class Idol
     {
         public Idol(string idolNameID)
         {

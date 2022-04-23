@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 
 namespace MirishitaMusicPlayer.Imas
 {
-    class NoteScrObject
+    internal class NoteScrObject
     {
         public NoteScrObject(MonoBehaviour monoBehaviour)
         {
@@ -22,18 +22,23 @@ namespace MirishitaMusicPlayer.Imas
                         case "absTime":
                             eventData.AbsTime = (double)item.Value;
                             break;
+
                         case "tick":
                             eventData.Tick = (long)item.Value;
                             break;
+
                         case "track":
                             eventData.Track = (int)item.Value;
                             break;
+
                         case "type":
                             eventData.Type = (int)item.Value;
                             break;
+
                         case "endPosx":
                             eventData.EndPosX = (float)item.Value;
                             break;
+
                         default:
                             break;
                     }
@@ -53,18 +58,23 @@ namespace MirishitaMusicPlayer.Imas
                         case "absTime":
                             eventData.AbsTime = (double)item.Value;
                             break;
+
                         case "tick":
                             eventData.Tick = (long)item.Value;
                             break;
+
                         case "tempo":
                             eventData.Tempo = (double)item.Value;
                             break;
+
                         case "tsigNumerator":
                             eventData.TSigNumerator = (int)item.Value;
                             break;
+
                         case "tsigDenominator":
                             eventData.TSigDenominator = (int)item.Value;
                             break;
+
                         default:
                             break;
                     }
@@ -79,4 +89,3 @@ namespace MirishitaMusicPlayer.Imas
         public List<EventConductorData> Ct { get; } = new();
     }
 }
-

@@ -1,6 +1,6 @@
 ﻿namespace MirishitaMusicPlayer.Imas
 {
-    class EventNoteData
+    internal class EventNoteData
     {
         public double AbsTime { get; set; }
 
@@ -15,4 +15,3 @@
         public float EndPosX { get; set; }
     }
 }
-

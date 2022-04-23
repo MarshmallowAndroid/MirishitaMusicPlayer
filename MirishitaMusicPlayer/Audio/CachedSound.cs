@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    class CachedSound
+    internal class CachedSound
     {
         public CachedSound(string soundFileName)
         {
@@ -27,7 +27,6 @@ namespace MirishitaMusicPlayer.Audio
 
         public CachedSound(HcaWaveStream hcaWaveStream)
         {
-
         }
 
         public WaveFormat WaveFormat { get; }
@@ -35,4 +34,3 @@ namespace MirishitaMusicPlayer.Audio
         public float[] AudioData { get; }
     }
 }
-

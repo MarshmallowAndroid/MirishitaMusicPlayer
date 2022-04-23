@@ -1,19 +1,20 @@
-﻿using System.IO;
-using CriAcb;
-using NAudio.Wave;
+﻿using CriAcb;
 using CriAwb;
+using NAudio.Wave;
+using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    class AcbWaveStream : WaveStream
+    internal class AcbWaveStream : WaveStream
     {
         private AcbReader acbReader;
         private AwbReader awbReader;
         private WaveStream waveStream;
 
-        public AcbWaveStream(string path) : this(File.OpenRead(path)) { }
+        public AcbWaveStream(string path) : this(File.OpenRead(path))
+        {
+        }
 
         public AcbWaveStream(Stream stream)
         {

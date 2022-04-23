@@ -1,6 +1,6 @@
 ﻿namespace MirishitaMusicPlayer.Imas
 {
-    class EventConductorData
+    internal class EventConductorData
     {
         public double AbsTime { get; set; }
 
@@ -21,4 +21,3 @@
         }
     }
 }
-

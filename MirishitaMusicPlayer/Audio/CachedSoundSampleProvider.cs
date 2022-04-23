@@ -1,9 +1,9 @@
-﻿using System;
-using NAudio.Wave;
+﻿using NAudio.Wave;
+using System;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    class CachedSoundSampleProvider : ISampleProvider
+    internal class CachedSoundSampleProvider : ISampleProvider
     {
         private CachedSound cachedSound;
         private long position;
@@ -25,4 +25,3 @@ namespace MirishitaMusicPlayer.Audio
         }
     }
 }
-

@@ -3,13 +3,10 @@ using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer
 {
@@ -24,7 +21,7 @@ namespace MirishitaMusicPlayer
         private readonly List<string> loadPaths = new();
 
         private readonly List<EventScenarioData> muteScenarios;
-        
+
         private AcbWaveStream bgmAcb;
         private AcbWaveStream[] voiceAcbs;
         private AcbWaveStream extraAcb;
@@ -107,7 +104,7 @@ namespace MirishitaMusicPlayer
             //
             // BGM is always the first in the array, as per how we loaded them
             bgmAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[0]));
-            
+
             // Leave these null for now
             voiceAcbs = null;
             extraAcb = null;
@@ -142,7 +139,7 @@ namespace MirishitaMusicPlayer
                 SongMixer);
         }
 
-        static Stream GetStreamFromAsset(SerializedFile file)
+        private static Stream GetStreamFromAsset(SerializedFile file)
         {
             // CRIWARE ACB files are stored as TextAssets in the m_Script field
 

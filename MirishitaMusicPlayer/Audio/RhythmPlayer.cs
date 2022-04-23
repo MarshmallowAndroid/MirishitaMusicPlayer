@@ -3,7 +3,7 @@ using NAudio.Wave.SampleProviders;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    class RhythmPlayer : ISampleProvider
+    internal class RhythmPlayer : ISampleProvider
     {
         private readonly CachedSound tapSound;
         private readonly CachedSound flickSound;
@@ -12,7 +12,6 @@ namespace MirishitaMusicPlayer.Audio
 
         public RhythmPlayer()
         {
-
         }
 
         public RhythmPlayer(string tapPath, string flickPath)
@@ -36,8 +35,6 @@ namespace MirishitaMusicPlayer.Audio
             mixer.AddMixerInput(new CachedSoundSampleProvider(flickSound));
         }
 
-
-
         public void Stop()
         {
             mixer.ReadFully = false;
@@ -58,4 +55,3 @@ namespace MirishitaMusicPlayer.Audio
         }
     }
 }
-
