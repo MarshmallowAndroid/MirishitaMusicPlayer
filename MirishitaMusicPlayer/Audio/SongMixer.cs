@@ -148,7 +148,7 @@ namespace MirishitaMusicPlayer.Audio
             // the VoiceControl array is less than sample provider count
             //
             // Necessary for proper voice volume adjustment
-            float multiplier = ((float)1 / (GetEnabledVoiceCount() + 1)) + 0.10f;
+            float multiplier = ((float)1 / (GetEnabledVoiceCount() + 1) + 0.05f);
             for (int i = 0; i < count; i++)
             {
                 buffer[i] *= multiplier;
