@@ -121,28 +121,5 @@ namespace MirishitaMusicPlayer.Audio
                 }
             }
         }
-
-        //private void FillBuffer()
-        //{
-        //    if (hcaFileStream.Position >= hcaFileStream.Length)
-        //        hcaFileStream.Position = dataStart;
-
-        //    byte[] blockBytes = hcaFileReader.ReadBytes(info.BlockSize);
-        //    if (blockBytes.Length > 0)
-        //    {
-        //        decoder.DecodeBlock(blockBytes);
-        //        decoder.ReadSamples16(sampleBuffer);
-        //    }
-        //    else
-        //    {
-        //        for (int i = 0; i < sampleBuffer.Length; i++)
-        //        {
-        //            for (int j = 0; j < sampleBuffer[i].Length; j++)
-        //            {
-        //                sampleBuffer[i][j] = 0;
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

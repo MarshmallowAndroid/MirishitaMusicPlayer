@@ -187,7 +187,7 @@ namespace MirishitaMusicPlayer
                         }
                     }
 
-                    secondsElapsed = songMixer.CurrentTime.TotalSeconds + 0.03;
+                    secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
                     if (setup)
                     {
@@ -222,8 +222,6 @@ namespace MirishitaMusicPlayer
                         muteIndex--;
                         orientScenarioIndex--;
                         mainScenarioIndex--;
-
-                        seeked = false;
                     }
 
                     Console.CursorLeft = 0;

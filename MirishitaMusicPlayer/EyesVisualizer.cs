@@ -15,9 +15,6 @@ namespace MirishitaMusicPlayer
             {
                 if (scenario.Idol == 0)
                 {
-                    Console.CursorLeft = 0;
-                    Console.CursorTop = line;
-
                     StringBuilder eyesStringBuilder = new();
 
                     switch (scenario.Param)
@@ -30,8 +27,8 @@ namespace MirishitaMusicPlayer
                                 @"   ___        ___  " + "\n" +
                                 @" --              --" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 4:
@@ -39,8 +36,8 @@ namespace MirishitaMusicPlayer
                                 @"    __        __   " + "\n" +
                                 @" ---            ---" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 5:
@@ -48,8 +45,8 @@ namespace MirishitaMusicPlayer
                                 @"   ___        ___  " + "\n" +
                                 @" --              --" + "\n" +
                                 @"  ___          ___ " + "\n" +
-                                @" -   -        -   -" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @"                   " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" -   -        -   -" + "\n" +
+                                @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 8:
@@ -58,8 +55,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ----_        _----" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 10:
@@ -68,8 +65,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ---__        __---" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 17:
@@ -77,8 +74,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ---__        __---" + "\n" +
                                 @"  ___          ___ " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 18:
@@ -86,8 +83,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ___--        --___" + "\n" +
                                 @"  ___          ___ " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 20:
@@ -95,8 +92,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ___--        --___" + "\n" +
                                 @"                   " + "\n" +
-                                @" -___-        -___-" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @"                   " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" -___-        -___-" + "\n" +
+                                @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 21:
@@ -104,8 +101,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" --__-        -__--" + "\n" +
                                 @"  ___          ___ " + "\n" +
-                                @" -   -        -   -" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @"                   " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" -   -        -   -" + "\n" +
+                                @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 22:
@@ -114,8 +111,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ___--        --___" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----        -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @" -----        -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 25:
@@ -123,8 +120,8 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" ___--        --___" + "\n" +
                                 @"                   " + "\n" +
-                                @" -___-        -___-" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @"                   " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" -___-        -___-" + "\n" +
+                                @"                   " + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 26:
@@ -132,8 +129,8 @@ namespace MirishitaMusicPlayer
                                 @"   ___        ___  " + "\n" +
                                 @" --              --" + "\n" +
                                 @"  ___          --- " + "\n" +
-                                @" -   -        | O |" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @"              -----" + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" -   -        | O |" + "\n" +
+                                @"              -----" + "\n" +
                                 @"                   " + "\n");
                             break;
                         case 27:
@@ -141,8 +138,8 @@ namespace MirishitaMusicPlayer
                                 @"   ___        ___  " + "\n" +
                                 @" --              --" + "\n" +
                                 @"  ---          ___ " + "\n" +
-                                @" | O |        -   -" + "    Expression ID: " + scenario.Param + "        \n" +
-                                @" -----             " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        -   -" + "\n" +
+                                @" -----             " + "\n" +
                                 @"                   " + "\n");
                             break;
                         default:
@@ -150,28 +147,27 @@ namespace MirishitaMusicPlayer
                                 @"                   " + "\n" +
                                 @" -----        -----" + "\n" +
                                 @"  ---          --- " + "\n" +
-                                @" | O |        | O |" + "    Unknown expr.: " + scenario.Param + "        \n" +
-                                @"  ---          --- " + "    Eye close: " + scenario.EyeClose + "\n" +
+                                @" | O |        | O |" + "\n" +
+                                @"  ---          --- " + "\n" +
                                 @"                   " + "\n");
                             break;
                     }
 
+                    Console.CursorLeft = 0;
+                    Console.CursorTop = line;
                     Console.Write(eyesStringBuilder.ToString());
 
                     if (scenario.EyeClose == 1)
                     {
                         eyesStringBuilder.Clear();
                         eyesStringBuilder.Append(
-                            //@"                   " + "\n" +
-                            //@" -----        -----" + "\n" +
                             @"                   " + "\n" +
                             @" -___-        -___-" + "\n" +
-                            @"                   " + "    Eye close: " + scenario.EyeClose + " \n" +
+                            @"                   " + "\n" +
                             @"                   " + "\n");
 
                         Console.CursorLeft = 0;
-                        Console.CursorTop = line;
-                        Console.CursorTop += 2;
+                        Console.CursorTop = line + 2;
                         Console.Write(eyesStringBuilder.ToString());
                     }
                 }

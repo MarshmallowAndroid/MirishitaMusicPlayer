@@ -13,13 +13,6 @@ namespace MirishitaMusicPlayer
         {
             if (scenario.Type == ScenarioType.LipSync)
             {
-                //if (mouthCursorTop < 0) mouthCursorTop = Console.CursorTop;
-                Console.CursorLeft = 0;
-                Console.CursorTop = line;
-
-                //Console.WriteLine(" [" + current.Param + "] ");
-                //Console.WriteLine("Type: " + current.Type + ", Parameter: " + current.Param + "        ");
-                //Console.WriteLine();
                 StringBuilder mouthStringBuilder = new();
 
                 switch (scenario.Param)
@@ -28,7 +21,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @"   ______________  " + "\n" +
                             @"   |            |  " + "\n" +
-                            @"   |            |  " + "    Sound: A, ID: " + scenario.Param + "        \n" +
+                            @"   |            |  " + "\n" +
                             @"   |            |  " + "\n" +
                             @"   \____________/  " + "\n" +
                             @"                   " + "\n");
@@ -37,7 +30,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
                             @" |\______________/|" + "\n" +
-                            @" \  ____________  /" + "    Sound: I, ID: " + scenario.Param + "        \n" +
+                            @" \  ____________  /" + "\n" +
                             @"  \/____________\/ " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -46,7 +39,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @"       ______      " + "\n" +
                             @"       |    |      " + "\n" +
-                            @"       |____|      " + "    Sound: U, ID: " + scenario.Param + "        \n" +
+                            @"       |____|      " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -55,7 +48,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
                             @" |\______________/|" + "\n" +
-                            @" |                |" + "    Sound: E, ID: " + scenario.Param + "        \n" +
+                            @" |                |" + "\n" +
                             @" \________________/" + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -64,7 +57,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @"     __________    " + "\n" +
                             @"     |        |    " + "\n" +
-                            @"     |        |    " + "    Sound: O, ID: " + scenario.Param + "        \n" +
+                            @"     |        |    " + "\n" +
                             @"     |        |    " + "\n" +
                             @"     |________|    " + "\n" +
                             @"                   " + "\n");
@@ -73,7 +66,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @"                   " + "\n" +
                             @"     \________/    " + "\n" +
-                            @"                   " + "    Sound: -, ID: " + scenario.Param + "        \n" +
+                            @"                   " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -82,7 +75,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @" __________________" + "\n" +
                             @" |\______________/|" + "\n" +
-                            @" \/______________\/" + "    Sound: I, ID: " + scenario.Param + "        \n" +
+                            @" \/______________\/" + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -91,7 +84,7 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                             @"     __________    " + "\n" +
                             @"     |\______/|    " + "\n" +
-                            @"     | ______ |    " + "    Sound: O, ID: " + scenario.Param + "        \n" +
+                            @"     | ______ |    " + "\n" +
                             @"     |/______\|    " + "\n" +
                             @"                   " + "\n" +
                             @"                   " + "\n");
@@ -100,13 +93,15 @@ namespace MirishitaMusicPlayer
                         mouthStringBuilder.Append(
                            @"                    " + "\n" +
                            @"    /\/\/\/\/\/\/\  " + "\n" +
-                           @"                    " + "    Unknown shape: " + scenario.Param + "        \n" +
+                           @"                    " + "\n" +
                            @"                    " + "\n" +
                            @"                    " + "\n" +
                            @"                    " + "\n");
                         break;
                 }
 
+                Console.CursorLeft = 0;
+                Console.CursorTop = line;
                 Console.Write(mouthStringBuilder.ToString());
             }
         }
