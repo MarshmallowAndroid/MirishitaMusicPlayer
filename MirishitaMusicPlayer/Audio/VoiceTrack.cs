@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer.Audio
 {
+
     internal class VoiceTrack : ISampleProvider, IDisposable
     {
         private readonly WaveStream waveStream;
         private readonly ISampleProvider sampleProvider;
         private readonly List<(long Sample, bool Singing)> triggers = new();
+        private readonly bool alwaysSing = false;
 
         private int nextTriggerIndex = 0;
         private long currentSample = 0;
-        private bool alwaysSing = false;
 
         public VoiceTrack(AcbWaveStream voiceAcb, List<EventScenarioData> muteScenarios, int voiceIndex, bool forceSinging = false)
         {
@@ -44,7 +45,7 @@ namespace MirishitaMusicPlayer.Audio
                 (waveStream.WaveFormat.BitsPerSample / 8 *
                 waveStream.WaveFormat.SampleRate *
                 waveStream.WaveFormat.Channels));
-            currentSample = PositionSamples;
+            currentSample = waveStream.Position / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8);
             nextTriggerIndex = 0;
         }
 
@@ -70,8 +71,7 @@ namespace MirishitaMusicPlayer.Audio
 
                 for (int j = 0; j < WaveFormat.Channels; j++)
                 {
-                    int index = i * WaveFormat.Channels + j;
-                    buffer[index] *= alwaysSing ? 1 : Singing ? 1 : 0;
+                    buffer[i * WaveFormat.Channels + j] *= alwaysSing ? 1 : Singing ? 1 : 0;
                 }
 
                 currentSample++;
@@ -89,7 +89,5 @@ namespace MirishitaMusicPlayer.Audio
         {
             waveStream.Dispose();
         }
-
-        private long PositionSamples => waveStream.Position / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8);
     }
 }

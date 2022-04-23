@@ -46,9 +46,9 @@ namespace MirishitaMusicPlayer
             ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
             AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
 
-            RhythmPlayer rhythm = new(
-                @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_tap.wav.bytes",
-                @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_flick.wav.bytes");
+            //RhythmPlayer rhythm = new(
+            //    @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_tap.wav.bytes",
+            //    @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_flick.wav.bytes");
 
             ScenarioScrObject mainScenario = scenarios.MainScenario;
             ScenarioScrObject orientScenario = scenarios.OrientationScenario;
@@ -57,10 +57,6 @@ namespace MirishitaMusicPlayer
             List<EventConductorData> conductors = notes.Ct.ToList();
 
             List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
-
-            WaveOutEvent outputDevice = audioLoader.OutputDevice;
-
-            //float ticksPerSecond = scenarios.TicksPerSecond;
 
             int[] tracks = new int[]
             {
@@ -79,13 +75,10 @@ namespace MirishitaMusicPlayer
                 55,
             };
 
-            //outputDevice.Play();
-            //rhythm.Tap();
-
             bool quit = false;
             bool setup = false;
 
-            int eventIndex = 0;
+            //int eventIndex = 0;
 
             double secondsElapsed = 0;
 
@@ -118,7 +111,7 @@ namespace MirishitaMusicPlayer
                     }
                 }
 
-                audioLoader.Setup(order, scenarios.VoiceCount > 5, rhythm);
+                audioLoader.Setup(order, scenarios.VoiceCount > 5);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
@@ -137,7 +130,7 @@ namespace MirishitaMusicPlayer
                 int lyricsCursorTop = mouthCursorTop + 7;
                 int rhythmCursorTop = lyricsCursorTop + 5;
 
-                bool queueErase = false;
+                //bool queueErase = false;
 
                 double ticksPerSecond = conductors[0].TicksPerSecond;
 
@@ -146,6 +139,7 @@ namespace MirishitaMusicPlayer
                 int orientScenarioIndex = 0;
                 int mainScenarioIndex = 0;
 
+                WaveOutEvent outputDevice = audioLoader.OutputDevice;
                 outputDevice.Play();
 
                 while (!songMixer.HasEnded && !quit)
@@ -249,9 +243,6 @@ namespace MirishitaMusicPlayer
                             else Console.Write(" [ ] ");
                         }
 
-                        //Console.Write(" Accuracy: " + (secondsElapsed - currentMuteScenario.AbsTime) + "s");
-                        //Console.Write("                                     ");
-
                         if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                     }
 
@@ -265,7 +256,6 @@ namespace MirishitaMusicPlayer
                     }
 
                     EventScenarioData currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
-                    //while (secondsElapsed >= currentOrientScenario.Tick / ticksPerSecond)
                     while (secondsElapsed >= currentOrientScenario.AbsTime)
                     {
                         EyesVisualizer.Render(currentOrientScenario, eyesCursorTop);
@@ -276,7 +266,6 @@ namespace MirishitaMusicPlayer
                     }
 
                     EventScenarioData currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
-                    //while (secondsElapsed >= currentMainScenario.Tick / ticksPerSecond)
                     while (secondsElapsed >= currentMainScenario.AbsTime)
                     {
                         MouthVisualizer.Render(currentMainScenario, mouthCursorTop);
