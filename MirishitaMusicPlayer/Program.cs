@@ -1,5 +1,6 @@
 ﻿using AssetStudio;
 using MirishitaMusicPlayer.Audio;
+using MirishitaMusicPlayer.Forms;
 using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
 using System;
@@ -8,75 +9,41 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MirishitaMusicPlayer
 {
     internal class Program
     {
+        [STAThread]
         private static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+
+            SongSelectForm songSelectForm = new();
+            songSelectForm.ShowDialog();
+
+            string songID = songSelectForm.ResultSongID ?? "";
+            if (songID == "") return;
+
             Console.OutputEncoding = Encoding.UTF8;
 
-            string filesPath;
-
-            if (args.Length > 0) filesPath = args[0];
-            else filesPath = Directory.GetCurrentDirectory();
-
-            string songID;
-
-            do
-            {
-                Console.CursorVisible = true;
-                Console.Write("Enter song ID: ");
-                songID = Console.ReadLine();
-
-                if (Directory.GetFiles(filesPath, $"*_{songID}*").Length > 0)
-                    break;
-
-                Console.WriteLine("Unable to find song with the specified ID.");
-                Console.ReadKey(true);
-            } while (true);
+            string filesPath = "Cache\\Songs";
 
             AssetsManager assetsManager = new();
 
             ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
             AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
 
-            //RhythmPlayer rhythm = new(
-            //    @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_tap.wav.bytes",
-            //    @"D:\mirishita\EXPORT\TextAsset\rhy_se_05_flick.wav.bytes");
-
             ScenarioScrObject mainScenario = scenarios.MainScenario;
             ScenarioScrObject orientScenario = scenarios.OrientationScenario;
 
             NoteScrObject notes = scenarios.Notes;
-            List<EventConductorData> conductors = notes.Ct.ToList();
 
             List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
 
-            int[] tracks = new int[]
-            {
-                //1, 2,                   // 2Mix
-                //3, 4,                   // 2Mix+
-                //9, 10, 11, 12,          // 4Mix
-                //25, 26, 27, 28, 29, 30, // 6Mix
-                31, 32, 33, 34, 35, 36, // Million Mix
-            };
-
-            int[] types = new int[]
-            {
-                41,
-                53,
-                54,
-                55,
-            };
-
             bool quit = false;
             bool setup = false;
-
-            //int eventIndex = 0;
-
-            double secondsElapsed = 0;
 
             while (!quit)
             {
@@ -124,13 +91,7 @@ namespace MirishitaMusicPlayer
                 int eyesCursorTop = voiceCursorTop + 2;
                 int mouthCursorTop = eyesCursorTop + 6;
                 int lyricsCursorTop = mouthCursorTop + 7;
-                int rhythmCursorTop = lyricsCursorTop + 5;
 
-                //bool queueErase = false;
-
-                double ticksPerSecond = conductors[0].TicksPerSecond;
-
-                int conductorIndex = 0;
                 int muteIndex = 0;
                 int orientScenarioIndex = 0;
                 int mainScenarioIndex = 0;
@@ -191,7 +152,7 @@ namespace MirishitaMusicPlayer
                         }
                     }
 
-                    secondsElapsed = songMixer.CurrentTime.TotalSeconds;
+                    double secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
                     if (setup)
                     {
@@ -248,15 +209,6 @@ namespace MirishitaMusicPlayer
                         if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                     }
 
-                    EventConductorData currentConductor = conductors[conductorIndex];
-                    if (secondsElapsed >= currentConductor.AbsTime)
-                    {
-                        ticksPerSecond = currentConductor.TicksPerSecond;
-
-                        if (conductorIndex < conductors.Count - 1) conductorIndex++;
-                        currentConductor = conductors[conductorIndex];
-                    }
-
                     EventScenarioData currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
                     while (secondsElapsed >= currentOrientScenario.AbsTime)
                     {
@@ -297,113 +249,11 @@ namespace MirishitaMusicPlayer
                         currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
                     }
 
-                    //continue;
-
-                    #region "Rhythm game" code
-
-                    //EventNoteData currentEvent = notes.Evts[eventIndex];
-                    //while (secondsElapsed >= currentEvent.AbsTime)
-                    ////while (secondsElapsed >= (currentEvent.Tick / ticksPerSecond))
-                    //{
-                    //    if (MatchesTrack(currentEvent.Track, tracks))
-                    //    {
-                    //        if (currentEvent.EndPosX >= 0 && currentEvent.Type >= 0)
-                    //        {
-                    //            //if (rhythmCursorTop < 0) rhythmCursorTop = Console.CursorTop;
-                    //            //Console.CursorTop = rhythmCursorTop;
-
-                    //            if (queueErase)
-                    //            {
-                    //                Console.CursorTop = rhythmCursorTop;
-                    //                Console.CursorLeft = 0;
-                    //                StringBuilder erase = new();
-
-                    //                for (int i = 0; i < 6; i++)
-                    //                {
-                    //                    erase.Append(" [ ] ");
-                    //                }
-                    //                Console.Write(erase.ToString());
-                    //                Console.CursorLeft = 0;
-
-                    //                queueErase = false;
-                    //            }
-
-                    //            Console.CursorLeft = (int)currentEvent.EndPosX * 5;
-                    //            //Console.Write(currentEvent.EndPosX);
-                    //            switch (currentEvent.Type)
-                    //            {
-                    //                case 0:
-                    //                    Console.Write(" [o] ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 1:
-                    //                    Console.Write(" [@] ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 2:
-                    //                    Console.Write(" [◄] ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 3:
-                    //                    Console.Write(" [▲] ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 4:
-                    //                    Console.Write(" [►] ");
-                    //                    rhythm.Flick();
-                    //                    break;
-                    //                case 5:
-                    //                    Console.Write(" [|] ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 6:
-                    //                    Console.Write(" [%] ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 7:
-                    //                    Console.Write(" [█] ");
-                    //                    rhythm.Tap();
-                    //                    break;
-                    //                case 8:
-                    //                    Console.Write(" [A]  [P]  [P]  [E]  [A]  [L] ");
-                    //                    break;
-                    //                default:
-                    //                    Console.Write(" " + currentEvent.Type + " ");
-                    //                    break;
-                    //            }
-                    //        }
-                    //    }
-
-                    //    EventNoteData nextEvent = notes.Evts[eventIndex + 1];
-                    //    if (nextEvent.AbsTime != currentEvent.AbsTime)
-                    //    {
-                    //        Console.WriteLine();
-                    //        queueErase = true;
-                    //    }
-
-                    //    if (eventIndex < notes.Evts.Count - 1) eventIndex++;
-                    //    currentEvent = notes.Evts[eventIndex];
-                    //}
-
-                    #endregion "Rhythm game" code
-
                     Thread.Sleep(1);
                 }
 
                 Console.Clear();
             }
-
-            //rhythm.Stop();
-        }
-
-        private static bool MatchesTrack(int track, int[] tracks)
-        {
-            for (int i = 0; i < tracks.Length; i++)
-            {
-                if (track == tracks[i]) return true;
-            }
-
-            return false;
         }
     }
 }

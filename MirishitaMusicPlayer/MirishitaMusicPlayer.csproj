@@ -1,24 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <StartupObject>MirishitaMusicPlayer.Program</StartupObject>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<StartupObject>MirishitaMusicPlayer.Program</StartupObject>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
+		<Version>1.1.0</Version>
+		<UseWindowsForms>True</UseWindowsForms>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NAudio.Wasapi" Version="2.0.0" />
-    <PackageReference Include="NAudio.WinMM" Version="2.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MessagePack" Version="2.3.85" />
+		<PackageReference Include="NAudio.Wasapi" Version="2.0.0" />
+		<PackageReference Include="NAudio.WinMM" Version="2.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AssetStudio\AssetStudio\AssetStudio.csproj" />
-    <ProjectReference Include="..\ClHcaSharp\ClHcaSharp\ClHcaSharp.csproj" />
-    <ProjectReference Include="..\CriAcb\CriAcb.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\AssetStudio\AssetStudioUtility\AssetStudioUtility.csproj" />
+		<ProjectReference Include="..\AssetStudio\AssetStudio\AssetStudio.csproj" />
+		<ProjectReference Include="..\ClHcaSharp\ClHcaSharp\ClHcaSharp.csproj" />
+		<ProjectReference Include="..\CriAcb\CriAcb.csproj" />
+	</ItemGroup>
 
 </Project>
