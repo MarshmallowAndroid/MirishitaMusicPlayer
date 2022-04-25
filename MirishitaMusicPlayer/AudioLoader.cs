@@ -68,7 +68,7 @@ namespace MirishitaMusicPlayer
 
         public SongMixer SongMixer { get; private set; }
 
-        public WaveOutEvent OutputDevice { get; } = new() { DesiredLatency = 75 };
+        public WaveOutEvent OutputDevice { get; } = new() { DesiredLatency = 100 };
 
         public void Setup(Idol[] order = null, bool extraEnabled = false, RhythmPlayer rhythmPlayer = null)
         {
