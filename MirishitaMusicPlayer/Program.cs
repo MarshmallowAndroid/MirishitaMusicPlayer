@@ -19,34 +19,31 @@ namespace MirishitaMusicPlayer
         private static void Main(string[] args)
         {
             Application.EnableVisualStyles();
-
-            SongSelectForm songSelectForm = new();
-            songSelectForm.ShowDialog();
-
-            string songID = songSelectForm.ResultSongID ?? "";
-            if (songID == "") return;
-
             Console.OutputEncoding = Encoding.UTF8;
-
-            string filesPath = "Cache\\Songs";
-
-            AssetsManager assetsManager = new();
-
-            ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
-            AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
-
-            ScenarioScrObject mainScenario = scenarios.MainScenario;
-            ScenarioScrObject orientScenario = scenarios.OrientationScenario;
-
-            NoteScrObject notes = scenarios.Notes;
-
-            List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
 
             bool quit = false;
             bool setup = false;
 
             while (!quit)
             {
+                SongSelectForm songSelectForm = new();
+                songSelectForm.ShowDialog();
+
+                string songID = songSelectForm.ResultSongID ?? "";
+                if (songID == "") return;
+
+                string filesPath = "Cache\\Songs";
+
+                AssetsManager assetsManager = new();
+
+                ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
+                AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
+
+                ScenarioScrObject mainScenario = scenarios.MainScenario;
+
+                List<EventScenarioData> expressionScenarios = scenarios.ExpressionScenarios;
+                List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
+
                 Idol[] order = null;
                 if (audioLoader.Singers != null)
                 {
@@ -92,9 +89,9 @@ namespace MirishitaMusicPlayer
                 int mouthCursorTop = eyesCursorTop + 6;
                 int lyricsCursorTop = mouthCursorTop + 7;
 
-                int muteIndex = 0;
-                int orientScenarioIndex = 0;
                 int mainScenarioIndex = 0;
+                int expressionScenarioIndex = 0;
+                int muteIndex = 0;
 
                 WaveOutEvent outputDevice = audioLoader.OutputDevice;
                 outputDevice.Play();
@@ -121,7 +118,7 @@ namespace MirishitaMusicPlayer
 
                             case ConsoleKey.R:
                                 muteIndex = 0;
-                                orientScenarioIndex = 0;
+                                expressionScenarioIndex = 0;
                                 mainScenarioIndex = 0;
                                 songMixer.Reset();
                                 break;
@@ -163,7 +160,7 @@ namespace MirishitaMusicPlayer
                     if (seeked)
                     {
                         muteIndex = 0;
-                        orientScenarioIndex = 0;
+                        expressionScenarioIndex = 0;
                         mainScenarioIndex = 0;
 
                         secondsElapsed = songMixer.CurrentTime.TotalSeconds;
@@ -173,9 +170,9 @@ namespace MirishitaMusicPlayer
                             if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                             else break;
                         }
-                        while (secondsElapsed >= orientScenario.Scenario[orientScenarioIndex].AbsTime)
+                        while (secondsElapsed >= expressionScenarios[expressionScenarioIndex].AbsTime)
                         {
-                            if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
+                            if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
                             else break;
                         }
                         while (secondsElapsed >= mainScenario.Scenario[mainScenarioIndex].AbsTime)
@@ -184,9 +181,12 @@ namespace MirishitaMusicPlayer
                             else break;
                         }
 
-                        muteIndex--;
-                        orientScenarioIndex--;
-                        mainScenarioIndex--;
+                        if (muteIndex > 0)
+                            muteIndex--;
+                        if (expressionScenarioIndex > 0)
+                            expressionScenarioIndex--;
+                        if (mainScenarioIndex > 0)
+                            mainScenarioIndex--;
                     }
 
                     Console.CursorLeft = 0;
@@ -209,14 +209,14 @@ namespace MirishitaMusicPlayer
                         if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                     }
 
-                    EventScenarioData currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+                    EventScenarioData currentOrientScenario = expressionScenarios[expressionScenarioIndex];
                     while (secondsElapsed >= currentOrientScenario.AbsTime)
                     {
                         EyesVisualizer.Render(currentOrientScenario, eyesCursorTop);
 
-                        if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
+                        if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
                         else break;
-                        currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+                        currentOrientScenario = expressionScenarios[expressionScenarioIndex];
                     }
 
                     EventScenarioData currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
