@@ -96,12 +96,12 @@ namespace MirishitaMusicPlayer
 
                     default:
                         mouthStringBuilder.Append(
-                           @"                    " + "\n" +
-                           @"    /\/\/\/\/\/\/\  " + "\n" +
-                           @"                    " + "\n" +
-                           @"                    " + "\n" +
-                           @"                    " + "\n" +
-                           @"                    " + "\n");
+                            @"                    " + "\n" +
+                            @"   /\/\/\/\/\/\/\   " + "\n" +
+                            @"                    " + "\n" +
+                            @"                    " + "\n" +
+                            @"                    " + "\n" +
+                            @"                    " + "\n");
                         break;
                 }
 
