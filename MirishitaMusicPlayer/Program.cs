@@ -24,9 +24,10 @@ namespace MirishitaMusicPlayer
             bool quit = false;
             bool setup = false;
 
+            SongSelectForm songSelectForm = new();
+
             while (!quit)
             {
-                SongSelectForm songSelectForm = new();
                 songSelectForm.ShowDialog();
 
                 string songID = songSelectForm.ResultSongID ?? "";
@@ -59,11 +60,11 @@ namespace MirishitaMusicPlayer
 
                     Console.WriteLine();
 
-                    int validVoiceCount = Math.Min(scenarios.VoiceCount, 5);
+                    int validVoiceCount = Math.Min(scenarios.VoiceCount, 13);
 
                     Console.Write("Select in order (" + validVoiceCount + " max)" + ": ");
                     string[] orderInput = Console.ReadLine().Trim().Split(' ');
-                    int validOrderCount = Math.Min(orderInput.Length, 5);
+                    int validOrderCount = Math.Min(orderInput.Length, 13);
                     order = new Idol[validOrderCount];
 
                     for (int i = 0; i < validOrderCount; i++)
@@ -73,7 +74,7 @@ namespace MirishitaMusicPlayer
                     }
                 }
 
-                audioLoader.Setup(order, scenarios.VoiceCount > 5);
+                audioLoader.Setup(order, scenarios.VoiceCount == 6);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
@@ -205,7 +206,7 @@ namespace MirishitaMusicPlayer
                         for (int i = 0; i < currentMuteScenario.Mute.Length; i++)
                         {
                             if (currentMuteScenario.Mute[i] == 1)
-                                Console.Write($" [{i + 1}] ");
+                                Console.Write($" [{i + 1:X}] ");
                             else Console.Write(" [ ] ");
                         }
 
