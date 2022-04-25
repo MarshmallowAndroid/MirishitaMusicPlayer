@@ -13,9 +13,15 @@ namespace MirishitaMusicPlayer.Audio
         private readonly List<VoiceTrack> voiceSampleProviders;
         private readonly VoiceTrack backgroundEx;
 
-        private readonly int voiceChannelCount;
+        private readonly List<(long Sample, int ActiveSingers)> triggers = new();
 
+        private readonly int voiceChannelCount;
         private readonly int channelDivide;
+
+        private long currentSample = 0;
+        private int nextTriggerIndex = 0;
+
+        private float multiplier = 1.0f;
 
         private bool disposing;
 
@@ -52,6 +58,11 @@ namespace MirishitaMusicPlayer.Audio
                 }
             }
 
+            foreach (var muteScenario in muteScenarios)
+            {
+                triggers.Add((AbsTimeToSamples(muteScenario.AbsTime), GetActiveSingers(muteScenario.Mute)));
+            }
+
             // For converting mono voices to stereo
 
             if (voiceSampleProviders.Count > 0)
@@ -78,6 +89,8 @@ namespace MirishitaMusicPlayer.Audio
         public void Reset()
         {
             backgroundWaveStream.Position = 0;
+            currentSample = 0;
+            nextTriggerIndex = 0;
 
             if (backgroundEx != null)
                 backgroundEx.Reset();
@@ -102,6 +115,10 @@ namespace MirishitaMusicPlayer.Audio
                 (backgroundWaveStream.WaveFormat.BitsPerSample / 8 *
                 backgroundWaveStream.WaveFormat.SampleRate *
                 backgroundWaveStream.WaveFormat.Channels));
+            currentSample = backgroundWaveStream.Position /
+                backgroundWaveStream.WaveFormat.Channels /
+                (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
+            nextTriggerIndex = 0;
 
             if (backgroundEx != null)
                 backgroundEx.Seek(seconds);
@@ -142,22 +159,35 @@ namespace MirishitaMusicPlayer.Audio
                 }
             }
 
+
+            int finalRead;
+
+            // Read from background music
+            int backgroundRead = backgroundSampleProvider.Read(bufferMain, offset, count);
+
             // Adjust volume of voices
             //
             // We need the number of real voices enabled, for cases where
             // the VoiceControl array is less than sample provider count
             //
             // Necessary for proper voice volume adjustment
-            float multiplier = ((float)1 / (GetEnabledVoiceCount() + 1) + 0.05f);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < backgroundRead / WaveFormat.Channels; i++)
             {
-                buffer[i] *= multiplier;
+                while (currentSample >= triggers[nextTriggerIndex].Sample)
+                {
+                    multiplier = (float)1 / (triggers[nextTriggerIndex].ActiveSingers + 1) + 0.10f;
+
+                    if (nextTriggerIndex < triggers.Count - 1) nextTriggerIndex++;
+                    else break;
+                }
+
+                for (int j = 0; j < WaveFormat.Channels; j++)
+                {
+                    buffer[i * WaveFormat.Channels + j] *= multiplier;
+                }
+
+                currentSample++;
             }
-
-            int finalRead;
-
-            // Read from background music
-            int backgroundRead = backgroundSampleProvider.Read(bufferMain, offset, count);
 
             // If available, read from extra (secondary) background music
             int backgroundExRead = 0;
@@ -215,17 +245,19 @@ namespace MirishitaMusicPlayer.Audio
             }
         }
 
-        private int GetEnabledVoiceCount()
+        private long AbsTimeToSamples(double absTime)
         {
-            if (voiceSampleProviders == null) return 0;
+            return (long)(absTime * WaveFormat.SampleRate);
+        }
 
-            int voicesEnabled = 0;
-            for (int i = 0; i < voiceSampleProviders.Count; i++)
+        private int GetActiveSingers(byte[] muteArray)
+        {
+            int activeSingers = 0;
+            for (int i = 0; i < muteArray.Length; i++)
             {
-                if (voiceSampleProviders[i].Singing) voicesEnabled++;
+                if (muteArray[i] > 0) activeSingers++;
             }
-
-            return Math.Min(voicesEnabled, voiceSampleProviders.Count);
+            return Math.Min(activeSingers, voiceSampleProviders.Count);
         }
     }
 }

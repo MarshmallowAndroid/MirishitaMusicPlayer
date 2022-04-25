@@ -31,9 +31,9 @@ namespace MirishitaMusicPlayer.Audio
             else triggers.Add((0, true));
         }
 
-        public WaveFormat WaveFormat => waveStream.WaveFormat;
-
         public bool Singing { get; private set; } = false;
+
+        public WaveFormat WaveFormat => sampleProvider.WaveFormat;
 
         public void Seek(float seconds)
         {
@@ -41,7 +41,9 @@ namespace MirishitaMusicPlayer.Audio
                 (waveStream.WaveFormat.BitsPerSample / 8 *
                 waveStream.WaveFormat.SampleRate *
                 waveStream.WaveFormat.Channels));
-            currentSample = waveStream.Position / WaveFormat.Channels / (WaveFormat.BitsPerSample / 8);
+            currentSample = waveStream.Position /
+                waveStream.WaveFormat.Channels /
+                (waveStream.WaveFormat.BitsPerSample / 8);
             nextTriggerIndex = 0;
         }
 
