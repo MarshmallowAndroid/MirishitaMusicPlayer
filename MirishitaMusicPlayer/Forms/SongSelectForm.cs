@@ -115,7 +115,7 @@ namespace MirishitaMusicPlayer.Forms
                 //MessageBox.Show("Download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 if (impendingClose)
-                    Close();
+                    Hide();
                 else
                     UpdateList();
 
@@ -163,7 +163,8 @@ namespace MirishitaMusicPlayer.Forms
 
             assetList = new(databaseFile);
 
-            UpdateList();
+            if (jacketsPanel.Controls.Count < 1)
+                UpdateList();
         }
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -265,7 +266,7 @@ namespace MirishitaMusicPlayer.Forms
 
             ResultSongID = songID;
 
-            if (!impendingClose) Close();
+            if (!impendingClose) Hide();
         }
 
         private void LoadingBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
