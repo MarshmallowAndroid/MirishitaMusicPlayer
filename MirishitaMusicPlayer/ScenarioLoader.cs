@@ -52,8 +52,8 @@ namespace MirishitaMusicPlayer
 
             // Figure out where the expression events are: in main scenario or orientation scenario?
             Func<EventScenarioData, bool> expressionPredicate = new(s => s.Type == ScenarioType.Expression);
-            MuteScenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
-            if (MuteScenarios.Count < 1) MuteScenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
+            ExpressionScenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
+            if (ExpressionScenarios.Count < 1) ExpressionScenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
 
             // Figure out where the mute events are: in main scenario or orientation scenario?
             Func<EventScenarioData, bool> mutePredicate = new(s => s.Type == ScenarioType.Mute);
