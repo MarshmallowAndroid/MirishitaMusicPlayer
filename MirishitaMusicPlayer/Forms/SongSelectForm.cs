@@ -1,19 +1,14 @@
-﻿using MirishitaMusicPlayer.Net.Princess;
+﻿using MirishitaMusicPlayer.Forms.Classes;
+using MirishitaMusicPlayer.Net.Downloader;
+using MirishitaMusicPlayer.Net.Princess;
+using MirishitaMusicPlayer.Net.TDAssets;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MessagePack;
-using System.Text.RegularExpressions;
-using MirishitaMusicPlayer.Net.Downloader;
-using MirishitaMusicPlayer.Net.TDAssets;
-using MirishitaMusicPlayer.Forms.Classes;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -31,6 +26,47 @@ namespace MirishitaMusicPlayer.Forms
         }
 
         public string ResultSongID { get; private set; }
+
+        private async void SongSelectForm_Load(object sender, EventArgs e)
+        {
+            DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
+            cacheDirectory.CreateSubdirectory("Jackets");
+            cacheDirectory.CreateSubdirectory("Songs");
+
+            FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
+
+            if (databaseFiles.Length < 1)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Database has not been downloaded. Download?",
+                    "Database not found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    getSongJacketsButton.Enabled = false;
+                    await InitializeNetAssetApi();
+                    await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
+                    MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    getSongJacketsButton.Enabled = true;
+                }
+                else return;
+            }
+
+            databaseFiles = cacheDirectory.GetFiles("*.data");
+
+            Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
+
+            FileStream databaseFile = databaseFiles[^1].OpenRead();
+
+            assetList = new(databaseFile);
+
+            if (jacketsPanel.Controls.Count < 1)
+                UpdateList();
+
+            jacketsPanel.Enabled = true;
+        }
 
         private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -92,120 +128,11 @@ namespace MirishitaMusicPlayer.Forms
                     downloadThread.Start();
                 }
             }
-            else
-            {
-                MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             getSongJacketsButton.Enabled = true;
+            jacketsPanel.Enabled = true;
             Cursor = Cursors.Default;
-        }
-
-        private void DownloadThread_DownloadCompleted(object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-
-            Invoke(() =>
-            {
-                progressBar.Value = 0;
-                //progressBar1.Visible = false;
-
-                //MessageBox.Show("Download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                if (impendingClose)
-                    Hide();
-                else
-                    UpdateList();
-
-                jacketsPanel.Enabled = true;
-            });
-        }
-
-        private void DownloadThread_ProgressChanged(float progress)
-        {
-            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
-        }
-
-        private async void SongSelectForm_Load(object sender, EventArgs e)
-        {
-            DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
-            cacheDirectory.CreateSubdirectory("Jackets");
-            cacheDirectory.CreateSubdirectory("Songs");
-
-            FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
-
-            if (databaseFiles.Length < 1)
-            {
-                DialogResult result = MessageBox.Show(
-                    "Database has not been downloaded. Download?",
-                    "Database not found",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    getSongJacketsButton.Enabled = false;
-                    await InitializeNetAssetApi();
-                    await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
-                    MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    getSongJacketsButton.Enabled = true;
-                }
-                else return;
-            }
-
-            databaseFiles = cacheDirectory.GetFiles("*.data");
-
-            Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
-
-            FileStream databaseFile = databaseFiles[^1].OpenRead();
-
-            assetList = new(databaseFile);
-
-            if (jacketsPanel.Controls.Count < 1)
-                UpdateList();
-        }
-
-        private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            Invoke(() => jacketsPanel.Enabled = false);
-
-            string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
-            AssetStudio.Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
-
-            if (jacketFiles.Length > 0)
-                UnityTextureHelpers.LoadFiles(jacketFiles);
-
-            List<Control> jackets = new();
-
-            int itemNumber = 1;
-            foreach (var item in jacketFiles)
-            {
-                string name = Path.GetFileNameWithoutExtension(item);
-                string songID = name["jacket_".Length..];
-                PictureBox songJacket = new()
-                {
-                    Width = 150,
-                    Height = 150,
-                    BackgroundImage = UnityTextureHelpers.GetBitmap(name),
-                    BackgroundImageLayout = ImageLayout.Zoom,
-                    Cursor = Cursors.Hand,
-                    Tag = songID
-                };
-
-                ToolTip toolTip = new();
-                toolTip.SetToolTip(songJacket, songID);
-
-                songJacket.Click += SongJacket_Click;
-                jackets.Add(songJacket);
-
-                loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
-            }
-
-            AssetStudio.Progress.Default = new Progress<int>();
-
-            e.Result = jackets;
         }
 
         private async void SongJacket_Click(object sender, EventArgs e)
@@ -266,7 +193,52 @@ namespace MirishitaMusicPlayer.Forms
 
             ResultSongID = songID;
 
-            if (!impendingClose) Hide();
+            if (!impendingClose)
+            {
+                impendingClose = false;
+                Hide();
+            }
+        }
+
+        private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Invoke(() => jacketsPanel.Enabled = false);
+
+            string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
+            AssetStudio.Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
+
+            if (jacketFiles.Length > 0)
+                UnityTextureHelpers.LoadFiles(jacketFiles);
+
+            List<Control> jackets = new();
+
+            int itemNumber = 1;
+            foreach (var item in jacketFiles)
+            {
+                string name = Path.GetFileNameWithoutExtension(item);
+                string songID = name["jacket_".Length..];
+                PictureBox songJacket = new()
+                {
+                    Width = 150,
+                    Height = 150,
+                    BackgroundImage = UnityTextureHelpers.GetBitmap(name),
+                    BackgroundImageLayout = ImageLayout.Zoom,
+                    Cursor = Cursors.Hand,
+                    Tag = songID
+                };
+
+                ToolTip toolTip = new();
+                toolTip.SetToolTip(songJacket, songID);
+
+                songJacket.Click += SongJacket_Click;
+                jackets.Add(songJacket);
+
+                loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
+            }
+
+            AssetStudio.Progress.Default = new Progress<int>();
+
+            e.Result = jackets;
         }
 
         private void LoadingBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -280,6 +252,30 @@ namespace MirishitaMusicPlayer.Forms
             jacketsPanel.Enabled = true;
 
             progressBar.Value = 0;
+        }
+
+        private void DownloadThread_ProgressChanged(float progress)
+        {
+            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
+        }
+
+        private void DownloadThread_DownloadCompleted(object sender)
+        {
+            DownloadThread downloadThread = sender as DownloadThread;
+            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
+
+            Invoke(() =>
+            {
+                progressBar.Value = 0;
+
+                if (impendingClose)
+                    Hide();
+                else
+                    UpdateList();
+
+                jacketsPanel.Enabled = true;
+            });
         }
 
         private async Task InitializeNetAssetApi()
