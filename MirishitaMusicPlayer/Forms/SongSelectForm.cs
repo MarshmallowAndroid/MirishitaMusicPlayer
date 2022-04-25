@@ -41,11 +41,12 @@ namespace MirishitaMusicPlayer.Forms
         private async void GetSongJacketsButton_Click(object sender, EventArgs e)
         {
             getSongJacketsButton.Enabled = false;
+            jacketsPanel.Enabled = false;
             Cursor = Cursors.WaitCursor;
 
             List<Asset> filesToDownload = new();
 
-            Regex allFilesRegex = new("jacket_[a-z]{6}.unity3d");
+            Regex allFilesRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
             uint totalBytesToDownload = 0;
 
@@ -76,10 +77,10 @@ namespace MirishitaMusicPlayer.Forms
             if (totalBytesToDownload > 0)
             {
                 DialogResult result = MessageBox.Show(
-                        $"Downloading {(float)totalBytesToDownload / 1000000:f2} MB. Continue?",
-                        $"{filesToDownload.Count} files selected",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
+                    $"Downloading {(float)totalBytesToDownload / 1000000:f2} MB. Continue?",
+                    $"{filesToDownload.Count} files selected",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
@@ -111,17 +112,14 @@ namespace MirishitaMusicPlayer.Forms
                 progressBar.Value = 0;
                 //progressBar1.Visible = false;
 
-                MessageBox.Show("Download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 if (impendingClose)
-                {
                     Close();
-                }
                 else
-                {
                     UpdateList();
-                }
 
+                jacketsPanel.Enabled = true;
             });
         }
 
@@ -170,6 +168,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            Invoke(() => jacketsPanel.Enabled = false);
+
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
             AssetStudio.Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
 
@@ -209,6 +209,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void SongJacket_Click(object sender, EventArgs e)
         {
+            jacketsPanel.Enabled = false;
+
             PictureBox jacket = sender as PictureBox;
 
             string songID = jacket.Tag.ToString();
@@ -254,7 +256,11 @@ namespace MirishitaMusicPlayer.Forms
 
                     impendingClose = true;
                 }
-                else return;
+                else
+                {
+                    jacketsPanel.Enabled = true;
+                    return;
+                }
             }
 
             ResultSongID = songID;
@@ -270,6 +276,7 @@ namespace MirishitaMusicPlayer.Forms
         private void LoadingBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             jacketsPanel.Controls.AddRange((e.Result as List<Control>).ToArray());
+            jacketsPanel.Enabled = true;
 
             progressBar.Value = 0;
         }
@@ -285,7 +292,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private void UpdateList()
         {
-            loadingBackgroundWorker.RunWorkerAsync();
+            if (!DesignMode)
+                loadingBackgroundWorker.RunWorkerAsync();
         }
     }
 }

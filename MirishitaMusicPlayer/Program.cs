@@ -32,6 +32,8 @@ namespace MirishitaMusicPlayer
                 string songID = songSelectForm.ResultSongID ?? "";
                 if (songID == "") return;
 
+                Console.Title = songID;
+
                 string filesPath = "Cache\\Songs";
 
                 AssetsManager assetsManager = new();
@@ -124,6 +126,7 @@ namespace MirishitaMusicPlayer
                                 break;
 
                             case ConsoleKey.S:
+                                outputDevice.Stop();
                                 setup = true;
                                 break;
 
