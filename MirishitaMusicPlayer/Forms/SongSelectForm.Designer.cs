@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.songIDTextBox = new System.Windows.Forms.TextBox();
-            this.getSongsButton = new System.Windows.Forms.Button();
+            this.getSongJacketsButton = new System.Windows.Forms.Button();
             this.bySongIDCheckBox = new System.Windows.Forms.CheckBox();
             this.jacketsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,15 +46,15 @@
             this.songIDTextBox.Size = new System.Drawing.Size(100, 23);
             this.songIDTextBox.TabIndex = 1;
             // 
-            // getSongsButton
+            // getSongJacketsButton
             // 
-            this.getSongsButton.Location = new System.Drawing.Point(12, 12);
-            this.getSongsButton.Name = "getSongsButton";
-            this.getSongsButton.Size = new System.Drawing.Size(127, 23);
-            this.getSongsButton.TabIndex = 2;
-            this.getSongsButton.Text = "Get all songs";
-            this.getSongsButton.UseVisualStyleBackColor = true;
-            this.getSongsButton.Click += new System.EventHandler(this.GetSongsButton_Click);
+            this.getSongJacketsButton.Location = new System.Drawing.Point(12, 12);
+            this.getSongJacketsButton.Name = "getSongJacketsButton";
+            this.getSongJacketsButton.Size = new System.Drawing.Size(127, 23);
+            this.getSongJacketsButton.TabIndex = 2;
+            this.getSongJacketsButton.Text = "Get all song jackets";
+            this.getSongJacketsButton.UseVisualStyleBackColor = true;
+            this.getSongJacketsButton.Click += new System.EventHandler(this.GetSongJacketsButton_Click);
             // 
             // bySongIDCheckBox
             // 
@@ -69,10 +69,13 @@
             // 
             // jacketsPanel
             // 
+            this.jacketsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.jacketsPanel.AutoScroll = true;
             this.jacketsPanel.Location = new System.Drawing.Point(12, 74);
             this.jacketsPanel.Name = "jacketsPanel";
-            this.jacketsPanel.Size = new System.Drawing.Size(776, 369);
+            this.jacketsPanel.Size = new System.Drawing.Size(959, 554);
             this.jacketsPanel.TabIndex = 4;
             // 
             // label1
@@ -86,7 +89,8 @@
             // 
             // updateDatabaseButton
             // 
-            this.updateDatabaseButton.Location = new System.Drawing.Point(676, 10);
+            this.updateDatabaseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.updateDatabaseButton.Location = new System.Drawing.Point(859, 10);
             this.updateDatabaseButton.Name = "updateDatabaseButton";
             this.updateDatabaseButton.Size = new System.Drawing.Size(112, 23);
             this.updateDatabaseButton.TabIndex = 6;
@@ -111,13 +115,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 455);
+            this.ClientSize = new System.Drawing.Size(983, 640);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.updateDatabaseButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.jacketsPanel);
             this.Controls.Add(this.bySongIDCheckBox);
-            this.Controls.Add(this.getSongsButton);
+            this.Controls.Add(this.getSongJacketsButton);
             this.Controls.Add(this.songIDTextBox);
             this.Name = "SongSelectForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -131,7 +135,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox songIDTextBox;
-        private System.Windows.Forms.Button getSongsButton;
+        private System.Windows.Forms.Button getSongJacketsButton;
         private System.Windows.Forms.CheckBox bySongIDCheckBox;
         private System.Windows.Forms.FlowLayoutPanel jacketsPanel;
         private System.Windows.Forms.Label label1;
