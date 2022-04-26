@@ -72,9 +72,9 @@ namespace MirishitaMusicPlayer.Audio
             {
                 volumeTriggers.Add((AbsTimeToSamples(muteScenario.AbsTime), GetActiveSingers(muteScenario.Mute)));
 
-                if (muteScenario.Mute.Length == 6 && backgroundExSampleProvider != null)
+                if (backgroundExSampleProvider != null)
                 {
-                    exTriggers.Add((AbsTimeToSamples(muteScenario.AbsTime), muteScenario.Mute[5] == 1));
+                    exTriggers.Add((AbsTimeToSamples(muteScenario.AbsTime), muteScenario.Mute[^1] == 1));
                 }
             }
 
@@ -114,7 +114,8 @@ namespace MirishitaMusicPlayer.Audio
             currentVolumeSample = 0;
             currentExSample = 0;
             nextVolumeTriggerIndex = 0;
-        }
+            nextExTriggerIndex = 0;
+    }
 
         public void Seek(float seconds)
         {
@@ -146,6 +147,7 @@ namespace MirishitaMusicPlayer.Audio
                 backgroundWaveStream.WaveFormat.Channels /
                 (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
             nextVolumeTriggerIndex = 0;
+            nextExTriggerIndex = 0;
         }
 
         public int Read(float[] buffer, int offset, int count)
