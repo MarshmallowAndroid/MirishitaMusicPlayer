@@ -16,7 +16,7 @@ namespace MirishitaMusicPlayer.Net.TDAssets
 
         public TDAssetsClient(string resourceVersion)
         {
-            baseAddress = $"https://{hostCloudFront}/{resourceVersion}" +
+            baseAddress = $"https://{hostBN765}/{resourceVersion}" +
                 $"/production/2018/Android";
         }
 

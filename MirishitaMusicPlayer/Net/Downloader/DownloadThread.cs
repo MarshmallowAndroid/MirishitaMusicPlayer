@@ -44,20 +44,31 @@ namespace MirishitaMusicPlayer.Net.Downloader
             {
                 if (!fileStatus.Downloading)
                 {
-                    await assets.DownloadAssetAsync(fileStatus.Asset.RemoteName, fileStatus.Asset.Name, directory);
-                    completed++;
-                    ProgressChanged?.Invoke((float)completed / totalCount);
+                    try
+                    {
+                        await assets.DownloadAssetAsync(fileStatus.Asset.RemoteName, fileStatus.Asset.Name, directory);
+                        completed++;
+                        ProgressChanged?.Invoke((float)completed / totalCount);
+                    }
+                    catch (Exception ex)
+                    {
+                        DownloadAborted?.Invoke(ex.Message, this);
+                        return;
+                    }
                 }
             }
 
-            DownloadCompleted?.Invoke(this);
+            if (completed == fileStatuses.Count)
+                DownloadCompleted?.Invoke(this);
         }
 
         public delegate void ProgressChangedEventHandler(float progress);
         public delegate void DownloadCompletedEventHandler(object sender);
+        public delegate void DownloadAbortedEventHandler(string message, object sender);
 
         public event ProgressChangedEventHandler ProgressChanged;
         public event DownloadCompletedEventHandler DownloadCompleted;
+        public event DownloadAbortedEventHandler DownloadAborted;
     }
 
     internal class FileStatus
