@@ -74,7 +74,7 @@ namespace MirishitaMusicPlayer
                     }
                 }
 
-                audioLoader.Setup(order, scenarios.VoiceCount == 6);
+                audioLoader.Setup(order, true);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
