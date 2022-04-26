@@ -16,11 +16,17 @@
 
         public string Str { get; set; }
 
+        public int On { get; set; }
+
+        public int On2 { get; set; }
+
         public int Idol { get; set; }
 
         public int CamNo { get; set; }
 
         public byte[] Mute { get; set; }
+
+        public int CheekLv { get; set; }
 
         public byte EyeClose { get; set; }
 

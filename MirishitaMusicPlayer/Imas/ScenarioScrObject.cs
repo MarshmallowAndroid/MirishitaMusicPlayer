@@ -47,6 +47,14 @@ namespace MirishitaMusicPlayer.Imas
                             eventData.Str = (string)property.Value;
                             break;
 
+                        case "on":
+                            eventData.On = (int)property.Value;
+                            break;
+
+                        case "on2":
+                            eventData.On2 = (int)property.Value;
+                            break;
+
                         case "idol":
                             eventData.Idol = (int)property.Value;
                             break;
@@ -65,6 +73,10 @@ namespace MirishitaMusicPlayer.Imas
                                     eventData.Mute[i] = (byte)mute[i];
                                 }
                             }
+                            break;
+
+                        case "cheeklv":
+                            eventData.CheekLv = (int)property.Value;
                             break;
 
                         case "eyeclose":
