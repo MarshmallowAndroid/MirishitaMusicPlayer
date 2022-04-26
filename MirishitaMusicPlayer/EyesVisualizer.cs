@@ -10,7 +10,7 @@ namespace MirishitaMusicPlayer
         {
             if (scenario.Type == ScenarioType.Expression)
             {
-                if (scenario.Idol == 0)
+                if (scenario.Idol == 0 || scenario.Idol == 100)
                 {
                     StringBuilder eyesStringBuilder = new();
 
