@@ -19,7 +19,7 @@ namespace MirishitaMusicPlayer
             AssetsManager assetsManager,
             string filesPath,
             string songID,
-            Orientation orientation = Orientation.Tate)
+            Orientation orientation = Orientation.Yoko)
         {
             // Load scenarios and notes first
             string scenarioPath = Path.Combine(filesPath, $"scrobj_{songID}.unity3d");
@@ -52,13 +52,13 @@ namespace MirishitaMusicPlayer
 
             // Figure out where the expression events are: in main scenario or orientation scenario?
             Func<EventScenarioData, bool> expressionPredicate = new(s => s.Type == ScenarioType.Expression);
-            ExpressionScenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
-            if (ExpressionScenarios.Count < 1) ExpressionScenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
+            ExpressionScenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
+            if (ExpressionScenarios.Count < 1) ExpressionScenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
 
             // Figure out where the mute events are: in main scenario or orientation scenario?
             Func<EventScenarioData, bool> mutePredicate = new(s => s.Type == ScenarioType.Mute);
-            MuteScenarios = MainScenario.Scenario.Where(mutePredicate).ToList();
-            if (MuteScenarios.Count < 1) MuteScenarios = OrientationScenario.Scenario.Where(mutePredicate).ToList();
+            MuteScenarios = OrientationScenario.Scenario.Where(mutePredicate).ToList();
+            if (MuteScenarios.Count < 1) MuteScenarios = MainScenario.Scenario.Where(mutePredicate).ToList();
 
             VoiceCount = MuteScenarios[0].Mute.Length;
 
