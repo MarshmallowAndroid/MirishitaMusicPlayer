@@ -190,7 +190,7 @@ namespace MirishitaMusicPlayer.Audio
             {
                 while (currentVolumeSample >= volumeTriggers[nextVolumeTriggerIndex].Sample)
                 {
-                    multiplier = (float)1 / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.10f;
+                    multiplier = (float)1 / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.05f;
 
                     if (nextVolumeTriggerIndex < volumeTriggers.Count - 1) nextVolumeTriggerIndex++;
                     else break;
