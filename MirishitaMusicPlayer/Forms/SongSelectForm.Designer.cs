@@ -96,6 +96,7 @@
             this.updateDatabaseButton.TabIndex = 6;
             this.updateDatabaseButton.Text = "Update database";
             this.updateDatabaseButton.UseVisualStyleBackColor = true;
+            this.updateDatabaseButton.Click += new System.EventHandler(this.UpdateDatabaseButton_Click);
             // 
             // progressBar
             // 

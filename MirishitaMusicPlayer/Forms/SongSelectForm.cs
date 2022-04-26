@@ -68,6 +68,21 @@ namespace MirishitaMusicPlayer.Forms
             jacketsPanel.Enabled = true;
         }
 
+        private async void UpdateDatabaseButton_Click(object sender, EventArgs e)
+        {
+            DirectoryInfo cacheDirectory = new("Cache");
+            FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
+
+            foreach (var file in databaseFiles)
+                file.Delete();
+
+            getSongJacketsButton.Enabled = false;
+            await InitializeNetAssetApi();
+            await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
+            MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            getSongJacketsButton.Enabled = true;
+        }
+
         private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             getSongJacketsButton.Text = bySongIDCheckBox.Checked ? "Get song jacket" : "Get all song jackets";
@@ -125,6 +140,7 @@ namespace MirishitaMusicPlayer.Forms
                     DownloadThread downloadThread = new(assetsClient, filesToDownload, "Cache\\Jackets");
                     downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
                     downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
+                    downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
                     downloadThread.Start();
                 }
             }
@@ -180,6 +196,7 @@ namespace MirishitaMusicPlayer.Forms
                     DownloadThread downloadThread = new(assetsClient, requiredAssets, "Cache\\Songs");
                     downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
                     downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
+                    downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
                     downloadThread.Start();
 
                     impendingClose = true;
@@ -198,6 +215,51 @@ namespace MirishitaMusicPlayer.Forms
                 impendingClose = false;
                 Hide();
             }
+        }
+
+        private void DownloadThread_ProgressChanged(float progress)
+        {
+            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
+        }
+
+        private void DownloadThread_DownloadCompleted(object sender)
+        {
+            DownloadThread downloadThread = sender as DownloadThread;
+            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+
+            Invoke(() =>
+            {
+                progressBar.Value = 0;
+
+                if (impendingClose)
+                    Hide();
+                else
+                    UpdateList();
+
+                jacketsPanel.Enabled = true;
+            });
+        }
+
+        private void DownloadThread_DownloadAborted(string message, object sender)
+        {
+            DownloadThread downloadThread = sender as DownloadThread;
+            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+
+            Invoke(() =>
+            {
+                progressBar.Value = 0;
+
+                MessageBox.Show("Unable to download assets. Try updating the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                if (impendingClose)
+                    impendingClose = false;
+
+                jacketsPanel.Enabled = true;
+            });
         }
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -252,30 +314,6 @@ namespace MirishitaMusicPlayer.Forms
             jacketsPanel.Enabled = true;
 
             progressBar.Value = 0;
-        }
-
-        private void DownloadThread_ProgressChanged(float progress)
-        {
-            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
-        }
-
-        private void DownloadThread_DownloadCompleted(object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-
-            Invoke(() =>
-            {
-                progressBar.Value = 0;
-
-                if (impendingClose)
-                    Hide();
-                else
-                    UpdateList();
-
-                jacketsPanel.Enabled = true;
-            });
         }
 
         private async Task InitializeNetAssetApi()
