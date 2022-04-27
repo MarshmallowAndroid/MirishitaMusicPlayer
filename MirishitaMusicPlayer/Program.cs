@@ -47,34 +47,45 @@ namespace MirishitaMusicPlayer
                 List<EventScenarioData> expressionScenarios = scenarios.ExpressionScenarios;
                 List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
 
-                Idol[] order = null;
+                
+                //if (audioLoader.Singers != null)
+                //{
+                //    Console.Clear();
+                //    Console.WriteLine();
+                //    Console.WriteLine("Available singers:");
+                //    for (int i = 0; i < audioLoader.Singers.Length; i++)
+                //    {
+                //        Console.WriteLine(" " + i + " " + audioLoader.Singers[i].IdolFirstName);
+                //    }
+
+                //    Console.WriteLine();
+
+                //    int validVoiceCount = Math.Min(scenarios.VoiceCount, 13);
+
+                //    Console.Write("Select in order (" + validVoiceCount + " max)" + ": ");
+                //    string[] orderInput = Console.ReadLine().Trim().Split(' ');
+                //    int validOrderCount = Math.Min(orderInput.Length, 13);
+                //    order = new Idol[validOrderCount];
+
+                //    for (int i = 0; i < validOrderCount; i++)
+                //    {
+                //        int selectionIndex = int.Parse(orderInput[i]);
+                //        order[i] = audioLoader.Singers[selectionIndex];
+                //    }
+                //}
+
                 if (audioLoader.Singers != null)
                 {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Console.WriteLine("Available singers:");
-                    for (int i = 0; i < audioLoader.Singers.Length; i++)
-                    {
-                        Console.WriteLine(" " + i + " " + audioLoader.Singers[i].IdolFirstName);
-                    }
+                    IdolOrderForm orderForm = new(audioLoader.Singers, scenarios.VoiceCount);
+                    orderForm.ShowDialog();
 
-                    Console.WriteLine();
+                    Idol[] order = orderForm.ResultOrder;
+                    orderForm.Dispose();
 
-                    int validVoiceCount = Math.Min(scenarios.VoiceCount, 13);
+                    if (order == null) continue;
 
-                    Console.Write("Select in order (" + validVoiceCount + " max)" + ": ");
-                    string[] orderInput = Console.ReadLine().Trim().Split(' ');
-                    int validOrderCount = Math.Min(orderInput.Length, 13);
-                    order = new Idol[validOrderCount];
-
-                    for (int i = 0; i < validOrderCount; i++)
-                    {
-                        int selectionIndex = int.Parse(orderInput[i]);
-                        order[i] = audioLoader.Singers[selectionIndex];
-                    }
+                    audioLoader.Setup(orderForm.ResultOrder, true);
                 }
-
-                audioLoader.Setup(order, true);
 
                 SongMixer songMixer = audioLoader.SongMixer;
 
