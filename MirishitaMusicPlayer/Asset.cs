@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer
 {
-    internal class Asset
+    public class Asset
     {
         public Asset(string name, string remoteName, uint size)
         {

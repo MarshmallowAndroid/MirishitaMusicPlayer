@@ -17,7 +17,6 @@ namespace MirishitaMusicPlayer.Forms
     {
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
-        private AssetList assetList;
 
         private bool hideAfterOperation = false;
 
@@ -27,6 +26,8 @@ namespace MirishitaMusicPlayer.Forms
         }
 
         public string ResultSongID { get; private set; }
+
+        public AssetList AssetList { get; private set; }
 
         private async void SongSelectForm_Load(object sender, EventArgs e)
         {
@@ -54,7 +55,7 @@ namespace MirishitaMusicPlayer.Forms
 
             FileStream databaseFile = databaseFiles[^1].OpenRead();
 
-            assetList = new(databaseFile);
+            AssetList = new(databaseFile);
 
             if (jacketsPanel.Controls.Count < 1)
                 UpdateList();
@@ -71,6 +72,11 @@ namespace MirishitaMusicPlayer.Forms
                 file.Delete();
 
             await UpdateDatabaseAsync();
+
+            Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
+            FileStream databaseFile = databaseFiles[^1].OpenRead();
+
+            AssetList = new(databaseFile);
         }
 
         private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -89,7 +95,7 @@ namespace MirishitaMusicPlayer.Forms
 
             uint totalBytesToDownload = 0;
 
-            foreach (var file in assetList.Assets)
+            foreach (var file in AssetList.Assets)
             {
                 string fileName = file.Name;
 
@@ -139,7 +145,7 @@ namespace MirishitaMusicPlayer.Forms
 
             string songID = jacket.Tag.ToString();
 
-            Asset scenarioAsset = assetList.Assets.First(a => a.Name.StartsWith("scrobj_" + songID));
+            Asset scenarioAsset = AssetList.Assets.First(a => a.Name.StartsWith("scrobj_" + songID));
 
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
             {

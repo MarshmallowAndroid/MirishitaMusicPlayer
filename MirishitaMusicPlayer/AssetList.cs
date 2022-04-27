@@ -4,7 +4,7 @@ using System.IO;
 
 namespace MirishitaMusicPlayer
 {
-    internal class AssetList
+    public class AssetList
     {
         public AssetList(Stream assetListStream)
         {

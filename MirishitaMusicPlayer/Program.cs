@@ -46,6 +46,7 @@ namespace MirishitaMusicPlayer
                 List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
 
                 IdolOrderForm idolOrderForm = new(
+                    songSelectForm.AssetList,
                     songID,
                     scenarios.VoiceCount,
                     assetsManager,
@@ -237,6 +238,8 @@ namespace MirishitaMusicPlayer
 
                     Thread.Sleep(1);
                 }
+
+                songMixer.Dispose();
 
                 Console.Clear();
             }

@@ -37,6 +37,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private readonly string songID;
 
+        private readonly string normalFile;
         private readonly string bgmFile;
         private readonly List<string> voiceFiles = new();
         private readonly string extraFile;
@@ -59,6 +60,7 @@ namespace MirishitaMusicPlayer.Forms
         List<EventScenarioData> muteScenarios;
 
         public IdolOrderForm(
+            AssetList assetList,
             string songID,
             int voiceCount,
             AssetsManager assetsManager,
@@ -66,18 +68,11 @@ namespace MirishitaMusicPlayer.Forms
         {
             InitializeComponent();
 
+            this.assetList = assetList;
             this.songID = songID;
             this.voiceCount = voiceCount;
             this.assetsManager = assetsManager;
             this.muteScenarios = muteScenarios;
-
-            DirectoryInfo cacheDirectory = new("Cache");
-            FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
-            Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
-
-            FileStream databaseFile = databaseFiles[^1].OpenRead();
-
-            assetList = new(databaseFile);
 
             Regex normalRegex = new($"song3_{songID}.acb.unity3d");
             Regex bgmRegex = new($"song3_{songID}_bgm.acb.unity3d");
@@ -87,7 +82,9 @@ namespace MirishitaMusicPlayer.Forms
             // Assign matching filenames to their corresponding audio type
             foreach (var asset in assetList.Assets)
             {
-                if (normalRegex.IsMatch(asset.Name) || bgmRegex.IsMatch(asset.Name))
+                if (normalRegex.IsMatch(asset.Name))
+                    normalFile = asset.Name;
+                else if (bgmRegex.IsMatch(asset.Name))
                     bgmFile = asset.Name;
                 if (voiceRegex.IsMatch(asset.Name))
                     voiceFiles.Add(asset.Name);
@@ -95,7 +92,7 @@ namespace MirishitaMusicPlayer.Forms
                     extraFile = asset.Name;
             }
 
-            if (voiceFiles.Count > 0 && !string.IsNullOrEmpty(extraFile))
+            if (voiceFiles.Count == 0 && !string.IsNullOrEmpty(extraFile))
                 hasExtraBgm = true;
 
             singers = new Idol[voiceFiles.Count];
@@ -111,25 +108,28 @@ namespace MirishitaMusicPlayer.Forms
             this.voiceCount = Math.Min(this.voiceCount, voiceFiles.Count);
             if (this.voiceCount == 5 + 1) this.voiceCount = 5;
 
-            //if (voiceFiles.Count == 0)
-            //{
-            //    Height = 166;
-            //}
+            if (voiceCount == 0)
+            {
+                Height = 166;
+            }
 
-            //if (voiceFiles.Count > 0)
-            //{
-            //    fiveIdolPanel.Visible = true;
-            //    Height = 302;
-            //}
+            if (voiceCount > 0)
+            {
+                fiveIdolPanel.Visible = true;
+                Height = 302;
+            }
 
-            //if (voiceFiles.Count > 5)
-            //{
-            //    eightIdolPanel.Visible = true;
-            //    Height = 408;
-            //}
+            if (voiceCount > 6)
+            {
+                eightIdolPanel.Visible = true;
+                Height = 408;
+            }
 
-            //if (voiceFiles.Count > 13)
-            //    Height = 745;
+            if (voiceCount > 13 || voiceFiles.Count > voiceCount)
+            {
+                stashedIdolsPanel.Visible = true;
+                Height = 745;
+            }
 
             if (hasExtraBgm)
                 extraCheckBox.Visible = true;
@@ -139,7 +139,7 @@ namespace MirishitaMusicPlayer.Forms
 
         public SongMixer SongMixer { get; private set; }
 
-        public WaveOutEvent OutputDevice { get; private set; } = new();
+        public WaveOutEvent OutputDevice { get; private set; } = new() { DesiredLatency = 100 };
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
@@ -156,9 +156,11 @@ namespace MirishitaMusicPlayer.Forms
                 checkBox.Dock = DockStyle.Fill;
                 checkBox.FlatAppearance.BorderSize = 0;
                 checkBox.FlatStyle = FlatStyle.Flat;
-                checkBox.Width = 100;
+                checkBox.Font = new System.Drawing.Font(checkBox.Font.FontFamily, 20.0f, FontStyle.Bold);
                 checkBox.Height = 100;
                 checkBox.Tag = i;
+                checkBox.TextAlign = ContentAlignment.MiddleCenter;
+                checkBox.Width = 100;
 
                 checkBox.CheckedChanged += CheckBox_CheckedChanged;
 
@@ -193,6 +195,8 @@ namespace MirishitaMusicPlayer.Forms
             CheckBox checkBox = sender as CheckBox;
             if (checkBox.Checked)
             {
+                checkBox.Text = "SWAP";
+
                 if (sourceCheckBox == null)
                     sourceCheckBox = checkBox;
                 else
@@ -200,13 +204,20 @@ namespace MirishitaMusicPlayer.Forms
                     (checkBox.BackgroundImage, sourceCheckBox.BackgroundImage) = (sourceCheckBox.BackgroundImage, checkBox.BackgroundImage);
 
                     foreach (var idolCheckBox in idolCheckBoxes)
+                    {
                         idolCheckBox.Checked = false;
+                        idolCheckBox.Text = "";
+                    }
 
                     sourceCheckBox = null;
                 }
             }
             else
+            {
+                checkBox.Text = "";
+
                 sourceCheckBox = null;
+            }
         }
 
         private async void StartButton_Click(object sender, EventArgs e)
@@ -224,7 +235,12 @@ namespace MirishitaMusicPlayer.Forms
                         return a.Name == extraFile;
                     }
                     else
-                        return a.Name == bgmFile;
+                    {
+                        if (string.IsNullOrEmpty(bgmFile))
+                            return a.Name == normalFile;
+                        else
+                            return a.Name == bgmFile;
+                    }
                 }));
 
             if (orderLength > 0)
@@ -233,7 +249,7 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     int index = (int)checkBox.Tag;
 
-                    if (index < voiceCount)
+                    if (index < orderLength)
                     {
                         Idol idol = new((string)checkBox.BackgroundImage.Tag);
                         resultOrder[index] = idol;

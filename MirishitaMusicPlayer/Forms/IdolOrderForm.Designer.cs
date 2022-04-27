@@ -52,6 +52,7 @@
             this.fiveIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.fiveIdolPanel.Size = new System.Drawing.Size(887, 173);
             this.fiveIdolPanel.TabIndex = 0;
+            this.fiveIdolPanel.Visible = false;
             // 
             // eightIdolPanel
             // 
@@ -71,6 +72,7 @@
             this.eightIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.eightIdolPanel.Size = new System.Drawing.Size(887, 105);
             this.eightIdolPanel.TabIndex = 0;
+            this.eightIdolPanel.Visible = false;
             // 
             // startButton
             // 
@@ -103,6 +105,7 @@
             this.stashedIdolsPanel.Name = "stashedIdolsPanel";
             this.stashedIdolsPanel.Size = new System.Drawing.Size(887, 294);
             this.stashedIdolsPanel.TabIndex = 3;
+            this.stashedIdolsPanel.Visible = false;
             // 
             // progressBar
             // 
@@ -137,9 +140,9 @@
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
             this.Controls.Add(this.stashedIdolsPanel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "IdolOrderForm";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select order";
             this.Load += new System.EventHandler(this.IdolOrderForm_Load);
