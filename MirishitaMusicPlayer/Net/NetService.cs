@@ -18,6 +18,8 @@ namespace MirishitaMusicPlayer.Net
             httpClient = new HttpClient();
         }
 
+        public static HttpClient HttpClient => httpClient;
+
         public static async Task<string> GetStringAsync(string url)
         {
             return await httpClient.GetStringAsync(url);
@@ -27,7 +29,5 @@ namespace MirishitaMusicPlayer.Net
         {
             return await httpClient.GetStreamAsync(url);
         }
-
-        public static HttpClient HttpClient => httpClient;
     }
 }

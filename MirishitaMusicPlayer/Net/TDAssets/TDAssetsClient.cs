@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer.Net.TDAssets
 {
-    internal class TDAssetsClient
+    public class TDAssetsClient
     {
         private const string hostCloudFront = "d2sf4w9bkv485c.cloudfront.net";
         private const string hostBN765 = "td-assets.bn765.com";

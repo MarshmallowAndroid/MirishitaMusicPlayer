@@ -30,9 +30,11 @@
         {
             this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.startButton = new System.Windows.Forms.Button();
             this.soloCheckBox = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.stashedIdolsPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.extraCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // fiveIdolPanel
@@ -70,47 +72,74 @@
             this.eightIdolPanel.Size = new System.Drawing.Size(887, 105);
             this.eightIdolPanel.TabIndex = 0;
             // 
-            // button1
+            // startButton
             // 
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(770, 560);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(129, 40);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.StartButton_Click);
+            this.startButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.startButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.startButton.Location = new System.Drawing.Point(770, 654);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(129, 40);
+            this.startButton.TabIndex = 1;
+            this.startButton.Text = "Start";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // soloCheckBox
             // 
+            this.soloCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.soloCheckBox.AutoSize = true;
             this.soloCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.soloCheckBox.Location = new System.Drawing.Point(704, 569);
+            this.soloCheckBox.Location = new System.Drawing.Point(704, 663);
             this.soloCheckBox.Name = "soloCheckBox";
             this.soloCheckBox.Size = new System.Drawing.Size(60, 25);
             this.soloCheckBox.TabIndex = 2;
             this.soloCheckBox.Text = "Solo";
             this.soloCheckBox.UseVisualStyleBackColor = true;
             // 
-            // flowLayoutPanel1
+            // stashedIdolsPanel
             // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 354);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(887, 191);
-            this.flowLayoutPanel1.TabIndex = 3;
+            this.stashedIdolsPanel.AutoScroll = true;
+            this.stashedIdolsPanel.Location = new System.Drawing.Point(12, 354);
+            this.stashedIdolsPanel.Name = "stashedIdolsPanel";
+            this.stashedIdolsPanel.Size = new System.Drawing.Size(887, 294);
+            this.stashedIdolsPanel.TabIndex = 3;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.progressBar.Location = new System.Drawing.Point(12, 671);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(267, 23);
+            this.progressBar.TabIndex = 4;
+            // 
+            // extraCheckBox
+            // 
+            this.extraCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.extraCheckBox.AutoSize = true;
+            this.extraCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.extraCheckBox.Location = new System.Drawing.Point(635, 663);
+            this.extraCheckBox.Name = "extraCheckBox";
+            this.extraCheckBox.Size = new System.Drawing.Size(63, 25);
+            this.extraCheckBox.TabIndex = 2;
+            this.extraCheckBox.Text = "Extra";
+            this.extraCheckBox.UseVisualStyleBackColor = true;
+            this.extraCheckBox.Visible = false;
             // 
             // IdolOrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(911, 612);
-            this.Controls.Add(this.flowLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(911, 706);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.extraCheckBox);
             this.Controls.Add(this.soloCheckBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.startButton);
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
+            this.Controls.Add(this.stashedIdolsPanel);
+            this.MaximizeBox = false;
             this.Name = "IdolOrderForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Select order";
             this.Load += new System.EventHandler(this.IdolOrderForm_Load);
@@ -123,8 +152,10 @@
 
         private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.CheckBox soloCheckBox;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel stashedIdolsPanel;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.CheckBox extraCheckBox;
     }
 }

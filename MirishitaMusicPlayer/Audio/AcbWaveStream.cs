@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    internal class AcbWaveStream : WaveStream
+    public class AcbWaveStream : WaveStream
     {
         private AcbReader acbReader;
         private AwbReader awbReader;

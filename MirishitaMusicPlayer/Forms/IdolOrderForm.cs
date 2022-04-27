@@ -1,11 +1,20 @@
-﻿using MirishitaMusicPlayer.Properties;
+﻿using AssetStudio;
+using MirishitaMusicPlayer.Audio;
+using MirishitaMusicPlayer.Imas;
+using MirishitaMusicPlayer.Net.Downloader;
+using MirishitaMusicPlayer.Net.Princess;
+using MirishitaMusicPlayer.Net.TDAssets;
+using MirishitaMusicPlayer.Properties;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,36 +32,130 @@ namespace MirishitaMusicPlayer.Forms
             3, 1, 0, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12
         };
 
+        private TDAssetsClient assetsClient;
+        private readonly AssetList assetList;
+
+        private readonly string songID;
+
+        private readonly string bgmFile;
+        private readonly List<string> voiceFiles = new();
+        private readonly string extraFile;
+
         private readonly Idol[] singers;
-        private readonly int maxVoiceCount;
+        private readonly int voiceCount;
+        private readonly bool hasExtraBgm;
+
         private readonly List<CheckBox> idolCheckBoxes = new();
         private CheckBox sourceCheckBox;
 
-        public IdolOrderForm(Idol[] order, int voiceCount)
+        private Idol[] resultOrder;
+
+        private readonly List<Asset> requiredAssets = new();
+        private readonly AssetsManager assetsManager;
+
+        private bool closeAfterOperation;
+        private bool shouldInitializeSongMixer;
+
+        List<EventScenarioData> muteScenarios;
+
+        public IdolOrderForm(
+            string songID,
+            int voiceCount,
+            AssetsManager assetsManager,
+            List<EventScenarioData> muteScenarios)
         {
             InitializeComponent();
 
-            singers = order;
-            maxVoiceCount = voiceCount;
+            this.songID = songID;
+            this.voiceCount = voiceCount;
+            this.assetsManager = assetsManager;
+            this.muteScenarios = muteScenarios;
+
+            DirectoryInfo cacheDirectory = new("Cache");
+            FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
+            Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
+
+            FileStream databaseFile = databaseFiles[^1].OpenRead();
+
+            assetList = new(databaseFile);
+
+            Regex normalRegex = new($"song3_{songID}.acb.unity3d");
+            Regex bgmRegex = new($"song3_{songID}_bgm.acb.unity3d");
+            Regex voiceRegex = new($"song3_{songID}_([0-9]{{3}})([a-z]{{3}}).acb.unity3d");
+            Regex extraRegex = new($"song3_{songID}_ex.acb.unity3d");
+
+            // Assign matching filenames to their corresponding audio type
+            foreach (var asset in assetList.Assets)
+            {
+                if (normalRegex.IsMatch(asset.Name) || bgmRegex.IsMatch(asset.Name))
+                    bgmFile = asset.Name;
+                if (voiceRegex.IsMatch(asset.Name))
+                    voiceFiles.Add(asset.Name);
+                else if (extraRegex.IsMatch(asset.Name))
+                    extraFile = asset.Name;
+            }
+
+            if (voiceFiles.Count > 0 && !string.IsNullOrEmpty(extraFile))
+                hasExtraBgm = true;
+
+            singers = new Idol[voiceFiles.Count];
+            for (int i = 0; i < voiceFiles.Count; i++)
+            {
+                string fileNameOnly = Path.GetFileNameWithoutExtension(voiceFiles[i]);
+                string idolNameID = fileNameOnly.Substring($"song3_{songID}_".Length, 6);
+                singers[i] = new Idol(idolNameID);
+            }
+
+            Array.Sort(singers, (s1, s2) => s1.IdolNameID.CompareTo(s2.IdolNameID));
+
+            this.voiceCount = Math.Min(this.voiceCount, voiceFiles.Count);
+            if (this.voiceCount == 5 + 1) this.voiceCount = 5;
+
+            //if (voiceFiles.Count == 0)
+            //{
+            //    Height = 166;
+            //}
+
+            //if (voiceFiles.Count > 0)
+            //{
+            //    fiveIdolPanel.Visible = true;
+            //    Height = 302;
+            //}
+
+            //if (voiceFiles.Count > 5)
+            //{
+            //    eightIdolPanel.Visible = true;
+            //    Height = 408;
+            //}
+
+            //if (voiceFiles.Count > 13)
+            //    Height = 745;
+
+            if (hasExtraBgm)
+                extraCheckBox.Visible = true;
         }
 
-        public Idol[] ResultOrder { get; private set; }
+        public bool ExtraBgmEnabled { get; private set; }
+
+        public SongMixer SongMixer { get; private set; }
+
+        public WaveOutEvent OutputDevice { get; private set; } = new();
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
-            if (singers.Length > 5)
-                eightIdolPanel.Visible = true;
-
             for (int i = 0; i < singers.Length; i++)
             {
                 Idol idol = singers[i];
+
                 CheckBox checkBox = new();
                 checkBox.Appearance = Appearance.Button;
                 checkBox.Anchor = AnchorStyles.None;
                 checkBox.BackgroundImageLayout = ImageLayout.Zoom;
                 checkBox.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
                 checkBox.BackgroundImage.Tag = idol.IdolNameID;
-                //checkBox.Dock = DockStyle.Fill;
+                checkBox.Dock = DockStyle.Fill;
+                checkBox.FlatAppearance.BorderSize = 0;
+                checkBox.FlatStyle = FlatStyle.Flat;
                 checkBox.Width = 100;
                 checkBox.Height = 100;
                 checkBox.Tag = i;
@@ -63,12 +166,11 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             int idolPosition = 0;
-            for (int i = 0; i < maxVoiceCount; i++)
+            for (int i = 0; i < voiceCount; i++)
             {
                 CheckBox checkBox = idolCheckBoxes[i];
 
                 int column = positionToIndexTable[(int)checkBox.Tag];
-                //checkBox.Tag = column;
 
                 if (idolPosition < 5)
                     fiveIdolPanel.Controls.Add(checkBox, column, 0);
@@ -78,9 +180,11 @@ namespace MirishitaMusicPlayer.Forms
                 idolPosition++;
             }
 
-            for (int i = maxVoiceCount; i < singers.Length; i++)
+            for (int i = voiceCount; i < singers.Length; i++)
             {
-                flowLayoutPanel1.Controls.Add(idolCheckBoxes[i]);
+                CheckBox checkBox = idolCheckBoxes[i];
+                checkBox.Dock = DockStyle.None;
+                stashedIdolsPanel.Controls.Add(checkBox);
             }
         }
 
@@ -93,23 +197,7 @@ namespace MirishitaMusicPlayer.Forms
                     sourceCheckBox = checkBox;
                 else
                 {
-                    int sourceColumn = fiveIdolPanel.GetColumn(sourceCheckBox);
-                    int targetColumn = fiveIdolPanel.GetColumn(checkBox);
-
-                    fiveIdolPanel.SetColumn(sourceCheckBox, targetColumn);
-                    fiveIdolPanel.SetColumn(checkBox, sourceColumn);
-
-                    int temp = (int)sourceCheckBox.Tag;
-                    sourceCheckBox.Tag = checkBox.Tag;
-                    checkBox.Tag = temp;
-
-                    if (sourceCheckBox.Parent != checkBox.Parent)
-                    {
-                        if (sourceCheckBox.Parent.GetType() == typeof(TableLayoutPanel))
-                            StashSwap(sourceCheckBox, checkBox);
-                        else
-                            StashSwap(checkBox, sourceCheckBox);
-                    }
+                    (checkBox.BackgroundImage, sourceCheckBox.BackgroundImage) = (sourceCheckBox.BackgroundImage, checkBox.BackgroundImage);
 
                     foreach (var idolCheckBox in idolCheckBoxes)
                         idolCheckBox.Checked = false;
@@ -118,53 +206,236 @@ namespace MirishitaMusicPlayer.Forms
                 }
             }
             else
-            {
                 sourceCheckBox = null;
-            }
         }
 
-        private void StartButton_Click(object sender, EventArgs e)
+        private async void StartButton_Click(object sender, EventArgs e)
         {
-            int orderLength = soloCheckBox.Checked ? 1 : maxVoiceCount;
+            int orderLength = soloCheckBox.Checked ? 1 : voiceCount;
 
-            ResultOrder = new Idol[orderLength];
+            resultOrder = new Idol[orderLength];
 
-            if (orderLength > 1)
+            requiredAssets.Add(
+                assetList.Assets.First(a =>
+                {
+                    if (hasExtraBgm && extraCheckBox.Checked)
+                    {
+                        ExtraBgmEnabled = true;
+                        return a.Name == extraFile;
+                    }
+                    else
+                        return a.Name == bgmFile;
+                }));
+
+            if (orderLength > 0)
             {
                 foreach (var checkBox in idolCheckBoxes)
                 {
                     int index = (int)checkBox.Tag;
 
-                    if (index < maxVoiceCount)
-                        ResultOrder[index] = new Idol((string)checkBox.BackgroundImage.Tag);
-                }
-            }
-            else
-                ResultOrder[0] = new Idol((string)idolCheckBoxes.First(c => (int)c.Tag == 0).Image.Tag);
+                    if (index < voiceCount)
+                    {
+                        Idol idol = new((string)checkBox.BackgroundImage.Tag);
+                        resultOrder[index] = idol;
 
-            Close();
+                        requiredAssets.Add(
+                            assetList.Assets.First(
+                                a => a.Name.StartsWith($"song3_{songID}_{idol.IdolAudioNameID}")));
+                    }
+                }
+
+                Asset extraVoiceAsset = assetList.Assets.FirstOrDefault(a => a.Name == extraFile);
+                if (extraVoiceAsset != null) requiredAssets.Add(extraVoiceAsset);
+            }
+
+            await ResolveMissingAssets(requiredAssets);
+
+            if (!closeAfterOperation)
+            {
+                InitializeSongMixer();
+                Close();
+            }
         }
 
-        private void StashSwap(Control toStash, Control toIdol)
+        private void InitializeSongMixer()
         {
-            TableLayoutPanel idolPanel = toStash.Parent as TableLayoutPanel;
-            Panel stashPanel = toIdol.Parent as Panel;
-
-            int stashIndex = stashPanel.Controls.IndexOf(toIdol);
-
-            List<Control> newControlList = new();
-            for (int i = 0; i < stashPanel.Controls.Count; i++)
+            if (shouldInitializeSongMixer)
             {
-                if (i == stashIndex)
-                    newControlList.Add(toStash);
-                else
-                    newControlList.Add(stashPanel.Controls[i]);
-            }
-            stashPanel.Controls.Clear();
-            stashPanel.Controls.AddRange(newControlList.ToArray());
+                List<string> loadPaths = new();
 
-            idolPanel.Controls.Add(toIdol, positionToIndexTable[(int)toIdol.Tag], 0);
-            idolPanel.Controls.Remove(toStash);
+                foreach (var asset in requiredAssets)
+                {
+                    loadPaths.Add(Path.Combine("Cache\\Songs", asset.Name));
+                }
+
+                // Load the files into AssetStudio for reading
+                //
+                // The loaded files put into the assetsFileList array
+                // in the same order they were loaded in (very important)
+                assetsManager.LoadFiles(loadPaths.ToArray());
+
+                // Get the stream of the BGM file and initialize its WaveStream
+                //
+                // BGM is always the first in the array, as per how we loaded them
+                AcbWaveStream bgmAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[0]));
+
+                // Leave these null for now
+                AcbWaveStream[] voiceAcbs = null;
+                AcbWaveStream extraAcb = null;
+
+                // If order is not nu--
+                if (resultOrder != null)
+                {
+                    // Get voice ACB streams and initialize their WaveStreams
+                    voiceAcbs = new AcbWaveStream[resultOrder.Length];
+
+                    for (int i = 0; i < resultOrder.Length; i++)
+                    {
+                        // Voices are after BGM and before extra (if any)
+                        voiceAcbs[i] = new(GetStreamFromAsset(assetsManager.assetsFileList[i + 1]));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(extraFile))
+                {
+                    // Same as for the BGM and voices
+                    //
+                    // Extra ACB is always the last
+                    extraAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[^1]));
+                }
+
+                // We got what we wanted (their MemoryStreams) so no need to keep them loaded
+                assetsManager.Clear();
+
+                // Initialize the song mixer
+                SongMixer = new(muteScenarios, voiceAcbs, bgmAcb, extraAcb);
+
+                // Initialize the output device
+                OutputDevice.Init(SongMixer);
+            }
+        }
+
+        private async Task ResolveMissingAssets(List<Asset> requiredAssets)
+        {
+            List<Asset> missingAssets = new();
+
+            bool complete = true;
+            uint totalBytes = 0;
+            foreach (var asset in requiredAssets)
+            {
+                if (!File.Exists(Path.Combine("Cache\\Songs", asset.Name)))
+                {
+                    complete = false;
+                    totalBytes += asset.Size;
+                    missingAssets.Add(asset);
+                }
+            }
+
+            if (!complete)
+            {
+                DialogResult result = MessageBox.Show(
+                   $"Download missing assets? ({totalBytes / 1000000} MB)",
+                   "Missing assets",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    await DownloadAssetsAsync(requiredAssets, "Cache\\Songs");
+                    closeAfterOperation = true;
+                }
+                else return;
+            }
+            else shouldInitializeSongMixer = true;
+        }
+
+        private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
+        {
+            LoadingMode(true);
+
+            await InitializeAssetClientAsync();
+
+            DownloadThread downloadThread = new(assetsClient, assetsToDownload, directory);
+            downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
+            downloadThread.Start();
+        }
+
+        private void DownloadThread_ProgressChanged(float progress)
+        {
+            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
+        }
+
+        private void DownloadThread_DownloadCompleted(object sender)
+        {
+            DownloadThread downloadThread = sender as DownloadThread;
+            DownloadThreadUnsubscribeAll(downloadThread);
+
+            Invoke(() =>
+            {
+                progressBar.Value = 0;
+
+                shouldInitializeSongMixer = true;
+
+                if (closeAfterOperation)
+                {
+                    InitializeSongMixer();
+                    Close();
+                }
+
+                LoadingMode(false);
+            });
+        }
+
+        private void DownloadThread_DownloadAborted(string message, object sender)
+        {
+            DownloadThread downloadThread = sender as DownloadThread;
+            DownloadThreadUnsubscribeAll(downloadThread);
+
+            Invoke((Delegate)(() =>
+            {
+                progressBar.Value = 0;
+
+                MessageBox.Show("Unable to download assets. Try going back and update the database.\n\n" +
+                    $"({message})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                if (closeAfterOperation)
+                    closeAfterOperation = false;
+
+                LoadingMode(false);
+            }));
+        }
+
+        private void DownloadThreadUnsubscribeAll(DownloadThread downloadThread)
+        {
+            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+        }
+
+        private async Task InitializeAssetClientAsync()
+        {
+            if (assetsClient == null)
+            {
+                ResourceVersionInfo resourceVersionInfo = await PrincessClient.GetLatest();
+                assetsClient = new(resourceVersionInfo.Version.ToString());
+            }
+        }
+
+        private void LoadingMode(bool loading)
+        {
+            Cursor = loading ? Cursors.WaitCursor : Cursors.Default;
+            startButton.Enabled = !loading;
+        }
+
+        private static Stream GetStreamFromAsset(SerializedFile file)
+        {
+            // CRIWARE ACB files are stored as TextAssets in the m_Script field
+
+            TextAsset asset = (TextAsset)file.Objects.FirstOrDefault(o => o.type == ClassIDType.TextAsset);
+
+            return new MemoryStream(asset.m_Script);
         }
     }
 }

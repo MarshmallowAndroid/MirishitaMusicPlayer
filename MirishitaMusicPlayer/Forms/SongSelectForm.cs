@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,8 +15,8 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class SongSelectForm : Form
     {
+        private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
-        private TDAssetsClient assetsClient;
         private AssetList assetList;
 
         private bool hideAfterOperation = false;
@@ -29,6 +30,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void SongSelectForm_Load(object sender, EventArgs e)
         {
+            ResultSongID = "";
+
             DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
             cacheDirectory.CreateSubdirectory("Jackets");
             cacheDirectory.CreateSubdirectory("Songs");
@@ -78,6 +81,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void GetSongJacketsButton_Click(object sender, EventArgs e)
         {
+            LoadingMode(true);
+
             List<Asset> filesToDownload = new();
 
             Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
@@ -123,56 +128,29 @@ namespace MirishitaMusicPlayer.Forms
                 }
             }
             else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            LoadingMode(false);
         }
 
         private async void SongJacket_Click(object sender, EventArgs e)
         {
+            LoadingMode(true);
             PictureBox jacket = sender as PictureBox;
 
             string songID = jacket.Tag.ToString();
 
-            List<Asset> requiredAssets = new();
-            foreach (var asset in assetList.Assets)
+            Asset scenarioAsset = assetList.Assets.First(a => a.Name.StartsWith("scrobj_" + songID));
+
+            if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
             {
-                if (asset.Name.StartsWith("song3_" + songID) ||
-                    asset.Name.StartsWith("scrobj_" + songID))
-                    requiredAssets.Add(asset);
-            }
-
-            List<Asset> missingAssets = new();
-
-            bool complete = true;
-            uint totalBytes = 0;
-            foreach (var asset in requiredAssets)
-            {
-                if (!File.Exists(Path.Combine("Cache\\Songs", asset.Name)))
-                {
-                    complete = false;
-                    totalBytes += asset.Size;
-                    missingAssets.Add(asset);
-                }
-            }
-
-            if (!complete)
-            {
-                DialogResult result = MessageBox.Show(
-                   $"Download missing assets? ({totalBytes / 1000000} MB)",
-                   "Missing assets",
-                   MessageBoxButtons.YesNo,
-                   MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    await DownloadAssetsAsync(requiredAssets, "Cache\\Songs");
-                    hideAfterOperation = true;
-                }
-                else return;
+                await InitializeAssetClientAsync();
+                await _assetsClient.DownloadAssetAsync(scenarioAsset.RemoteName, scenarioAsset.Name, "Cache\\Songs");
             }
 
             ResultSongID = songID;
 
-            if (!hideAfterOperation)
-                Hide();
+            LoadingMode(false);
+            Hide();
         }
 
         private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
@@ -181,7 +159,7 @@ namespace MirishitaMusicPlayer.Forms
 
             await InitializeAssetClientAsync();
 
-            DownloadThread downloadThread = new(assetsClient, assetsToDownload, directory);
+            DownloadThread downloadThread = new(_assetsClient, assetsToDownload, directory);
             downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
             downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
             downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
@@ -220,7 +198,7 @@ namespace MirishitaMusicPlayer.Forms
             {
                 progressBar.Value = 0;
 
-                MessageBox.Show("Unable to download assets. Try updating the database.\n\n" + 
+                MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
                     $"({message})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 if (hideAfterOperation)
@@ -296,17 +274,17 @@ namespace MirishitaMusicPlayer.Forms
         {
             LoadingMode(true);
             await InitializeAssetClientAsync();
-            await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
+            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
             MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            LoadingMode(true);
+            LoadingMode(false);
         }
 
         private async Task InitializeAssetClientAsync()
         {
-            if (assetsClient == null)
+            if (_assetsClient == null)
             {
                 resourceVersionInfo = await PrincessClient.GetLatest();
-                assetsClient = new(resourceVersionInfo.Version.ToString());
+                _assetsClient = new(resourceVersionInfo.Version.ToString());
             }
         }
 

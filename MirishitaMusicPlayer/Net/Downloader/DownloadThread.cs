@@ -1,6 +1,7 @@
 ﻿using MirishitaMusicPlayer.Net.TDAssets;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -52,6 +53,7 @@ namespace MirishitaMusicPlayer.Net.Downloader
                     }
                     catch (Exception ex)
                     {
+                        File.Delete(Path.Combine(directory, fileStatus.Asset.Name));
                         DownloadAborted?.Invoke(ex.Message, this);
                         return;
                     }

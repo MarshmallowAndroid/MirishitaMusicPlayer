@@ -60,10 +60,7 @@ namespace MirishitaMusicPlayer
             MuteScenarios = OrientationScenario.Scenario.Where(mutePredicate).ToList();
             if (MuteScenarios.Count < 1) MuteScenarios = MainScenario.Scenario.Where(mutePredicate).ToList();
 
-            int muteLength = MuteScenarios[0].Mute.Length;
-
-            // Extra BGM
-            if (muteLength == 5 + 1) VoiceCount = muteLength - 1;
+            VoiceCount = MuteScenarios[0].Mute.Length;
 
             assetsManager.Clear();
         }

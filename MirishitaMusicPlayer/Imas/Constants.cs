@@ -1,6 +1,6 @@
 ﻿namespace MirishitaMusicPlayer.Imas
 {
-    internal enum ScenarioType : int
+    public enum ScenarioType : int
     {
         ShowLyrics = 11,
         HideLyrics = 12,

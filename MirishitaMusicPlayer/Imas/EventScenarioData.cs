@@ -1,6 +1,6 @@
 ﻿namespace MirishitaMusicPlayer.Imas
 {
-    internal class EventScenarioData
+    public class EventScenarioData
     {
         public double AbsTime { get; set; }
 

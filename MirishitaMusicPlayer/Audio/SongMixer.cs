@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    internal class SongMixer : ISampleProvider, IDisposable
+    public class SongMixer : ISampleProvider, IDisposable
     {
         private readonly AcbWaveStream backgroundWaveStream;
         private readonly AcbWaveStream backgroundExWaveStream;
@@ -60,7 +60,7 @@ namespace MirishitaMusicPlayer.Audio
                             voiceSampleProviders.Add(new VoiceTrack(voiceAcb, muteScenarios, voiceIndex++));
                     }
                 }
-                else
+                else if (voiceAcbs.Length == 1)
                 {
                     if (voiceAcbs[0] != null)
                         voiceSampleProviders.Add(new VoiceTrack(voiceAcbs[0], muteScenarios, -1));

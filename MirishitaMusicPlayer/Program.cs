@@ -2,6 +2,7 @@
 using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Forms;
 using MirishitaMusicPlayer.Imas;
+using MirishitaMusicPlayer.Net.TDAssets;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace MirishitaMusicPlayer
             bool quit = false;
             bool setup = false;
 
+            AssetsManager assetsManager = new();
+
             SongSelectForm songSelectForm = new();
 
             while (!quit)
@@ -37,57 +40,24 @@ namespace MirishitaMusicPlayer
 
                 string filesPath = "Cache\\Songs";
 
-                AssetsManager assetsManager = new();
-
                 ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
-                AudioLoader audioLoader = new(assetsManager, scenarios.MuteScenarios, filesPath, songID);
-
                 ScenarioScrObject mainScenario = scenarios.MainScenario;
-
                 List<EventScenarioData> expressionScenarios = scenarios.ExpressionScenarios;
                 List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
 
-                
-                //if (audioLoader.Singers != null)
-                //{
-                //    Console.Clear();
-                //    Console.WriteLine();
-                //    Console.WriteLine("Available singers:");
-                //    for (int i = 0; i < audioLoader.Singers.Length; i++)
-                //    {
-                //        Console.WriteLine(" " + i + " " + audioLoader.Singers[i].IdolFirstName);
-                //    }
+                IdolOrderForm idolOrderForm = new(
+                    songID,
+                    scenarios.VoiceCount,
+                    assetsManager,
+                    scenarios.MuteScenarios);
+                idolOrderForm.ShowDialog();
 
-                //    Console.WriteLine();
+                SongMixer songMixer = idolOrderForm.SongMixer;
+                WaveOutEvent outputDevice = idolOrderForm.OutputDevice;
 
-                //    int validVoiceCount = Math.Min(scenarios.VoiceCount, 13);
+                if (songMixer == null) continue;
 
-                //    Console.Write("Select in order (" + validVoiceCount + " max)" + ": ");
-                //    string[] orderInput = Console.ReadLine().Trim().Split(' ');
-                //    int validOrderCount = Math.Min(orderInput.Length, 13);
-                //    order = new Idol[validOrderCount];
-
-                //    for (int i = 0; i < validOrderCount; i++)
-                //    {
-                //        int selectionIndex = int.Parse(orderInput[i]);
-                //        order[i] = audioLoader.Singers[selectionIndex];
-                //    }
-                //}
-
-                if (audioLoader.Singers != null)
-                {
-                    IdolOrderForm orderForm = new(audioLoader.Singers, scenarios.VoiceCount);
-                    orderForm.ShowDialog();
-
-                    Idol[] order = orderForm.ResultOrder;
-                    orderForm.Dispose();
-
-                    if (order == null) continue;
-
-                    audioLoader.Setup(orderForm.ResultOrder, true);
-                }
-
-                SongMixer songMixer = audioLoader.SongMixer;
+                idolOrderForm.Dispose();
 
                 Console.WriteLine();
                 Console.Write("Press any key to play...");
@@ -107,7 +77,6 @@ namespace MirishitaMusicPlayer
                 int expressionScenarioIndex = 0;
                 int muteIndex = 0;
 
-                WaveOutEvent outputDevice = audioLoader.OutputDevice;
                 outputDevice.Play();
 
                 while (!songMixer.HasEnded && !quit)
@@ -121,13 +90,14 @@ namespace MirishitaMusicPlayer
                                 songMixer.MuteVoices = !songMixer.MuteVoices;
                                 break;
 
-                            case ConsoleKey.B:
-                                songMixer.MuteBackground = !songMixer.MuteBackground;
-                                break;
-
                             case ConsoleKey.Q:
                                 outputDevice.Stop();
+                                outputDevice.Dispose();
                                 quit = true;
+                                break;
+
+                            case ConsoleKey.B:
+                                songMixer.MuteBackground = !songMixer.MuteBackground;
                                 break;
 
                             case ConsoleKey.R:
@@ -139,6 +109,7 @@ namespace MirishitaMusicPlayer
 
                             case ConsoleKey.S:
                                 outputDevice.Stop();
+                                outputDevice.Dispose();
                                 setup = true;
                                 break;
 
