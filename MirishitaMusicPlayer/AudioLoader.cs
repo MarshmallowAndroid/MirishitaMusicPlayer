@@ -87,7 +87,7 @@ namespace MirishitaMusicPlayer
             {
                 for (int i = 0; i < order.Length; i++)
                     // Identify each voice based on the idol's internal ID (like 001har for Haruka)
-                    loadPaths.Add(voicePaths.Where(p => p.Contains(order[i].IdolNameID)).FirstOrDefault());
+                    loadPaths.Add(voicePaths.Where(p => p.Contains(order[i].IdolAudioNameID)).FirstOrDefault());
             }
 
             // If the extra path is not empty and extra is enabled, add the extra track to the load path
