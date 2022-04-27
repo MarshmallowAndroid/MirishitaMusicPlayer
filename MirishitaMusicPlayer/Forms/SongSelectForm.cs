@@ -18,7 +18,7 @@ namespace MirishitaMusicPlayer.Forms
         private TDAssetsClient assetsClient;
         private AssetList assetList;
 
-        private bool impendingClose = false;
+        private bool hideAfterOperation = false;
 
         public SongSelectForm()
         {
@@ -34,7 +34,6 @@ namespace MirishitaMusicPlayer.Forms
             cacheDirectory.CreateSubdirectory("Songs");
 
             FileInfo[] databaseFiles = cacheDirectory.GetFiles("*.data");
-
             if (databaseFiles.Length < 1)
             {
                 DialogResult result = MessageBox.Show(
@@ -44,18 +43,10 @@ namespace MirishitaMusicPlayer.Forms
                     MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
-                {
-                    getSongJacketsButton.Enabled = false;
-                    await InitializeNetAssetApi();
-                    await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
-                    MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    getSongJacketsButton.Enabled = true;
-                }
+                    await UpdateDatabaseAsync();
                 else return;
             }
-
             databaseFiles = cacheDirectory.GetFiles("*.data");
-
             Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
 
             FileStream databaseFile = databaseFiles[^1].OpenRead();
@@ -65,7 +56,7 @@ namespace MirishitaMusicPlayer.Forms
             if (jacketsPanel.Controls.Count < 1)
                 UpdateList();
 
-            jacketsPanel.Enabled = true;
+            LoadingMode(false);
         }
 
         private async void UpdateDatabaseButton_Click(object sender, EventArgs e)
@@ -76,11 +67,7 @@ namespace MirishitaMusicPlayer.Forms
             foreach (var file in databaseFiles)
                 file.Delete();
 
-            getSongJacketsButton.Enabled = false;
-            await InitializeNetAssetApi();
-            await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
-            MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            getSongJacketsButton.Enabled = true;
+            await UpdateDatabaseAsync();
         }
 
         private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -91,13 +78,9 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void GetSongJacketsButton_Click(object sender, EventArgs e)
         {
-            getSongJacketsButton.Enabled = false;
-            jacketsPanel.Enabled = false;
-            Cursor = Cursors.WaitCursor;
-
             List<Asset> filesToDownload = new();
 
-            Regex allFilesRegex = new("jacket_[0-9a-z]{6}.unity3d");
+            Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
             uint totalBytesToDownload = 0;
 
@@ -117,7 +100,7 @@ namespace MirishitaMusicPlayer.Forms
                 }
                 else
                 {
-                    if (allFilesRegex.IsMatch(fileName))
+                    if (allJacketsRegex.IsMatch(fileName))
                     {
                         filesToDownload.Add(file);
                         totalBytesToDownload += file.Size;
@@ -135,26 +118,15 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    await InitializeNetAssetApi();
-
-                    DownloadThread downloadThread = new(assetsClient, filesToDownload, "Cache\\Jackets");
-                    downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
-                    downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
-                    downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
-                    downloadThread.Start();
+                    await InitializeAssetClientAsync();
+                    await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
                 }
             }
             else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            getSongJacketsButton.Enabled = true;
-            jacketsPanel.Enabled = true;
-            Cursor = Cursors.Default;
         }
 
         private async void SongJacket_Click(object sender, EventArgs e)
         {
-            jacketsPanel.Enabled = false;
-
             PictureBox jacket = sender as PictureBox;
 
             string songID = jacket.Tag.ToString();
@@ -191,30 +163,29 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    await InitializeNetAssetApi();
-
-                    DownloadThread downloadThread = new(assetsClient, requiredAssets, "Cache\\Songs");
-                    downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
-                    downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
-                    downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
-                    downloadThread.Start();
-
-                    impendingClose = true;
+                    await DownloadAssetsAsync(requiredAssets, "Cache\\Songs");
+                    hideAfterOperation = true;
                 }
-                else
-                {
-                    jacketsPanel.Enabled = true;
-                    return;
-                }
+                else return;
             }
 
             ResultSongID = songID;
 
-            if (!impendingClose)
-            {
-                impendingClose = false;
+            if (!hideAfterOperation)
                 Hide();
-            }
+        }
+
+        private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
+        {
+            LoadingMode(true);
+
+            await InitializeAssetClientAsync();
+
+            DownloadThread downloadThread = new(assetsClient, assetsToDownload, directory);
+            downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
+            downloadThread.Start();
         }
 
         private void DownloadThread_ProgressChanged(float progress)
@@ -225,46 +196,50 @@ namespace MirishitaMusicPlayer.Forms
         private void DownloadThread_DownloadCompleted(object sender)
         {
             DownloadThread downloadThread = sender as DownloadThread;
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+            DownloadThreadUnsubscribeAll(downloadThread);
 
             Invoke(() =>
             {
                 progressBar.Value = 0;
 
-                if (impendingClose)
+                if (hideAfterOperation)
                     Hide();
                 else
                     UpdateList();
 
-                jacketsPanel.Enabled = true;
+                LoadingMode(false);
             });
         }
 
         private void DownloadThread_DownloadAborted(string message, object sender)
         {
             DownloadThread downloadThread = sender as DownloadThread;
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+            DownloadThreadUnsubscribeAll(downloadThread);
 
             Invoke(() =>
             {
                 progressBar.Value = 0;
 
-                MessageBox.Show("Unable to download assets. Try updating the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to download assets. Try updating the database.\n\n" + 
+                    $"({message})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                if (impendingClose)
-                    impendingClose = false;
+                if (hideAfterOperation)
+                    hideAfterOperation = false;
 
-                jacketsPanel.Enabled = true;
+                LoadingMode(false);
             });
+        }
+
+        private void DownloadThreadUnsubscribeAll(DownloadThread downloadThread)
+        {
+            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
+            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
+            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
         }
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Invoke(() => jacketsPanel.Enabled = false);
+            Invoke(() => LoadingMode(true));
 
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
             AssetStudio.Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
@@ -311,12 +286,22 @@ namespace MirishitaMusicPlayer.Forms
         private void LoadingBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             jacketsPanel.Controls.AddRange((e.Result as List<Control>).ToArray());
-            jacketsPanel.Enabled = true;
 
             progressBar.Value = 0;
+
+            LoadingMode(false);
         }
 
-        private async Task InitializeNetAssetApi()
+        private async Task UpdateDatabaseAsync()
+        {
+            LoadingMode(true);
+            await InitializeAssetClientAsync();
+            await assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
+            MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            LoadingMode(true);
+        }
+
+        private async Task InitializeAssetClientAsync()
         {
             if (assetsClient == null)
             {
@@ -329,6 +314,13 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (!DesignMode)
                 loadingBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void LoadingMode(bool loading)
+        {
+            Cursor = loading ? Cursors.WaitCursor : Cursors.Default;
+            getSongJacketsButton.Enabled = !loading;
+            jacketsPanel.Enabled = !loading;
         }
     }
 }
