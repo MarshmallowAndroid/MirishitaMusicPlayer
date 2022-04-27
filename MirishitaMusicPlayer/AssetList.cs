@@ -6,9 +6,9 @@ namespace MirishitaMusicPlayer
 {
     internal class AssetList
     {
-        public AssetList(Stream assetStream)
+        public AssetList(Stream assetListStream)
         {
-            var fileDictionary = (MessagePackSerializer.Deserialize<object>(assetStream) as object[])[0] as Dictionary<object, object>;
+            var fileDictionary = (MessagePackSerializer.Deserialize<object>(assetListStream) as object[])[0] as Dictionary<object, object>;
 
             Assets = new Asset[fileDictionary.Count];
 
@@ -26,6 +26,8 @@ namespace MirishitaMusicPlayer
 
                 Assets[index++] = new(fileName, assetInfo[1].ToString(), fileSize);
             }
+
+            assetListStream.Dispose();
         }
 
         public Asset[] Assets { get; }
