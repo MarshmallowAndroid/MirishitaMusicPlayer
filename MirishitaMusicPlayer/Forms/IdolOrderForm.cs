@@ -242,6 +242,7 @@ namespace MirishitaMusicPlayer.Forms
 
             resultOrder = new Idol[orderLength];
 
+            requiredAssets.Clear();
             requiredAssets.Add(
                 assetList.Assets.First(a =>
                 {
@@ -361,6 +362,8 @@ namespace MirishitaMusicPlayer.Forms
                     missingAssets.Add(asset);
                 }
             }
+
+            shouldInitializeSongMixer = complete;
 
             if (!complete)
             {
