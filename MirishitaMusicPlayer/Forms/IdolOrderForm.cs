@@ -368,7 +368,7 @@ namespace MirishitaMusicPlayer.Forms
             if (!complete)
             {
                 DialogResult result = MessageBox.Show(
-                   $"Download missing assets? ({totalBytes / 1000000} MB)",
+                   $"Download missing assets? ({(float)totalBytes / 1000000:f2} MB)",
                    "Missing assets",
                    MessageBoxButtons.YesNo,
                    MessageBoxIcon.Question);
