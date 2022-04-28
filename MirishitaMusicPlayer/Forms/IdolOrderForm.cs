@@ -1,7 +1,6 @@
 ﻿using AssetStudio;
 using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Imas;
-using MirishitaMusicPlayer.Net.Downloader;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
 using MirishitaMusicPlayer.Properties;
@@ -33,9 +32,11 @@ namespace MirishitaMusicPlayer.Forms
         };
 
         private TDAssetsClient assetsClient;
-        private readonly AssetList assetList;
 
         private readonly string songID;
+
+        private readonly AssetList assetList;
+        private readonly List<EventScenarioData> muteScenarios;
 
         private readonly string normalFile;
         private readonly string bgmFile;
@@ -54,10 +55,7 @@ namespace MirishitaMusicPlayer.Forms
         private readonly List<Asset> requiredAssets = new();
         private readonly AssetsManager assetsManager;
 
-        private bool closeAfterOperation;
         private bool shouldInitializeSongMixer;
-
-        List<EventScenarioData> muteScenarios;
 
         public IdolOrderForm(
             AssetList assetList,
@@ -84,11 +82,11 @@ namespace MirishitaMusicPlayer.Forms
             {
                 if (normalRegex.IsMatch(asset.Name))
                     normalFile = asset.Name;
-                else if (bgmRegex.IsMatch(asset.Name))
+                if (bgmRegex.IsMatch(asset.Name))
                     bgmFile = asset.Name;
                 if (voiceRegex.IsMatch(asset.Name))
                     voiceFiles.Add(asset.Name);
-                else if (extraRegex.IsMatch(asset.Name))
+                if (extraRegex.IsMatch(asset.Name))
                     extraFile = asset.Name;
             }
 
@@ -131,6 +129,9 @@ namespace MirishitaMusicPlayer.Forms
                 Height = 745;
             }
 
+            if (voiceCount > 0)
+                soloCheckBox.Visible = true;
+
             if (hasExtraBgm)
                 extraCheckBox.Visible = true;
         }
@@ -140,6 +141,14 @@ namespace MirishitaMusicPlayer.Forms
         public SongMixer SongMixer { get; private set; }
 
         public WaveOutEvent OutputDevice { get; private set; } = new() { DesiredLatency = 100 };
+
+        public void ProcessSong()
+        {
+            if (voiceCount > 0)
+                ShowDialog();
+            else
+                Task.Run(() => InitializeAssetsAsync()).Wait();
+        }
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
@@ -222,6 +231,13 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void StartButton_Click(object sender, EventArgs e)
         {
+            await InitializeAssetsAsync();
+        }
+
+        private async Task InitializeAssetsAsync()
+        {
+            LoadingMode(true);
+
             int orderLength = soloCheckBox.Checked ? 1 : voiceCount;
 
             resultOrder = new Idol[orderLength];
@@ -264,74 +280,71 @@ namespace MirishitaMusicPlayer.Forms
                 if (extraVoiceAsset != null) requiredAssets.Add(extraVoiceAsset);
             }
 
-            await ResolveMissingAssets(requiredAssets);
-
-            if (!closeAfterOperation)
+            if (await ResolveMissingAssets(requiredAssets))
             {
                 InitializeSongMixer();
                 Close();
             }
+
+            LoadingMode(false);
         }
 
         private void InitializeSongMixer()
         {
-            if (shouldInitializeSongMixer)
+            List<string> loadPaths = new();
+
+            foreach (var asset in requiredAssets)
             {
-                List<string> loadPaths = new();
-
-                foreach (var asset in requiredAssets)
-                {
-                    loadPaths.Add(Path.Combine("Cache\\Songs", asset.Name));
-                }
-
-                // Load the files into AssetStudio for reading
-                //
-                // The loaded files put into the assetsFileList array
-                // in the same order they were loaded in (very important)
-                assetsManager.LoadFiles(loadPaths.ToArray());
-
-                // Get the stream of the BGM file and initialize its WaveStream
-                //
-                // BGM is always the first in the array, as per how we loaded them
-                AcbWaveStream bgmAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[0]));
-
-                // Leave these null for now
-                AcbWaveStream[] voiceAcbs = null;
-                AcbWaveStream extraAcb = null;
-
-                // If order is not nu--
-                if (resultOrder != null)
-                {
-                    // Get voice ACB streams and initialize their WaveStreams
-                    voiceAcbs = new AcbWaveStream[resultOrder.Length];
-
-                    for (int i = 0; i < resultOrder.Length; i++)
-                    {
-                        // Voices are after BGM and before extra (if any)
-                        voiceAcbs[i] = new(GetStreamFromAsset(assetsManager.assetsFileList[i + 1]));
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(extraFile))
-                {
-                    // Same as for the BGM and voices
-                    //
-                    // Extra ACB is always the last
-                    extraAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[^1]));
-                }
-
-                // We got what we wanted (their MemoryStreams) so no need to keep them loaded
-                assetsManager.Clear();
-
-                // Initialize the song mixer
-                SongMixer = new(muteScenarios, voiceAcbs, bgmAcb, extraAcb);
-
-                // Initialize the output device
-                OutputDevice.Init(SongMixer);
+                loadPaths.Add(Path.Combine("Cache\\Songs", asset.Name));
             }
+
+            // Load the files into AssetStudio for reading
+            //
+            // The loaded files put into the assetsFileList array
+            // in the same order they were loaded in (very important)
+            assetsManager.LoadFiles(loadPaths.ToArray());
+
+            // Get the stream of the BGM file and initialize its WaveStream
+            //
+            // BGM is always the first in the array, as per how we loaded them
+            AcbWaveStream bgmAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[0]));
+
+            // Leave these null for now
+            AcbWaveStream[] voiceAcbs = null;
+            AcbWaveStream extraAcb = null;
+
+            // If order is not nu--
+            if (resultOrder != null)
+            {
+                // Get voice ACB streams and initialize their WaveStreams
+                voiceAcbs = new AcbWaveStream[resultOrder.Length];
+
+                for (int i = 0; i < resultOrder.Length; i++)
+                {
+                    // Voices are after BGM and before extra (if any)
+                    voiceAcbs[i] = new(GetStreamFromAsset(assetsManager.assetsFileList[i + 1]));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(extraFile))
+            {
+                // Same as for the BGM and voices
+                //
+                // Extra ACB is always the last
+                extraAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[^1]));
+            }
+
+            // We got what we wanted (their MemoryStreams) so no need to keep them loaded
+            assetsManager.Clear();
+
+            // Initialize the song mixer
+            SongMixer = new(muteScenarios, voiceAcbs, bgmAcb, extraAcb);
+
+            // Initialize the output device
+            OutputDevice.Init(SongMixer);
         }
 
-        private async Task ResolveMissingAssets(List<Asset> requiredAssets)
+        private async Task<bool> ResolveMissingAssets(List<Asset> requiredAssets)
         {
             List<Asset> missingAssets = new();
 
@@ -339,7 +352,9 @@ namespace MirishitaMusicPlayer.Forms
             uint totalBytes = 0;
             foreach (var asset in requiredAssets)
             {
-                if (!File.Exists(Path.Combine("Cache\\Songs", asset.Name)))
+                string assetFile = Path.Combine("Cache\\Songs", asset.Name);
+                if (!File.Exists(assetFile) ||
+                    (File.Exists(assetFile) && new FileInfo(assetFile).Length != asset.Size))
                 {
                     complete = false;
                     totalBytes += asset.Size;
@@ -357,12 +372,12 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    await DownloadAssetsAsync(requiredAssets, "Cache\\Songs");
-                    closeAfterOperation = true;
+                    await DownloadAssetsAsync(missingAssets, "Cache\\Songs");
                 }
-                else return;
+                else return false;
             }
-            else shouldInitializeSongMixer = true;
+
+            return shouldInitializeSongMixer;
         }
 
         private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
@@ -371,63 +386,27 @@ namespace MirishitaMusicPlayer.Forms
 
             await InitializeAssetClientAsync();
 
-            DownloadThread downloadThread = new(assetsClient, assetsToDownload, directory);
-            downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
-            downloadThread.Start();
-        }
-
-        private void DownloadThread_ProgressChanged(float progress)
-        {
-            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
-        }
-
-        private void DownloadThread_DownloadCompleted(object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            DownloadThreadUnsubscribeAll(downloadThread);
-
-            Invoke(() =>
+            int completed = 0;
+            try
             {
-                progressBar.Value = 0;
-
-                shouldInitializeSongMixer = true;
-
-                if (closeAfterOperation)
+                foreach (var asset in assetsToDownload)
                 {
-                    InitializeSongMixer();
-                    Close();
+                    await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
+                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
+                    completed++;
                 }
 
-                LoadingMode(false);
-            });
-        }
-
-        private void DownloadThread_DownloadAborted(string message, object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            DownloadThreadUnsubscribeAll(downloadThread);
-
-            Invoke((Delegate)(() =>
+                shouldInitializeSongMixer = true;
+            }
+            catch (Exception e)
             {
                 progressBar.Value = 0;
 
                 MessageBox.Show("Unable to download assets. Try going back and update the database.\n\n" +
-                    $"({message})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                if (closeAfterOperation)
-                    closeAfterOperation = false;
-
-                LoadingMode(false);
-            }));
-        }
-
-        private void DownloadThreadUnsubscribeAll(DownloadThread downloadThread)
-        {
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+                shouldInitializeSongMixer = false;
+            }
         }
 
         private async Task InitializeAssetClientAsync()

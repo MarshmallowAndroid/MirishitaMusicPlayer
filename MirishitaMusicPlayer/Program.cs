@@ -51,7 +51,7 @@ namespace MirishitaMusicPlayer
                     scenarios.VoiceCount,
                     assetsManager,
                     scenarios.MuteScenarios);
-                idolOrderForm.ShowDialog();
+                idolOrderForm.ProcessSong();
 
                 SongMixer songMixer = idolOrderForm.SongMixer;
                 WaveOutEvent outputDevice = idolOrderForm.OutputDevice;

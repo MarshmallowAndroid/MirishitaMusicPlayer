@@ -1,5 +1,4 @@
 ﻿using MirishitaMusicPlayer.Forms.Classes;
-using MirishitaMusicPlayer.Net.Downloader;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
 using System;
@@ -17,8 +16,6 @@ namespace MirishitaMusicPlayer.Forms
     {
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
-
-        private bool hideAfterOperation = false;
 
         public SongSelectForm()
         {
@@ -72,6 +69,8 @@ namespace MirishitaMusicPlayer.Forms
                 file.Delete();
 
             await UpdateDatabaseAsync();
+
+            databaseFiles = cacheDirectory.GetFiles("*.data");
 
             Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
             FileStream databaseFile = databaseFiles[^1].OpenRead();
@@ -131,6 +130,7 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     await InitializeAssetClientAsync();
                     await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
+
                 }
             }
             else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -165,60 +165,23 @@ namespace MirishitaMusicPlayer.Forms
 
             await InitializeAssetClientAsync();
 
-            DownloadThread downloadThread = new(_assetsClient, assetsToDownload, directory);
-            downloadThread.ProgressChanged += DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted += DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted += DownloadThread_DownloadAborted;
-            downloadThread.Start();
-        }
-
-        private void DownloadThread_ProgressChanged(float progress)
-        {
-            Invoke(() => progressBar.Value = (int)((float)progress * progressBar.Maximum));
-        }
-
-        private void DownloadThread_DownloadCompleted(object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            DownloadThreadUnsubscribeAll(downloadThread);
-
-            Invoke(() =>
+            int completed = 0;
+            try
             {
-                progressBar.Value = 0;
-
-                if (hideAfterOperation)
-                    Hide();
-                else
-                    UpdateList();
-
-                LoadingMode(false);
-            });
-        }
-
-        private void DownloadThread_DownloadAborted(string message, object sender)
-        {
-            DownloadThread downloadThread = sender as DownloadThread;
-            DownloadThreadUnsubscribeAll(downloadThread);
-
-            Invoke(() =>
+                foreach (var asset in assetsToDownload)
+                {
+                    await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
+                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
+                    completed++;
+                }
+            }
+            catch (Exception e)
             {
                 progressBar.Value = 0;
 
                 MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
-                    $"({message})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                if (hideAfterOperation)
-                    hideAfterOperation = false;
-
-                LoadingMode(false);
-            });
-        }
-
-        private void DownloadThreadUnsubscribeAll(DownloadThread downloadThread)
-        {
-            downloadThread.ProgressChanged -= DownloadThread_ProgressChanged;
-            downloadThread.DownloadCompleted -= DownloadThread_DownloadCompleted;
-            downloadThread.DownloadAborted -= DownloadThread_DownloadAborted;
+                    $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
