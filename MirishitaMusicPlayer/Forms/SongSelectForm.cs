@@ -259,8 +259,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void UpdateList()
         {
-            if (!DesignMode)
-                loadingBackgroundWorker.RunWorkerAsync();
+            loadingBackgroundWorker.RunWorkerAsync();
         }
 
         private void LoadingMode(bool loading)

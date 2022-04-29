@@ -26,8 +26,9 @@ namespace MirishitaMusicPlayer
             bool setup = false;
 
             AssetsManager assetsManager = new();
-
             SongSelectForm songSelectForm = new();
+
+            new VisualizerForm().ShowDialog();
 
             while (!quit)
             {
