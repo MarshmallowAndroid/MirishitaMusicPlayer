@@ -73,9 +73,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_0 {
+        internal static System.Drawing.Bitmap close_0 {
             get {
-                object obj = ResourceManager.GetObject("closed_0", resourceCulture);
+                object obj = ResourceManager.GetObject("close_0", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_1 {
+        internal static System.Drawing.Bitmap close_1 {
             get {
-                object obj = ResourceManager.GetObject("closed_1", resourceCulture);
+                object obj = ResourceManager.GetObject("close_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_10 {
+        internal static System.Drawing.Bitmap close_10 {
             get {
-                object obj = ResourceManager.GetObject("closed_10", resourceCulture);
+                object obj = ResourceManager.GetObject("close_10", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_11 {
+        internal static System.Drawing.Bitmap close_11 {
             get {
-                object obj = ResourceManager.GetObject("closed_11", resourceCulture);
+                object obj = ResourceManager.GetObject("close_11", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_12 {
+        internal static System.Drawing.Bitmap close_12 {
             get {
-                object obj = ResourceManager.GetObject("closed_12", resourceCulture);
+                object obj = ResourceManager.GetObject("close_12", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_13 {
+        internal static System.Drawing.Bitmap close_13 {
             get {
-                object obj = ResourceManager.GetObject("closed_13", resourceCulture);
+                object obj = ResourceManager.GetObject("close_13", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_14 {
+        internal static System.Drawing.Bitmap close_14 {
             get {
-                object obj = ResourceManager.GetObject("closed_14", resourceCulture);
+                object obj = ResourceManager.GetObject("close_14", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +143,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_15 {
+        internal static System.Drawing.Bitmap close_15 {
             get {
-                object obj = ResourceManager.GetObject("closed_15", resourceCulture);
+                object obj = ResourceManager.GetObject("close_15", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +153,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_16 {
+        internal static System.Drawing.Bitmap close_16 {
             get {
-                object obj = ResourceManager.GetObject("closed_16", resourceCulture);
+                object obj = ResourceManager.GetObject("close_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +163,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_17 {
+        internal static System.Drawing.Bitmap close_17 {
             get {
-                object obj = ResourceManager.GetObject("closed_17", resourceCulture);
+                object obj = ResourceManager.GetObject("close_17", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +173,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_18 {
+        internal static System.Drawing.Bitmap close_18 {
             get {
-                object obj = ResourceManager.GetObject("closed_18", resourceCulture);
+                object obj = ResourceManager.GetObject("close_18", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +183,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_19 {
+        internal static System.Drawing.Bitmap close_19 {
             get {
-                object obj = ResourceManager.GetObject("closed_19", resourceCulture);
+                object obj = ResourceManager.GetObject("close_19", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,9 +193,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_2 {
+        internal static System.Drawing.Bitmap close_2 {
             get {
-                object obj = ResourceManager.GetObject("closed_2", resourceCulture);
+                object obj = ResourceManager.GetObject("close_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -203,9 +203,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_20 {
+        internal static System.Drawing.Bitmap close_20 {
             get {
-                object obj = ResourceManager.GetObject("closed_20", resourceCulture);
+                object obj = ResourceManager.GetObject("close_20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -213,9 +213,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_21 {
+        internal static System.Drawing.Bitmap close_21 {
             get {
-                object obj = ResourceManager.GetObject("closed_21", resourceCulture);
+                object obj = ResourceManager.GetObject("close_21", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -223,9 +223,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_22 {
+        internal static System.Drawing.Bitmap close_22 {
             get {
-                object obj = ResourceManager.GetObject("closed_22", resourceCulture);
+                object obj = ResourceManager.GetObject("close_22", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -233,9 +233,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_23 {
+        internal static System.Drawing.Bitmap close_23 {
             get {
-                object obj = ResourceManager.GetObject("closed_23", resourceCulture);
+                object obj = ResourceManager.GetObject("close_23", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,9 +243,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_24 {
+        internal static System.Drawing.Bitmap close_24 {
             get {
-                object obj = ResourceManager.GetObject("closed_24", resourceCulture);
+                object obj = ResourceManager.GetObject("close_24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -253,9 +253,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_25 {
+        internal static System.Drawing.Bitmap close_25 {
             get {
-                object obj = ResourceManager.GetObject("closed_25", resourceCulture);
+                object obj = ResourceManager.GetObject("close_25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -263,9 +263,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_26 {
+        internal static System.Drawing.Bitmap close_26 {
             get {
-                object obj = ResourceManager.GetObject("closed_26", resourceCulture);
+                object obj = ResourceManager.GetObject("close_26", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -273,9 +273,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_27 {
+        internal static System.Drawing.Bitmap close_27 {
             get {
-                object obj = ResourceManager.GetObject("closed_27", resourceCulture);
+                object obj = ResourceManager.GetObject("close_27", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -283,9 +283,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_3 {
+        internal static System.Drawing.Bitmap close_3 {
             get {
-                object obj = ResourceManager.GetObject("closed_3", resourceCulture);
+                object obj = ResourceManager.GetObject("close_3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -293,9 +293,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_4 {
+        internal static System.Drawing.Bitmap close_4 {
             get {
-                object obj = ResourceManager.GetObject("closed_4", resourceCulture);
+                object obj = ResourceManager.GetObject("close_4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -303,9 +303,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_5 {
+        internal static System.Drawing.Bitmap close_5 {
             get {
-                object obj = ResourceManager.GetObject("closed_5", resourceCulture);
+                object obj = ResourceManager.GetObject("close_5", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -313,9 +313,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_6 {
+        internal static System.Drawing.Bitmap close_6 {
             get {
-                object obj = ResourceManager.GetObject("closed_6", resourceCulture);
+                object obj = ResourceManager.GetObject("close_6", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -323,9 +323,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_7 {
+        internal static System.Drawing.Bitmap close_7 {
             get {
-                object obj = ResourceManager.GetObject("closed_7", resourceCulture);
+                object obj = ResourceManager.GetObject("close_7", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -333,9 +333,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_8 {
+        internal static System.Drawing.Bitmap close_8 {
             get {
-                object obj = ResourceManager.GetObject("closed_8", resourceCulture);
+                object obj = ResourceManager.GetObject("close_8", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -343,9 +343,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap closed_9 {
+        internal static System.Drawing.Bitmap close_9 {
             get {
-                object obj = ResourceManager.GetObject("closed_9", resourceCulture);
+                object obj = ResourceManager.GetObject("close_9", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -946,16 +946,6 @@ namespace MirishitaMusicPlayer.Properties {
         internal static System.Drawing.Bitmap mouth_4 {
             get {
                 object obj = ResourceManager.GetObject("mouth_4", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap mouth_54 {
-            get {
-                object obj = ResourceManager.GetObject("mouth_54", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
