@@ -68,20 +68,10 @@ namespace MirishitaMusicPlayer
 
                 PlayerForm playerForm = new(songMixer, outputDevice);
 
-                scenarioPlayback.ExpressionChanged += (ex, ey) =>
-                {
-                    playerForm.UpdateExpression(ex, ey);
-                };
-
-                scenarioPlayback.LipSyncChanged += (l) =>
-                {
-                    playerForm.UpdateLipSync(l);
-                };
-
-                scenarioPlayback.LyricsChanged += (l) =>
-                {
-                    playerForm.UpdateLyrics(l);
-                };
+                scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
+                scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
+                scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
+                scenarioPlayback.SongStopped += () => playerForm.Stop(true);
 
                 scenarioPlayback.Start();
                 outputDevice.Play();

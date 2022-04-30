@@ -95,6 +95,17 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
+        public void Stop(bool closeForm = false)
+        {
+            songMixer.Dispose();
+
+            outputDevice.Stop();
+            outputDevice.Dispose();
+
+            if (closeForm)
+                TryInvoke(() => Close());
+        }
+
         private void PlayButton_Click(object sender, EventArgs e)
         {
             if (outputDevice.PlaybackState == PlaybackState.Playing)
@@ -130,17 +141,22 @@ namespace MirishitaMusicPlayer.Forms
 
         private void StopButton_Click(object sender, EventArgs e)
         {
-            songMixer.Dispose();
-
-            outputDevice.Stop();
-            outputDevice.Dispose();
-
-            Close();
+            Stop(true);
         }
 
         private void VolumeTrackBar_Scroll(object sender, EventArgs e)
         {
             outputDevice.Volume = volumeTrackBar.Value / 100.0f;
+        }
+
+        private void PlayerForm_Load(object sender, EventArgs e)
+        {
+            volumeTrackBar.Value = (int)(outputDevice.Volume * 100.0f);
+        }
+
+        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Stop();
         }
     }
 }

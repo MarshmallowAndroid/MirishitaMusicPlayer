@@ -98,7 +98,7 @@
             this.debugEyesIDLabel.AutoSize = true;
             this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIDLabel.Location = new System.Drawing.Point(418, 12);
+            this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 12);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
             this.debugEyesIDLabel.Size = new System.Drawing.Size(0, 37);
             this.debugEyesIDLabel.TabIndex = 2;
@@ -108,7 +108,7 @@
             this.debugEyeCloseIDLabel.AutoSize = true;
             this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(418, 49);
+            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 49);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
             this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(0, 37);
             this.debugEyeCloseIDLabel.TabIndex = 2;
@@ -118,7 +118,7 @@
             this.debugMouthIDLabel.AutoSize = true;
             this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIDLabel.Location = new System.Drawing.Point(418, 282);
+            this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 282);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
             this.debugMouthIDLabel.Size = new System.Drawing.Size(0, 37);
             this.debugMouthIDLabel.TabIndex = 2;
@@ -236,7 +236,7 @@
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.volumeTrackBar.Size = new System.Drawing.Size(45, 266);
             this.volumeTrackBar.TabIndex = 6;
-            this.volumeTrackBar.TickFrequency = 0;
+            this.volumeTrackBar.TickFrequency = 50;
             this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
             // 
             // volumeLabel
@@ -252,7 +252,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 696);
+            this.ClientSize = new System.Drawing.Size(424, 696);
             this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -268,6 +268,8 @@
             this.Name = "PlayerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Player";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerForm_FormClosing);
+            this.Load += new System.EventHandler(this.PlayerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).EndInit();
