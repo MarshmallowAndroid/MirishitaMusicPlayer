@@ -1,5 +1,6 @@
 ﻿using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Properties;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,17 +13,19 @@ using System.Windows.Forms;
 
 namespace MirishitaMusicPlayer.Forms
 {
-    public partial class VisualizerForm : Form
+    public partial class PlayerForm : Form
     {
-        SongMixer songMixer;
+        private readonly WaveOutEvent outputDevice;
+        private readonly SongMixer songMixer;
 
         bool seekBarScrolling;
 
-        public VisualizerForm(SongMixer mixer)
+        public PlayerForm(SongMixer mixer, WaveOutEvent device)
         {
             InitializeComponent();
 
             songMixer = mixer;
+            outputDevice = device;
         }
 
         public void UpdateExpression(int expressionID, bool eyeClose)
@@ -30,23 +33,27 @@ namespace MirishitaMusicPlayer.Forms
             TryInvoke(() =>
             {
 
-                label1.Text = expressionID.ToString();
-                label2.Text = $"eye close: " + eyeClose;
+                debugEyesIDLabel.Text = expressionID.ToString();
+                debugEyeCloseIDLabel.Text = $"eye close: " + eyeClose;
             });
-            string resourceName = $"{(eyeClose ? "closed" : "open")}_{expressionID}";
+            string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionID}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
+
+            
             expressionPictureBox.BackgroundImage = resource;
         }
 
         public void UpdateLipSync(int lipSyncID)
         {
-            TryInvoke(() => label3.Text = lipSyncID.ToString());
+            TryInvoke(() => debugMouthIDLabel.Text = lipSyncID.ToString());
 
             if (lipSyncID == 56 || lipSyncID == 59)
                 lipSyncID = 1;
 
             string resourceName = $"mouth_{lipSyncID}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
+            if (resource == null) TryInvoke(() => lipSyncPictureBox.Visible = false);
+            else TryInvoke(() => lipSyncPictureBox.Visible = true);
             lipSyncPictureBox.BackgroundImage = resource;
         }
 

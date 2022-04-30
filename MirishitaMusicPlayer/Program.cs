@@ -58,7 +58,7 @@ namespace MirishitaMusicPlayer
 
                 idolOrderForm.Dispose();
 
-                ScenarioPlaybackWorker scenarioPlayback = new(
+                ScenarioPlayer scenarioPlayback = new(
                     outputDevice,
                     songMixer,
                     mainScenario,
@@ -66,26 +66,27 @@ namespace MirishitaMusicPlayer
                     muteScenarios);
 
 
-                VisualizerForm visualizer = new(songMixer);
+                PlayerForm playerForm = new(songMixer, outputDevice);
 
                 scenarioPlayback.ExpressionChanged += (ex, ey) =>
                 {
-                    visualizer.UpdateExpression(ex, ey);
+                    playerForm.UpdateExpression(ex, ey);
                 };
 
                 scenarioPlayback.LipSyncChanged += (l) =>
                 {
-                    visualizer.UpdateLipSync(l);
+                    playerForm.UpdateLipSync(l);
                 };
 
                 scenarioPlayback.LyricsChanged += (l) =>
                 {
-                    visualizer.UpdateLyrics(l);
+                    playerForm.UpdateLyrics(l);
                 };
 
                 scenarioPlayback.Start();
                 outputDevice.Play();
-                visualizer.ShowDialog();
+
+                playerForm.ShowDialog();
             }
         }
     }

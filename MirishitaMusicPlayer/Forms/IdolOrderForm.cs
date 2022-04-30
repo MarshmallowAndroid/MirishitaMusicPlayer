@@ -26,11 +26,6 @@ namespace MirishitaMusicPlayer.Forms
             2, 1, 3, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12
         };
 
-        private static readonly int[] indexToPositionTable = new int[]
-        {
-            3, 1, 0, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12
-        };
-
         private TDAssetsClient assetsClient;
 
         private readonly string songID;
@@ -390,26 +385,31 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
-            try
+            foreach (var asset in assetsToDownload)
             {
-                foreach (var asset in assetsToDownload)
+                try
                 {
                     await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
                     progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                     completed++;
                 }
 
-                shouldInitializeSongMixer = true;
-            }
-            catch (Exception e)
-            {
-                progressBar.Value = 0;
+                catch (Exception e)
+                {
+                    progressBar.Value = 0;
 
-                MessageBox.Show("Unable to download assets. Try going back and update the database.\n\n" +
-                    $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Unable to download assets. Try going back and update the database.\n\n" +
+                        $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                shouldInitializeSongMixer = false;
+                    File.Delete(Path.Combine(directory, asset.Name));
+
+                    shouldInitializeSongMixer = false;
+
+                    return;
+                }
             }
+
+            shouldInitializeSongMixer = true;
         }
 
         private async Task InitializeAssetClientAsync()

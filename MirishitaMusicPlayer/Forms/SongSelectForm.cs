@@ -128,7 +128,6 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    await InitializeAssetClientAsync();
                     await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
                     UpdateList();
                 }
@@ -149,19 +148,7 @@ namespace MirishitaMusicPlayer.Forms
 
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
             {
-                try
-                {
-                    await InitializeAssetClientAsync();
-                    await _assetsClient.DownloadAssetAsync(scenarioAsset.RemoteName, scenarioAsset.Name, "Cache\\Songs");
-                }
-                catch (Exception ex)
-                {
-                    progressBar.Value = 0;
-
-                    MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
-                        $"Error message:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
+                    await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
             }
 
             ResultSongID = songID;
@@ -177,21 +164,25 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
-            try
+            foreach (var asset in assetsToDownload)
             {
-                foreach (var asset in assetsToDownload)
+                try
                 {
                     await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
                     progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                     completed++;
                 }
-            }
-            catch (Exception e)
-            {
-                progressBar.Value = 0;
+                catch (Exception e)
+                {
+                    progressBar.Value = 0;
 
-                MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
-                    $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
+                        $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    File.Delete(Path.Combine(directory, asset.Name));
+
+                    return;
+                }
             }
         }
 
@@ -270,7 +261,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private void UpdateList()
         {
-            loadingBackgroundWorker.RunWorkerAsync();
+            if (!DesignMode)
+                loadingBackgroundWorker.RunWorkerAsync();
         }
 
         private void LoadingMode(bool loading)

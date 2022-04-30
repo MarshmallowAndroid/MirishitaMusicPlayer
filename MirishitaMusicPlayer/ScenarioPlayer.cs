@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer
 {
-    internal class ScenarioPlaybackWorker
+    internal class ScenarioPlayer
     {
-        WaveOutEvent outputDevice;
-        SongMixer songMixer;
-        Thread backgroundThread;
+        private readonly WaveOutEvent outputDevice;
+        private readonly SongMixer songMixer;
+        private readonly Thread scenarioThread;
 
         ScenarioScrObject mainScenario;
         List<EventScenarioData> expressionScenarios;
@@ -22,7 +22,7 @@ namespace MirishitaMusicPlayer
 
         bool shouldStop = false;
 
-        public ScenarioPlaybackWorker(
+        public ScenarioPlayer(
             WaveOutEvent output,
             SongMixer mixer,
             ScenarioScrObject main,
@@ -36,20 +36,20 @@ namespace MirishitaMusicPlayer
             expressionScenarios = expressions;
             muteScenarios = mute;
 
-            backgroundThread = new Thread(DoPlayback);
+            scenarioThread = new Thread(DoScenarioPlayback);
         }
 
         public void Start()
         {
-            backgroundThread.Start();
+            scenarioThread.Start();
         }
 
         public void Stop()
         {
-
+            shouldStop = true;
         }
 
-        private void DoPlayback()
+        private void DoScenarioPlayback()
         {
             int mainScenarioIndex = 0;
             int expressionScenarioIndex = 0;
@@ -229,6 +229,8 @@ namespace MirishitaMusicPlayer
 
                 Thread.Sleep(1);
             }
+
+            songMixer.Dispose();
         }
 
         public delegate void ExpressionChangedEventHandler(int expressionID, bool eyeClose);
