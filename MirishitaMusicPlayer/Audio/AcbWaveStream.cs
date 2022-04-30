@@ -8,9 +8,9 @@ namespace MirishitaMusicPlayer.Audio
 {
     public class AcbWaveStream : WaveStream
     {
-        private AcbReader acbReader;
-        private AwbReader awbReader;
-        private WaveStream waveStream;
+        private readonly AcbReader acbReader;
+        private readonly AwbReader awbReader;
+        private readonly WaveStream waveStream;
 
         public AcbWaveStream(string path) : this(File.OpenRead(path))
         {

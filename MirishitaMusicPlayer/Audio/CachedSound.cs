@@ -9,7 +9,7 @@ namespace MirishitaMusicPlayer.Audio
         public CachedSound(string soundFileName)
         {
             WaveFileReader reader = new(soundFileName);
-            MediaFoundationResampler resampler = new MediaFoundationResampler(reader, new WaveFormat(44100, 2));
+            MediaFoundationResampler resampler = new(reader, new WaveFormat(44100, 2));
 
             WaveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
             ISampleProvider sampleProvider = new SampleChannel(resampler);

@@ -5,7 +5,7 @@ namespace MirishitaMusicPlayer.Audio
 {
     internal class CachedSoundSampleProvider : ISampleProvider
     {
-        private CachedSound cachedSound;
+        private readonly CachedSound cachedSound;
         private long position;
 
         public CachedSoundSampleProvider(CachedSound source)
