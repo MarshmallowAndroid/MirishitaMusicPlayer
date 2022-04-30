@@ -93,29 +93,35 @@ namespace MirishitaMusicPlayer.Forms
             Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
             uint totalBytesToDownload = 0;
-
             foreach (var file in AssetList.Assets)
             {
                 string fileName = file.Name;
 
                 if (File.Exists(Path.Combine("Cache\\Jackets", fileName))) continue;
 
-                if (bySongIDCheckBox.Checked)
+                //if (bySongIDCheckBox.Checked)
+                //{
+                //    if (fileName.Equals($"jacket_{songIDTextBox.Text}.unity3d"))
+                //    {
+                //        filesToDownload.Add(file);
+                //        totalBytesToDownload += file.Size;
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show($"Song ID \"{songIDTextBox.Text}\" doesn't exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //        LoadingMode(false);
+
+                //        return;
+                //    }
+                //}
+                //else
+                //{
+                if (allJacketsRegex.IsMatch(fileName))
                 {
-                    if (fileName.Equals($"jacket_{songIDTextBox.Text}.unity3d"))
-                    {
-                        filesToDownload.Add(file);
-                        totalBytesToDownload += file.Size;
-                    }
+                    filesToDownload.Add(file);
+                    totalBytesToDownload += file.Size;
                 }
-                else
-                {
-                    if (allJacketsRegex.IsMatch(fileName))
-                    {
-                        filesToDownload.Add(file);
-                        totalBytesToDownload += file.Size;
-                    }
-                }
+                //}
             }
 
             if (totalBytesToDownload > 0)
@@ -132,32 +138,48 @@ namespace MirishitaMusicPlayer.Forms
                     UpdateList();
                 }
             }
-            else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+            {
+                if (bySongIDCheckBox.Checked)
+                {
+                    await PlaySong(songIDTextBox.Text);
+                }
+                else
+                    MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
             LoadingMode(false);
         }
 
         private async void SongJacket_Click(object sender, EventArgs e)
         {
-            LoadingMode(true);
             PictureBox jacket = sender as PictureBox;
 
             string songID = jacket.Tag.ToString();
 
+            await PlaySong(songID);
+        }
+
+        private async Task PlaySong(string songID)
+        {
+            LoadingMode(true);
+
             Asset scenarioAsset = AssetList.Assets.First(a => a.Name.StartsWith("scrobj_" + songID));
 
+            bool shouldContinue;
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
             {
-                    await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
+                shouldContinue = await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
             }
+            else shouldContinue = true;
 
             ResultSongID = songID;
 
             LoadingMode(false);
-            Hide();
+            if (shouldContinue) Hide();
         }
 
-        private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
+        private async Task<bool> DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
         {
             LoadingMode(true);
 
@@ -169,21 +191,24 @@ namespace MirishitaMusicPlayer.Forms
                 try
                 {
                     await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
-                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                     completed++;
+                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                 }
                 catch (Exception e)
                 {
-                    progressBar.Value = 0;
-
                     MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
                         $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     File.Delete(Path.Combine(directory, asset.Name));
 
-                    return;
+                    return false;
                 }
             }
+
+            progressBar.Value = 0;
+
+            if (completed == assetsToDownload.Count) return true;
+            else return false;
         }
 
         private void LoadingBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)

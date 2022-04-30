@@ -32,7 +32,7 @@
             this.getSongJacketsButton = new System.Windows.Forms.Button();
             this.bySongIDCheckBox = new System.Windows.Forms.CheckBox();
             this.jacketsPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.availableSongsLabel = new System.Windows.Forms.Label();
             this.updateDatabaseButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.loadingBackgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -78,14 +78,14 @@
             this.jacketsPanel.Size = new System.Drawing.Size(959, 554);
             this.jacketsPanel.TabIndex = 4;
             // 
-            // label1
+            // availableSongsLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 56);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 15);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Available songs";
+            this.availableSongsLabel.AutoSize = true;
+            this.availableSongsLabel.Location = new System.Drawing.Point(12, 56);
+            this.availableSongsLabel.Name = "availableSongsLabel";
+            this.availableSongsLabel.Size = new System.Drawing.Size(89, 15);
+            this.availableSongsLabel.TabIndex = 5;
+            this.availableSongsLabel.Text = "Available songs";
             // 
             // updateDatabaseButton
             // 
@@ -119,7 +119,7 @@
             this.ClientSize = new System.Drawing.Size(983, 640);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.updateDatabaseButton);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.availableSongsLabel);
             this.Controls.Add(this.jacketsPanel);
             this.Controls.Add(this.bySongIDCheckBox);
             this.Controls.Add(this.getSongJacketsButton);
@@ -139,7 +139,7 @@
         private System.Windows.Forms.Button getSongJacketsButton;
         private System.Windows.Forms.CheckBox bySongIDCheckBox;
         private System.Windows.Forms.FlowLayoutPanel jacketsPanel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label availableSongsLabel;
         private System.Windows.Forms.Button updateDatabaseButton;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker loadingBackgroundWorker;

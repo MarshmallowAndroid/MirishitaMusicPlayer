@@ -16,9 +16,9 @@ namespace MirishitaMusicPlayer
         private readonly SongMixer songMixer;
         private readonly Thread scenarioThread;
 
-        ScenarioScrObject mainScenario;
-        List<EventScenarioData> expressionScenarios;
-        List<EventScenarioData> muteScenarios;
+        private readonly ScenarioScrObject mainScenario;
+        private readonly List<EventScenarioData> expressionScenarios;
+        private readonly List<EventScenarioData> muteScenarios;
 
         bool shouldStop = false;
 
@@ -231,6 +231,8 @@ namespace MirishitaMusicPlayer
             }
 
             songMixer.Dispose();
+
+            SongStopped?.Invoke();
         }
 
         public delegate void ExpressionChangedEventHandler(int expressionID, bool eyeClose);
@@ -241,5 +243,8 @@ namespace MirishitaMusicPlayer
 
         public delegate void LyricsChangedEventHandler(string lyrics);
         public event LyricsChangedEventHandler LyricsChanged;
+
+        public delegate void SongStoppedEventHandler();
+        public event SongStoppedEventHandler SongStopped;
     }
 }
