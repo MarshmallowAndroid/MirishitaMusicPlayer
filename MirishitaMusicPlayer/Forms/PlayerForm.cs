@@ -39,7 +39,6 @@ namespace MirishitaMusicPlayer.Forms
             string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionID}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
 
-            
             expressionPictureBox.BackgroundImage = resource;
         }
 
@@ -69,6 +68,9 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (!seekBarScrolling)
                 seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
+
+            currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
+            totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
         }
 
         private void SeekBar_Scroll(object sender, EventArgs e)
@@ -91,6 +93,54 @@ namespace MirishitaMusicPlayer.Forms
             catch (Exception)
             {
             }
+        }
+
+        private void PlayButton_Click(object sender, EventArgs e)
+        {
+            if (outputDevice.PlaybackState == PlaybackState.Playing)
+                outputDevice.Pause();
+            else
+            {
+                try
+                {
+                    outputDevice.Play();
+                }
+                catch (Exception)
+                {
+                    outputDevice.Init(songMixer);
+                    outputDevice.Play();
+                }
+            }
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            songMixer.Reset();
+        }
+
+        private void ToggleBgmButton_Click(object sender, EventArgs e)
+        {
+            songMixer.MuteBackground = !songMixer.MuteBackground;
+        }
+
+        private void ToggleVoicesButton_Click(object sender, EventArgs e)
+        {
+            songMixer.MuteVoices = !songMixer.MuteVoices;
+        }
+
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            songMixer.Dispose();
+
+            outputDevice.Stop();
+            outputDevice.Dispose();
+
+            Close();
+        }
+
+        private void VolumeTrackBar_Scroll(object sender, EventArgs e)
+        {
+            outputDevice.Volume = volumeTrackBar.Value / 100.0f;
         }
     }
 }

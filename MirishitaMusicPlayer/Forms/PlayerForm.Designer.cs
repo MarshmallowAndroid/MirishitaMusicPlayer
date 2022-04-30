@@ -40,15 +40,18 @@
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.totalTimeLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toggleBgmButton = new System.Windows.Forms.Button();
-            this.playButton = new System.Windows.Forms.Button();
-            this.ResetButton = new System.Windows.Forms.Button();
-            this.toggleVoicesButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
+            this.toggleVoicesButton = new System.Windows.Forms.Button();
+            this.ResetButton = new System.Windows.Forms.Button();
+            this.playButton = new System.Windows.Forms.Button();
+            this.toggleBgmButton = new System.Windows.Forms.Button();
+            this.volumeTrackBar = new System.Windows.Forms.TrackBar();
+            this.volumeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // expressionPictureBox
@@ -158,10 +161,10 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Controls.Add(this.stopButton, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.toggleVoicesButton, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ResetButton, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.playButton, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.toggleBgmButton, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.toggleVoicesButton, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.ResetButton, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.playButton, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.toggleBgmButton, 3, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 526);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
@@ -169,46 +172,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(400, 75);
             this.tableLayoutPanel1.TabIndex = 5;
-            // 
-            // toggleBgmButton
-            // 
-            this.toggleBgmButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toggleBgmButton.Location = new System.Drawing.Point(163, 3);
-            this.toggleBgmButton.Name = "toggleBgmButton";
-            this.toggleBgmButton.Size = new System.Drawing.Size(74, 69);
-            this.toggleBgmButton.TabIndex = 0;
-            this.toggleBgmButton.Text = "Toggle BGM";
-            this.toggleBgmButton.UseVisualStyleBackColor = true;
-            // 
-            // playButton
-            // 
-            this.playButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.playButton.Location = new System.Drawing.Point(3, 3);
-            this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(74, 69);
-            this.playButton.TabIndex = 1;
-            this.playButton.Text = "Play/Pause";
-            this.playButton.UseVisualStyleBackColor = true;
-            // 
-            // ResetButton
-            // 
-            this.ResetButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ResetButton.Location = new System.Drawing.Point(83, 3);
-            this.ResetButton.Name = "ResetButton";
-            this.ResetButton.Size = new System.Drawing.Size(74, 69);
-            this.ResetButton.TabIndex = 2;
-            this.ResetButton.Text = "Reset";
-            this.ResetButton.UseVisualStyleBackColor = true;
-            // 
-            // toggleVoicesButton
-            // 
-            this.toggleVoicesButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toggleVoicesButton.Location = new System.Drawing.Point(243, 3);
-            this.toggleVoicesButton.Name = "toggleVoicesButton";
-            this.toggleVoicesButton.Size = new System.Drawing.Size(74, 69);
-            this.toggleVoicesButton.TabIndex = 3;
-            this.toggleVoicesButton.Text = "Toggle Voices";
-            this.toggleVoicesButton.UseVisualStyleBackColor = true;
             // 
             // stopButton
             // 
@@ -219,12 +182,79 @@
             this.stopButton.TabIndex = 4;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
-            // VisualizerForm
+            // toggleVoicesButton
+            // 
+            this.toggleVoicesButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toggleVoicesButton.Location = new System.Drawing.Point(83, 3);
+            this.toggleVoicesButton.Name = "toggleVoicesButton";
+            this.toggleVoicesButton.Size = new System.Drawing.Size(74, 69);
+            this.toggleVoicesButton.TabIndex = 3;
+            this.toggleVoicesButton.Text = "Toggle Voices";
+            this.toggleVoicesButton.UseVisualStyleBackColor = true;
+            this.toggleVoicesButton.Click += new System.EventHandler(this.ToggleVoicesButton_Click);
+            // 
+            // ResetButton
+            // 
+            this.ResetButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ResetButton.Location = new System.Drawing.Point(3, 3);
+            this.ResetButton.Name = "ResetButton";
+            this.ResetButton.Size = new System.Drawing.Size(74, 69);
+            this.ResetButton.TabIndex = 2;
+            this.ResetButton.Text = "Reset";
+            this.ResetButton.UseVisualStyleBackColor = true;
+            this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            // 
+            // playButton
+            // 
+            this.playButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.playButton.Location = new System.Drawing.Point(163, 3);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(74, 69);
+            this.playButton.TabIndex = 1;
+            this.playButton.Text = "Play/Pause";
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Click += new System.EventHandler(this.PlayButton_Click);
+            // 
+            // toggleBgmButton
+            // 
+            this.toggleBgmButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toggleBgmButton.Location = new System.Drawing.Point(243, 3);
+            this.toggleBgmButton.Name = "toggleBgmButton";
+            this.toggleBgmButton.Size = new System.Drawing.Size(74, 69);
+            this.toggleBgmButton.TabIndex = 0;
+            this.toggleBgmButton.Text = "Toggle BGM";
+            this.toggleBgmButton.UseVisualStyleBackColor = true;
+            this.toggleBgmButton.Click += new System.EventHandler(this.ToggleBgmButton_Click);
+            // 
+            // volumeTrackBar
+            // 
+            this.volumeTrackBar.Location = new System.Drawing.Point(567, 418);
+            this.volumeTrackBar.Maximum = 100;
+            this.volumeTrackBar.Name = "volumeTrackBar";
+            this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.volumeTrackBar.Size = new System.Drawing.Size(45, 266);
+            this.volumeTrackBar.TabIndex = 6;
+            this.volumeTrackBar.TickFrequency = 0;
+            this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
+            // 
+            // volumeLabel
+            // 
+            this.volumeLabel.AutoSize = true;
+            this.volumeLabel.Location = new System.Drawing.Point(565, 400);
+            this.volumeLabel.Name = "volumeLabel";
+            this.volumeLabel.Size = new System.Drawing.Size(47, 15);
+            this.volumeLabel.TabIndex = 7;
+            this.volumeLabel.Text = "Volume";
+            // 
+            // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 696);
+            this.ClientSize = new System.Drawing.Size(624, 696);
+            this.Controls.Add(this.volumeLabel);
+            this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.totalTimeLabel);
             this.Controls.Add(this.currentTimeLabel);
@@ -235,13 +265,14 @@
             this.Controls.Add(this.seekBar);
             this.Controls.Add(this.lipSyncPictureBox);
             this.Controls.Add(this.expressionPictureBox);
-            this.Name = "VisualizerForm";
+            this.Name = "PlayerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Player";
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -265,5 +296,7 @@
         private System.Windows.Forms.Button toggleVoicesButton;
         private System.Windows.Forms.Button ResetButton;
         private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.TrackBar volumeTrackBar;
+        private System.Windows.Forms.Label volumeLabel;
     }
 }

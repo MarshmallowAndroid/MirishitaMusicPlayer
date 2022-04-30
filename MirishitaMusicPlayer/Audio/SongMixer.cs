@@ -97,6 +97,8 @@ namespace MirishitaMusicPlayer.Audio
 
         public TimeSpan CurrentTime => backgroundWaveStream.CurrentTime;
 
+        public TimeSpan TotalTime => backgroundWaveStream.TotalTime;
+
         public WaveFormat WaveFormat => backgroundSampleProvider.WaveFormat;
 
         public long Position
@@ -299,6 +301,8 @@ namespace MirishitaMusicPlayer.Audio
                 if (voice != null)
                     voice.Dispose();
             }
+
+            HasEnded = true;
         }
 
         private long AbsTimeToSamples(double absTime)
