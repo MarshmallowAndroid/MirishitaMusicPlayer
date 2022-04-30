@@ -903,9 +903,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_a {
+        internal static System.Drawing.Bitmap mouth_0 {
             get {
-                object obj = ResourceManager.GetObject("mouth_a", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_0", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -913,9 +913,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_closed {
+        internal static System.Drawing.Bitmap mouth_1 {
             get {
-                object obj = ResourceManager.GetObject("mouth_closed", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -923,9 +923,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_e {
+        internal static System.Drawing.Bitmap mouth_2 {
             get {
-                object obj = ResourceManager.GetObject("mouth_e", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -933,9 +933,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_i {
+        internal static System.Drawing.Bitmap mouth_3 {
             get {
-                object obj = ResourceManager.GetObject("mouth_i", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -943,9 +943,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_o {
+        internal static System.Drawing.Bitmap mouth_4 {
             get {
-                object obj = ResourceManager.GetObject("mouth_o", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -953,9 +953,9 @@ namespace MirishitaMusicPlayer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mouth_u {
+        internal static System.Drawing.Bitmap mouth_54 {
             get {
-                object obj = ResourceManager.GetObject("mouth_u", resourceCulture);
+                object obj = ResourceManager.GetObject("mouth_54", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -370,23 +370,23 @@
   <data name="makoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\makoto.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_a" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_a.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_closed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_closed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_e" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_e.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_i" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_i.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_o" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_o.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mouth_u" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\face_images\mouth\mouth_u.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="mouth_54" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\face_images\mouth\mouth_54.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="open_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\face_images\open\open_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -99,6 +99,37 @@ namespace MirishitaMusicPlayer.Audio
 
         public WaveFormat WaveFormat => backgroundSampleProvider.WaveFormat;
 
+        public long Position
+        {
+            get
+            {
+                return backgroundWaveStream.Position;
+            }
+            set
+            {
+                backgroundWaveStream.Position = value;
+
+                if (backgroundExWaveStream != null)
+                    backgroundExWaveStream.Position = backgroundWaveStream.Position;
+
+                foreach (var voice in voiceSampleProviders)
+                {
+                    voice.Position  = backgroundWaveStream.Position / 2;
+                }
+
+                currentVolumeSample = backgroundWaveStream.Position /
+                    backgroundWaveStream.WaveFormat.Channels /
+                    (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
+                currentExSample = backgroundWaveStream.Position /
+                    backgroundWaveStream.WaveFormat.Channels /
+                    (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
+                nextVolumeTriggerIndex = 0;
+                nextExTriggerIndex = 0;
+            }
+        }
+
+        public long Length => backgroundWaveStream.Length;
+
         public void Reset()
         {
             backgroundWaveStream.Position = 0;
@@ -115,7 +146,7 @@ namespace MirishitaMusicPlayer.Audio
             currentExSample = 0;
             nextVolumeTriggerIndex = 0;
             nextExTriggerIndex = 0;
-    }
+        }
 
         public void Seek(float seconds)
         {
@@ -190,7 +221,7 @@ namespace MirishitaMusicPlayer.Audio
             {
                 while (currentVolumeSample >= volumeTriggers[nextVolumeTriggerIndex].Sample)
                 {
-                     multiplier = (float)1 / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.075f;
+                    multiplier = (float)1 / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.075f;
 
                     if (nextVolumeTriggerIndex < volumeTriggers.Count - 1) nextVolumeTriggerIndex++;
                     else break;

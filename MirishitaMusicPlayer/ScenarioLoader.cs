@@ -19,7 +19,7 @@ namespace MirishitaMusicPlayer
             AssetsManager assetsManager,
             string filesPath,
             string songID,
-            Orientation orientation = Orientation.Yoko)
+            Orientation orientation = Orientation.Tate)
         {
             // Load scenarios and notes first
             string scenarioPath = Path.Combine(filesPath, $"scrobj_{songID}.unity3d");

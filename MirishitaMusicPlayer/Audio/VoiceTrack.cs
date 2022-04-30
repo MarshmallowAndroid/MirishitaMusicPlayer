@@ -35,6 +35,22 @@ namespace MirishitaMusicPlayer.Audio
 
         public WaveFormat WaveFormat => sampleProvider.WaveFormat;
 
+        public long Position
+        {
+            get
+            {
+                return waveStream.Position;
+            }
+            set
+            {
+                waveStream.Position = value;
+                currentSample = waveStream.Position /
+                    waveStream.WaveFormat.Channels /
+                    (waveStream.WaveFormat.BitsPerSample / 8);
+                nextTriggerIndex = 0;
+            }
+        }
+
         public void Seek(float seconds)
         {
             waveStream.Position += (long)(seconds *

@@ -130,7 +130,7 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     await InitializeAssetClientAsync();
                     await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
-
+                    UpdateList();
                 }
             }
             else MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -149,8 +149,19 @@ namespace MirishitaMusicPlayer.Forms
 
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
             {
-                await InitializeAssetClientAsync();
-                await _assetsClient.DownloadAssetAsync(scenarioAsset.RemoteName, scenarioAsset.Name, "Cache\\Songs");
+                try
+                {
+                    await InitializeAssetClientAsync();
+                    await _assetsClient.DownloadAssetAsync(scenarioAsset.RemoteName, scenarioAsset.Name, "Cache\\Songs");
+                }
+                catch (Exception ex)
+                {
+                    progressBar.Value = 0;
+
+                    MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
+                        $"Error message:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
             }
 
             ResultSongID = songID;
