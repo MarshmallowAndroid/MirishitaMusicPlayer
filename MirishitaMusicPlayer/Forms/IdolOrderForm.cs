@@ -125,10 +125,10 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             if (voiceCount > 0)
-                soloCheckBox.Visible = true;
+                soloCheckBox.Enabled = true;
 
             if (hasExtraBgm)
-                extraCheckBox.Visible = true;
+                extraCheckBox.Enabled = true;
         }
 
         public bool ExtraBgmEnabled { get; private set; }
@@ -370,7 +370,7 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    await DownloadAssetsAsync(missingAssets, "Cache\\Songs");
+                    shouldInitializeSongMixer = await DownloadAssetsAsync(missingAssets, "Cache\\Songs");
                 }
                 else return false;
             }
@@ -378,7 +378,7 @@ namespace MirishitaMusicPlayer.Forms
             return shouldInitializeSongMixer;
         }
 
-        private async Task DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
+        private async Task<bool> DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
         {
             LoadingMode(true);
 
@@ -390,8 +390,8 @@ namespace MirishitaMusicPlayer.Forms
                 try
                 {
                     await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
-                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                     completed++;
+                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                 }
 
                 catch (Exception e)
@@ -403,13 +403,15 @@ namespace MirishitaMusicPlayer.Forms
 
                     File.Delete(Path.Combine(directory, asset.Name));
 
-                    shouldInitializeSongMixer = false;
-
-                    return;
+                    return false;
                 }
             }
 
-            shouldInitializeSongMixer = true;
+            progressBar.Value = 0;
+
+            if (completed == assetsToDownload.Count)
+                return true;
+            else return false;
         }
 
         private async Task InitializeAssetClientAsync()

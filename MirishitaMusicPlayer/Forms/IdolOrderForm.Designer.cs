@@ -90,6 +90,7 @@
             // 
             this.soloCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.soloCheckBox.AutoSize = true;
+            this.soloCheckBox.Enabled = false;
             this.soloCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.soloCheckBox.Location = new System.Drawing.Point(635, 663);
             this.soloCheckBox.Name = "soloCheckBox";
@@ -97,7 +98,6 @@
             this.soloCheckBox.TabIndex = 2;
             this.soloCheckBox.Text = "Solo";
             this.soloCheckBox.UseVisualStyleBackColor = true;
-            this.soloCheckBox.Visible = false;
             // 
             // stashedIdolsPanel
             // 
@@ -120,6 +120,7 @@
             // 
             this.extraCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.extraCheckBox.AutoSize = true;
+            this.extraCheckBox.Enabled = false;
             this.extraCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.extraCheckBox.Location = new System.Drawing.Point(701, 663);
             this.extraCheckBox.Name = "extraCheckBox";
@@ -127,7 +128,6 @@
             this.extraCheckBox.TabIndex = 2;
             this.extraCheckBox.Text = "Extra";
             this.extraCheckBox.UseVisualStyleBackColor = true;
-            this.extraCheckBox.Visible = false;
             // 
             // IdolOrderForm
             // 
