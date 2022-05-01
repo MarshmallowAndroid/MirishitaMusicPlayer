@@ -125,7 +125,7 @@
             // 
             // lyricsTextBox
             // 
-            this.lyricsTextBox.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lyricsTextBox.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lyricsTextBox.Location = new System.Drawing.Point(12, 418);
             this.lyricsTextBox.Name = "lyricsTextBox";
             this.lyricsTextBox.Size = new System.Drawing.Size(400, 105);

@@ -32,7 +32,6 @@ namespace MirishitaMusicPlayer.Forms
         {
             TryInvoke(() =>
             {
-
                 debugEyesIDLabel.Text = expressionID.ToString();
                 debugEyeCloseIDLabel.Text = $"eye close: " + eyeClose;
             });
@@ -46,8 +45,8 @@ namespace MirishitaMusicPlayer.Forms
         {
             TryInvoke(() => debugMouthIDLabel.Text = lipSyncID.ToString());
 
-            if (lipSyncID == 56 || lipSyncID == 59)
-                lipSyncID = 1;
+            //if (lipSyncID == 56 || lipSyncID == 59)
+            //    lipSyncID = 1;
 
             string resourceName = $"mouth_{lipSyncID}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
@@ -151,7 +150,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void PlayerForm_Load(object sender, EventArgs e)
         {
-            volumeTrackBar.Value = (int)(outputDevice.Volume * 100.0f);
+            volumeTrackBar.Value = (int)Math.Floor(outputDevice.Volume * 100.0f);
         }
 
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)

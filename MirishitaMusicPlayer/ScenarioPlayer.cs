@@ -60,58 +60,6 @@ namespace MirishitaMusicPlayer
             while (!songMixer.HasEnded)
             {
                 if (shouldStop) break;
-                //if (Console.KeyAvailable)
-                //{
-                //    switch (Console.ReadKey(true).Key)
-                //    {
-                //        case ConsoleKey.V:
-                //            songMixer.MuteVoices = !songMixer.MuteVoices;
-                //            break;
-
-                //        case ConsoleKey.Q:
-                //            outputDevice.Stop();
-                //            outputDevice.Dispose();
-                //            quit = true;
-                //            break;
-
-                //        case ConsoleKey.B:
-                //            songMixer.MuteBackground = !songMixer.MuteBackground;
-                //            break;
-
-                //        case ConsoleKey.R:
-                //            muteIndex = 0;
-                //            expressionScenarioIndex = 0;
-                //            mainScenarioIndex = 0;
-                //            songMixer.Reset();
-                //            break;
-
-                //        case ConsoleKey.S:
-                //            outputDevice.Stop();
-                //            outputDevice.Dispose();
-                //            setup = true;
-                //            break;
-
-                //        case ConsoleKey.Spacebar:
-                //            if (outputDevice.PlaybackState == PlaybackState.Playing)
-                //                outputDevice.Pause();
-                //            else if (outputDevice.PlaybackState == PlaybackState.Paused)
-                //                outputDevice.Play();
-                //            break;
-
-                //        case ConsoleKey.LeftArrow:
-                //            songMixer.Seek(-3.0f);
-                //            seeked = true;
-                //            break;
-
-                //        case ConsoleKey.RightArrow:
-                //            songMixer.Seek(3.0f);
-                //            seeked = true;
-                //            break;
-
-                //        default:
-                //            break;
-                //    }
-                //}
 
                 if (secondsElapsed > songMixer.CurrentTime.TotalSeconds)
                 {
