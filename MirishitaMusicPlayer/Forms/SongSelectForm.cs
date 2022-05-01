@@ -259,6 +259,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void LoadingBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            jacketsPanel.Controls.Clear();
             jacketsPanel.Controls.AddRange((e.Result as List<Control>).ToArray());
 
             progressBar.Value = 0;
