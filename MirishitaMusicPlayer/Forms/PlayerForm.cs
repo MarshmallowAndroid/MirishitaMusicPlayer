@@ -18,7 +18,9 @@ namespace MirishitaMusicPlayer.Forms
         private readonly WaveOutEvent outputDevice;
         private readonly SongMixer songMixer;
 
-        bool seekBarScrolling;
+        private readonly int defaultWidth;
+
+        private bool extrasShown = false;
 
         public PlayerForm(SongMixer mixer, WaveOutEvent device)
         {
@@ -26,6 +28,8 @@ namespace MirishitaMusicPlayer.Forms
 
             songMixer = mixer;
             outputDevice = device;
+
+            defaultWidth = Width;
         }
 
         public void UpdateExpression(int expressionID, bool eyeClose)
@@ -63,26 +67,6 @@ namespace MirishitaMusicPlayer.Forms
             });
         }
 
-        private void UpdateTimer_Tick(object sender, EventArgs e)
-        {
-            if (!seekBarScrolling)
-                seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
-
-            currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
-            totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
-        }
-
-        private void SeekBar_Scroll(object sender, EventArgs e)
-        {
-            seekBarScrolling = true;
-            songMixer.Position = (long)(seekBar.Value / 100.0f * songMixer.Length);
-        }
-
-        private void SeekBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            seekBarScrolling = false;
-        }
-
         private void TryInvoke(Action action)
         {
             try
@@ -105,6 +89,21 @@ namespace MirishitaMusicPlayer.Forms
                 TryInvoke(() => Close());
         }
 
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (!seekBar.Capture)
+                seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
+
+            currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
+            totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
+        }
+
+        private void SeekBar_Scroll(object sender, EventArgs e)
+        {
+            if (seekBar.Capture)
+                songMixer.Position = (long)(seekBar.Value / 100.0f * songMixer.Length);
+        }
+
         private void PlayButton_Click(object sender, EventArgs e)
         {
             if (outputDevice.PlaybackState == PlaybackState.Playing)
@@ -123,39 +122,60 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        private void ResetButton_Click(object sender, EventArgs e)
+        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Reset();
+        private void ToggleBgmButton_Click(object sender, EventArgs e) => songMixer.MuteBackground = !songMixer.MuteBackground;
+        private void ToggleVoicesButton_Click(object sender, EventArgs e) => songMixer.MuteVoices = !songMixer.MuteVoices;
+        private void StopButton_Click(object sender, EventArgs e) => Stop(true);
+        private void VolumeTrackBar_Scroll(object sender, EventArgs e) => outputDevice.Volume = volumeTrackBar.Value / 100.0f;
+        private void PlayerForm_Load(object sender, EventArgs e) => volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e) => Stop();
+
+        private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
-            songMixer.Reset();
+            int multiplier = 1;
+            int target = 0;
+
+            if (extrasShown)
+            {
+                multiplier = -1;
+                target = defaultWidth;
+            }
+            else
+            {
+                multiplier = 1;
+                target = defaultWidth + 200;
+            }    
+
+            Width += 10 * multiplier;
+            Left -= 5 * multiplier;
+
+            if ((!extrasShown && Width >= target) || (extrasShown && Width <= target))
+            {
+                Width = target;
+                extrasShowTimer.Enabled = false;
+            }
+
+            //else
+            //{
+            //    Width -= 10;
+            //    Left += 5;
+
+            //    if (Width <= defaultWidth)
+            //    {
+            //        Width = defaultWidth;
+            //        extrasShowTimer.Enabled = false;
+            //    }
+            //}
         }
 
-        private void ToggleBgmButton_Click(object sender, EventArgs e)
+        private void ShowExtrasButton_Click(object sender, EventArgs e)
         {
-            songMixer.MuteBackground = !songMixer.MuteBackground;
-        }
+            extrasShowTimer.Enabled = true;
 
-        private void ToggleVoicesButton_Click(object sender, EventArgs e)
-        {
-            songMixer.MuteVoices = !songMixer.MuteVoices;
-        }
-
-        private void StopButton_Click(object sender, EventArgs e)
-        {
-            Stop(true);
-        }
-
-        private void VolumeTrackBar_Scroll(object sender, EventArgs e)
-        {
-            outputDevice.Volume = volumeTrackBar.Value / 100.0f;
-        }
-
-        private void PlayerForm_Load(object sender, EventArgs e)
-        {
-            volumeTrackBar.Value = (int)Math.Floor(outputDevice.Volume * 100.0f);
-        }
-
-        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Stop();
+            if (Width > defaultWidth)
+                extrasShown = true;
+            else
+                extrasShown = false;
         }
     }
 }

@@ -47,6 +47,8 @@
             this.toggleBgmButton = new System.Windows.Forms.Button();
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
             this.volumeLabel = new System.Windows.Forms.Label();
+            this.showExtrasButton = new System.Windows.Forms.Button();
+            this.extrasShowTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
@@ -86,7 +88,6 @@
             this.seekBar.TickFrequency = 0;
             this.seekBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.seekBar.Scroll += new System.EventHandler(this.SeekBar_Scroll);
-            this.seekBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeekBar_MouseUp);
             // 
             // updateTimer
             // 
@@ -96,31 +97,31 @@
             // debugEyesIDLabel
             // 
             this.debugEyesIDLabel.AutoSize = true;
-            this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 12);
+            this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 15);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
-            this.debugEyesIDLabel.Size = new System.Drawing.Size(0, 37);
+            this.debugEyesIDLabel.Size = new System.Drawing.Size(0, 25);
             this.debugEyesIDLabel.TabIndex = 2;
             // 
             // debugEyeCloseIDLabel
             // 
             this.debugEyeCloseIDLabel.AutoSize = true;
-            this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 49);
+            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 40);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
-            this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(0, 37);
+            this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(0, 25);
             this.debugEyeCloseIDLabel.TabIndex = 2;
             // 
             // debugMouthIDLabel
             // 
             this.debugMouthIDLabel.AutoSize = true;
-            this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 282);
+            this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 285);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
-            this.debugMouthIDLabel.Size = new System.Drawing.Size(0, 37);
+            this.debugMouthIDLabel.Size = new System.Drawing.Size(0, 25);
             this.debugMouthIDLabel.TabIndex = 2;
             // 
             // lyricsTextBox
@@ -248,11 +249,27 @@
             this.volumeLabel.TabIndex = 7;
             this.volumeLabel.Text = "Volume";
             // 
+            // showExtrasButton
+            // 
+            this.showExtrasButton.Location = new System.Drawing.Point(147, 607);
+            this.showExtrasButton.Name = "showExtrasButton";
+            this.showExtrasButton.Size = new System.Drawing.Size(131, 26);
+            this.showExtrasButton.TabIndex = 8;
+            this.showExtrasButton.Text = "Show extras";
+            this.showExtrasButton.UseVisualStyleBackColor = true;
+            this.showExtrasButton.Click += new System.EventHandler(this.ShowExtrasButton_Click);
+            // 
+            // extrasShowTimer
+            // 
+            this.extrasShowTimer.Interval = 16;
+            this.extrasShowTimer.Tick += new System.EventHandler(this.ExtrasShowTimer_Tick);
+            // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(424, 696);
+            this.Controls.Add(this.showExtrasButton);
             this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -300,5 +317,7 @@
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.TrackBar volumeTrackBar;
         private System.Windows.Forms.Label volumeLabel;
+        private System.Windows.Forms.Button showExtrasButton;
+        private System.Windows.Forms.Timer extrasShowTimer;
     }
 }
