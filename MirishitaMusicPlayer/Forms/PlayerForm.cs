@@ -2,13 +2,7 @@
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MirishitaMusicPlayer.Forms
@@ -21,12 +15,18 @@ namespace MirishitaMusicPlayer.Forms
         private readonly int defaultWidth;
 
         private bool isSeeking = false;
-
         private bool extrasShown = false;
 
         public PlayerForm(SongMixer mixer, WaveOutEvent device)
         {
             InitializeComponent();
+
+            /*
+             * 
+             * Normal: 440
+             * Extras shown: 640
+             * 
+             */
 
             songMixer = mixer;
             outputDevice = device;
@@ -38,8 +38,8 @@ namespace MirishitaMusicPlayer.Forms
         {
             TryInvoke(() =>
             {
-                debugEyesIDLabel.Text = expressionID.ToString();
-                debugEyeCloseIDLabel.Text = $"eye close: " + eyeClose;
+                debugEyesIDLabel.Text = "Expression: " + expressionID.ToString();
+                debugEyeCloseIDLabel.Text = $"Eye close: " + eyeClose;
             });
             string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionID}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
@@ -49,7 +49,7 @@ namespace MirishitaMusicPlayer.Forms
 
         public void UpdateLipSync(int lipSyncID)
         {
-            TryInvoke(() => debugMouthIDLabel.Text = lipSyncID.ToString());
+            TryInvoke(() => debugMouthIDLabel.Text = "Mouth: " + lipSyncID.ToString());
 
             //if (lipSyncID == 56 || lipSyncID == 59)
             //    lipSyncID = 1;
@@ -89,6 +89,11 @@ namespace MirishitaMusicPlayer.Forms
 
             if (closeForm)
                 TryInvoke(() => Close());
+        }
+
+        private void PlayerForm_Load(object sender, EventArgs e)
+        {
+            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -131,20 +136,12 @@ namespace MirishitaMusicPlayer.Forms
         private void ResetButton_Click(object sender, EventArgs e) => songMixer.Reset();
         private void StopButton_Click(object sender, EventArgs e) => Stop(true);
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e) => Stop();
-        private void PlayerForm_Load(object sender, EventArgs e)
-        {
-            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
-        }
 
         private void VolumeTrackBar_Scroll(object sender, EventArgs e)
         {
             outputDevice.Volume = volumeTrackBar.Value / 100.0f;
 
-            //volumeToolTip.SetToolTip(volumeTrackBar, volumeTrackBar.Value.ToString());
-            if (volumeTrackBar.Capture)
-            {
-                volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
-            }
+            volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }
 
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)

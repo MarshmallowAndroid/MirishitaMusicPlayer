@@ -38,7 +38,7 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.loadingBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.volumeLabel = new System.Windows.Forms.Label();
             this.volumeToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -49,14 +49,14 @@
             this.songIDTextBox.Location = new System.Drawing.Point(233, 12);
             this.songIDTextBox.Name = "songIDTextBox";
             this.songIDTextBox.Size = new System.Drawing.Size(100, 23);
-            this.songIDTextBox.TabIndex = 1;
+            this.songIDTextBox.TabIndex = 2;
             // 
             // getSongJacketsButton
             // 
             this.getSongJacketsButton.Location = new System.Drawing.Point(12, 11);
             this.getSongJacketsButton.Name = "getSongJacketsButton";
             this.getSongJacketsButton.Size = new System.Drawing.Size(127, 23);
-            this.getSongJacketsButton.TabIndex = 2;
+            this.getSongJacketsButton.TabIndex = 0;
             this.getSongJacketsButton.Text = "Get all song jackets";
             this.getSongJacketsButton.UseVisualStyleBackColor = true;
             this.getSongJacketsButton.Click += new System.EventHandler(this.GetSongJacketsButton_Click);
@@ -67,7 +67,7 @@
             this.bySongIDCheckBox.Location = new System.Drawing.Point(145, 14);
             this.bySongIDCheckBox.Name = "bySongIDCheckBox";
             this.bySongIDCheckBox.Size = new System.Drawing.Size(82, 19);
-            this.bySongIDCheckBox.TabIndex = 3;
+            this.bySongIDCheckBox.TabIndex = 1;
             this.bySongIDCheckBox.Text = "By song ID";
             this.bySongIDCheckBox.UseVisualStyleBackColor = true;
             this.bySongIDCheckBox.CheckedChanged += new System.EventHandler(this.BySongIDCheckBox_CheckedChanged);
@@ -81,7 +81,7 @@
             this.jacketsPanel.Location = new System.Drawing.Point(12, 74);
             this.jacketsPanel.Name = "jacketsPanel";
             this.jacketsPanel.Size = new System.Drawing.Size(959, 554);
-            this.jacketsPanel.TabIndex = 4;
+            this.jacketsPanel.TabIndex = 8;
             // 
             // availableSongsLabel
             // 
@@ -89,7 +89,7 @@
             this.availableSongsLabel.Location = new System.Drawing.Point(12, 56);
             this.availableSongsLabel.Name = "availableSongsLabel";
             this.availableSongsLabel.Size = new System.Drawing.Size(89, 15);
-            this.availableSongsLabel.TabIndex = 5;
+            this.availableSongsLabel.TabIndex = 7;
             this.availableSongsLabel.Text = "Available songs";
             // 
             // updateDatabaseButton
@@ -108,7 +108,7 @@
             this.progressBar.Location = new System.Drawing.Point(339, 12);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(216, 23);
-            this.progressBar.TabIndex = 7;
+            this.progressBar.TabIndex = 3;
             // 
             // loadingBackgroundWorker
             // 
@@ -117,31 +117,32 @@
             this.loadingBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.LoadingBackgroundWorker_ProgressChanged);
             this.loadingBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.LoadingBackgroundWorker_RunWorkerCompleted);
             // 
-            // volumeBar
+            // volumeTrackBar
             // 
             this.volumeTrackBar.Location = new System.Drawing.Point(614, 12);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Size = new System.Drawing.Size(239, 45);
-            this.volumeTrackBar.TabIndex = 8;
+            this.volumeTrackBar.TabIndex = 5;
             this.volumeTrackBar.TickFrequency = 50;
             this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeBar_Scroll);
             // 
-            // label1
+            // volumeLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(561, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 15);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Volume";
+            this.volumeLabel.AutoSize = true;
+            this.volumeLabel.Location = new System.Drawing.Point(561, 15);
+            this.volumeLabel.Name = "volumeLabel";
+            this.volumeLabel.Size = new System.Drawing.Size(47, 15);
+            this.volumeLabel.TabIndex = 4;
+            this.volumeLabel.Text = "Volume";
             // 
             // SongSelectForm
             // 
+            this.AcceptButton = this.getSongJacketsButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(983, 640);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.updateDatabaseButton);
@@ -171,7 +172,7 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker loadingBackgroundWorker;
         private System.Windows.Forms.TrackBar volumeTrackBar;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label volumeLabel;
         private System.Windows.Forms.ToolTip volumeToolTip;
     }
 }

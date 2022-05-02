@@ -85,7 +85,7 @@
             this.seekBar.Maximum = 100;
             this.seekBar.Name = "seekBar";
             this.seekBar.Size = new System.Drawing.Size(400, 45);
-            this.seekBar.TabIndex = 1;
+            this.seekBar.TabIndex = 10;
             this.seekBar.TickFrequency = 0;
             this.seekBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.seekBar.Scroll += new System.EventHandler(this.SeekBar_Scroll);
@@ -102,8 +102,9 @@
             this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 15);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
-            this.debugEyesIDLabel.Size = new System.Drawing.Size(0, 25);
+            this.debugEyesIDLabel.Size = new System.Drawing.Size(106, 25);
             this.debugEyesIDLabel.TabIndex = 2;
+            this.debugEyesIDLabel.Text = "Expression:";
             // 
             // debugEyeCloseIDLabel
             // 
@@ -112,8 +113,9 @@
             this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 40);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
-            this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(0, 25);
+            this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(93, 25);
             this.debugEyeCloseIDLabel.TabIndex = 2;
+            this.debugEyeCloseIDLabel.Text = "Eye close:";
             // 
             // debugMouthIDLabel
             // 
@@ -122,8 +124,9 @@
             this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 285);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
-            this.debugMouthIDLabel.Size = new System.Drawing.Size(0, 25);
+            this.debugMouthIDLabel.Size = new System.Drawing.Size(72, 25);
             this.debugMouthIDLabel.TabIndex = 2;
+            this.debugMouthIDLabel.Text = "Mouth:";
             // 
             // lyricsTextBox
             // 
@@ -131,7 +134,7 @@
             this.lyricsTextBox.Location = new System.Drawing.Point(12, 418);
             this.lyricsTextBox.Name = "lyricsTextBox";
             this.lyricsTextBox.Size = new System.Drawing.Size(400, 105);
-            this.lyricsTextBox.TabIndex = 3;
+            this.lyricsTextBox.TabIndex = 0;
             this.lyricsTextBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // currentTimeLabel
@@ -140,7 +143,7 @@
             this.currentTimeLabel.Location = new System.Drawing.Point(12, 604);
             this.currentTimeLabel.Name = "currentTimeLabel";
             this.currentTimeLabel.Size = new System.Drawing.Size(64, 32);
-            this.currentTimeLabel.TabIndex = 4;
+            this.currentTimeLabel.TabIndex = 7;
             this.currentTimeLabel.Text = "0:00";
             this.currentTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -150,7 +153,7 @@
             this.totalTimeLabel.Location = new System.Drawing.Point(348, 604);
             this.totalTimeLabel.Name = "totalTimeLabel";
             this.totalTimeLabel.Size = new System.Drawing.Size(64, 32);
-            this.totalTimeLabel.TabIndex = 4;
+            this.totalTimeLabel.TabIndex = 9;
             this.totalTimeLabel.Text = "0:00";
             this.totalTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -173,7 +176,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(400, 75);
-            this.tableLayoutPanel1.TabIndex = 5;
+            this.tableLayoutPanel1.TabIndex = 1;
             // 
             // stopButton
             // 
@@ -181,7 +184,7 @@
             this.stopButton.Location = new System.Drawing.Point(323, 3);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(74, 69);
-            this.stopButton.TabIndex = 4;
+            this.stopButton.TabIndex = 6;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
             this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
@@ -214,7 +217,7 @@
             this.playButton.Location = new System.Drawing.Point(163, 3);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(74, 69);
-            this.playButton.TabIndex = 1;
+            this.playButton.TabIndex = 4;
             this.playButton.Text = "Play/Pause";
             this.playButton.UseVisualStyleBackColor = true;
             this.playButton.Click += new System.EventHandler(this.PlayButton_Click);
@@ -225,14 +228,14 @@
             this.toggleBgmButton.Location = new System.Drawing.Point(243, 3);
             this.toggleBgmButton.Name = "toggleBgmButton";
             this.toggleBgmButton.Size = new System.Drawing.Size(74, 69);
-            this.toggleBgmButton.TabIndex = 0;
+            this.toggleBgmButton.TabIndex = 5;
             this.toggleBgmButton.Text = "Toggle BGM";
             this.toggleBgmButton.UseVisualStyleBackColor = true;
             this.toggleBgmButton.Click += new System.EventHandler(this.ToggleBgmButton_Click);
             // 
             // volumeTrackBar
             // 
-            this.volumeTrackBar.Location = new System.Drawing.Point(567, 418);
+            this.volumeTrackBar.Location = new System.Drawing.Point(727, 418);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -244,7 +247,7 @@
             // volumeLabel
             // 
             this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Location = new System.Drawing.Point(565, 400);
+            this.volumeLabel.Location = new System.Drawing.Point(725, 400);
             this.volumeLabel.Name = "volumeLabel";
             this.volumeLabel.Size = new System.Drawing.Size(47, 15);
             this.volumeLabel.TabIndex = 7;
@@ -269,7 +272,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 696);
+            this.ClientSize = new System.Drawing.Size(784, 696);
             this.Controls.Add(this.showExtrasButton);
             this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
@@ -283,6 +286,8 @@
             this.Controls.Add(this.seekBar);
             this.Controls.Add(this.lipSyncPictureBox);
             this.Controls.Add(this.expressionPictureBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "PlayerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Player";
