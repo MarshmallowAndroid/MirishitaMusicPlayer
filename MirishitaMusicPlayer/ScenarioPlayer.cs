@@ -69,17 +69,17 @@ namespace MirishitaMusicPlayer
 
                     secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
-                    while (secondsElapsed >= muteScenarios[muteIndex].AbsTime)
+                    while (secondsElapsed > muteScenarios[muteIndex].AbsTime)
                     {
                         if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                         else break;
                     }
-                    while (secondsElapsed >= expressionScenarios[expressionScenarioIndex].AbsTime)
+                    while (secondsElapsed > expressionScenarios[expressionScenarioIndex].AbsTime)
                     {
                         if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
                         else break;
                     }
-                    while (secondsElapsed >= mainScenario.Scenario[mainScenarioIndex].AbsTime)
+                    while (secondsElapsed > mainScenario.Scenario[mainScenarioIndex].AbsTime)
                     {
                         if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                         else break;
