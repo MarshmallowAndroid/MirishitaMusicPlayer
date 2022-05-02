@@ -93,7 +93,7 @@ namespace MirishitaMusicPlayer.Audio
 
         public bool MuteBackground { get; set; }
 
-        public byte[] VoiceControl { get; set; }
+        public int VoiceCount => voiceSampleProviders.Count;
 
         public TimeSpan CurrentTime => backgroundWaveStream.CurrentTime;
 
@@ -116,7 +116,7 @@ namespace MirishitaMusicPlayer.Audio
 
                 foreach (var voice in voiceSampleProviders)
                 {
-                    voice.Position  = backgroundWaveStream.Position / 2;
+                    voice.Position = backgroundWaveStream.Position / 2;
                 }
 
                 currentVolumeSample = backgroundWaveStream.Position /
@@ -131,57 +131,6 @@ namespace MirishitaMusicPlayer.Audio
         }
 
         public long Length => backgroundWaveStream.Length;
-
-        public void Reset()
-        {
-            backgroundWaveStream.Position = 0;
-
-            if (backgroundExWaveStream != null)
-                backgroundExWaveStream.Position = 0;
-
-            foreach (var voice in voiceSampleProviders)
-            {
-                voice.Reset();
-            }
-
-            currentVolumeSample = 0;
-            currentExSample = 0;
-            nextVolumeTriggerIndex = 0;
-            nextExTriggerIndex = 0;
-        }
-
-        public void Seek(float seconds)
-        {
-            // TODO: Simplify
-
-            if (backgroundWaveStream.CurrentTime.TotalSeconds + seconds < 0)
-            {
-                Reset();
-                return;
-            }
-
-            backgroundWaveStream.Position += (long)(seconds *
-                (backgroundWaveStream.WaveFormat.BitsPerSample / 8 *
-                backgroundWaveStream.WaveFormat.SampleRate *
-                backgroundWaveStream.WaveFormat.Channels));
-
-            if (backgroundExWaveStream != null)
-                backgroundExWaveStream.Position = backgroundWaveStream.Position;
-
-            foreach (var voice in voiceSampleProviders)
-            {
-                voice.Seek(seconds);
-            }
-
-            currentVolumeSample = backgroundWaveStream.Position /
-                backgroundWaveStream.WaveFormat.Channels /
-                (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
-            currentExSample = backgroundWaveStream.Position /
-                backgroundWaveStream.WaveFormat.Channels /
-                (backgroundWaveStream.WaveFormat.BitsPerSample / 8);
-            nextVolumeTriggerIndex = 0;
-            nextExTriggerIndex = 0;
-        }
 
         public int Read(float[] buffer, int offset, int count)
         {

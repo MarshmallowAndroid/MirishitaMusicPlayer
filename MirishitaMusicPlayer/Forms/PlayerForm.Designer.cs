@@ -103,7 +103,7 @@
             this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 15);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
             this.debugEyesIDLabel.Size = new System.Drawing.Size(106, 25);
-            this.debugEyesIDLabel.TabIndex = 2;
+            this.debugEyesIDLabel.TabIndex = 11;
             this.debugEyesIDLabel.Text = "Expression:";
             // 
             // debugEyeCloseIDLabel
@@ -114,7 +114,7 @@
             this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 40);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
             this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(93, 25);
-            this.debugEyeCloseIDLabel.TabIndex = 2;
+            this.debugEyeCloseIDLabel.TabIndex = 12;
             this.debugEyeCloseIDLabel.Text = "Eye close:";
             // 
             // debugMouthIDLabel
@@ -125,7 +125,7 @@
             this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 285);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
             this.debugMouthIDLabel.Size = new System.Drawing.Size(72, 25);
-            this.debugMouthIDLabel.TabIndex = 2;
+            this.debugMouthIDLabel.TabIndex = 13;
             this.debugMouthIDLabel.Text = "Mouth:";
             // 
             // lyricsTextBox
@@ -192,6 +192,7 @@
             // toggleVoicesButton
             // 
             this.toggleVoicesButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toggleVoicesButton.Enabled = false;
             this.toggleVoicesButton.Location = new System.Drawing.Point(83, 3);
             this.toggleVoicesButton.Name = "toggleVoicesButton";
             this.toggleVoicesButton.Size = new System.Drawing.Size(74, 69);
@@ -240,7 +241,7 @@
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.volumeTrackBar.Size = new System.Drawing.Size(45, 266);
-            this.volumeTrackBar.TabIndex = 6;
+            this.volumeTrackBar.TabIndex = 15;
             this.volumeTrackBar.TickFrequency = 50;
             this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
             // 
@@ -250,7 +251,7 @@
             this.volumeLabel.Location = new System.Drawing.Point(725, 400);
             this.volumeLabel.Name = "volumeLabel";
             this.volumeLabel.Size = new System.Drawing.Size(47, 15);
-            this.volumeLabel.TabIndex = 7;
+            this.volumeLabel.TabIndex = 14;
             this.volumeLabel.Text = "Volume";
             // 
             // showExtrasButton

@@ -95,44 +95,6 @@ namespace MirishitaMusicPlayer
 
                 secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
-                //if (setup)
-                //{
-                //    setup = false;
-                //    break;
-                //}
-
-                //if (seeked)
-                //{
-                //    muteIndex = 0;
-                //    expressionScenarioIndex = 0;
-                //    mainScenarioIndex = 0;
-
-                //    secondsElapsed = songMixer.CurrentTime.TotalSeconds;
-
-                //    while (secondsElapsed >= muteScenarios[muteIndex].AbsTime)
-                //    {
-                //        if (muteIndex < muteScenarios.Count - 1) muteIndex++;
-                //        else break;
-                //    }
-                //    while (secondsElapsed >= expressionScenarios[expressionScenarioIndex].AbsTime)
-                //    {
-                //        if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
-                //        else break;
-                //    }
-                //    while (secondsElapsed >= mainScenario.Scenario[mainScenarioIndex].AbsTime)
-                //    {
-                //        if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
-                //        else break;
-                //    }
-
-                //    if (muteIndex > 0)
-                //        muteIndex--;
-                //    if (expressionScenarioIndex > 0)
-                //        expressionScenarioIndex--;
-                //    if (mainScenarioIndex > 0)
-                //        mainScenarioIndex--;
-                //}
-
                 EventScenarioData currentMuteScenario = muteScenarios[muteIndex];
                 if (secondsElapsed >= currentMuteScenario.AbsTime)
                 {

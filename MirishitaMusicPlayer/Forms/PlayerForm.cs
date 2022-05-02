@@ -93,6 +93,9 @@ namespace MirishitaMusicPlayer.Forms
 
         private void PlayerForm_Load(object sender, EventArgs e)
         {
+            if (songMixer.VoiceCount > 0)
+                toggleVoicesButton.Enabled = true;
+
             volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
         }
 
@@ -133,7 +136,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ToggleBgmButton_Click(object sender, EventArgs e) => songMixer.MuteBackground = !songMixer.MuteBackground;
         private void ToggleVoicesButton_Click(object sender, EventArgs e) => songMixer.MuteVoices = !songMixer.MuteVoices;
-        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Reset();
+        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Position = 0;
         private void StopButton_Click(object sender, EventArgs e) => Stop(true);
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e) => Stop();
 
