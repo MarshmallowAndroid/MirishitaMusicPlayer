@@ -142,42 +142,51 @@ namespace MirishitaMusicPlayer.Audio
                 buffer[i] = 0;
             }
 
-            float[] voiceBuffer = new float[count / channelDivide];
             float[] bufferMain = new float[count];
-
-            long sampleTemp = currentVolumeSample;
 
             // Read and mix voices
             for (int i = 0; i < voiceSampleProviders.Count; i++)
             {
-                voiceSampleProviders[i].Read(voiceBuffer, offset, count / channelDivide);
+                voiceSampleProviders[i].Read(bufferMain, offset, count / channelDivide);
 
                 if (MuteVoices) continue;
-
-                currentVolumeSample = sampleTemp;
 
                 // Mono to stereo conversion
                 int index = offset;
                 for (int j = 0; j < count / channelDivide; j++)
                 {
-                    while (currentVolumeSample >= volumeTriggers[nextVolumeTriggerIndex].Sample)
-                    {
-                        if (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers == 1)
-                            multiplier = (1.0f / 2.0f) + 0.15f;
-                        else
-                            multiplier = 1.0f / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.15f;
-
-                        if (nextVolumeTriggerIndex < volumeTriggers.Count - 1) nextVolumeTriggerIndex++;
-                        else break;
-                    }
-
                     for (int channel = 0; channel < channelDivide; channel++)
                     {
-                        buffer[index++] += voiceBuffer[j] * multiplier;
+                        buffer[index++] += bufferMain[j];
                     }
-
-                    currentVolumeSample++;
                 }
+            }
+
+            // Adjust volume of voices
+            //
+            // We need the number of real voices enabled, for cases where
+            // the VoiceControl array is less than sample provider count
+            //
+            // Necessary for proper voice volume adjustment
+            for (int i = offset; i < count / backgroundWaveStream.WaveFormat.Channels; i++)
+            {
+                while (currentVolumeSample >= volumeTriggers[nextVolumeTriggerIndex].Sample)
+                {
+                    if (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers == 1)
+                        multiplier = (1.0f / 2.0f);
+                    else
+                        multiplier = 1.0f / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.10f;
+
+                    if (nextVolumeTriggerIndex < volumeTriggers.Count - 1) nextVolumeTriggerIndex++;
+                    else break;
+                }
+
+                for (int j = 0; j < backgroundWaveStream.WaveFormat.Channels; j++)
+                {
+                    buffer[i * WaveFormat.Channels + j] *= multiplier;
+                }
+
+                currentVolumeSample++;
             }
 
             // Read from background music
