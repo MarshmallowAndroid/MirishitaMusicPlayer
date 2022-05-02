@@ -66,11 +66,12 @@ namespace MirishitaMusicPlayer
                     expressionScenarios,
                     muteScenarios);
 
-                PlayerForm playerForm = new(songMixer, outputDevice);
+                PlayerForm playerForm = new(idolOrderForm.Order, songMixer, outputDevice);
 
                 scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
                 scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
                 scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
+                scenarioPlayback.MuteChanged += (m) => playerForm.UpdateMute(m);
                 scenarioPlayback.SongStopped += () => playerForm.Stop(true);
 
                 scenarioPlayback.Start();

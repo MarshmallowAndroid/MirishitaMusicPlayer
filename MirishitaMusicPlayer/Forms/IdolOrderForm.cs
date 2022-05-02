@@ -33,7 +33,7 @@ namespace MirishitaMusicPlayer.Forms
         private readonly AssetList assetList;
         private readonly List<EventScenarioData> muteScenarios;
 
-        private readonly string normalFile;
+        private readonly string originalBgmFile;
         private readonly string bgmFile;
         private readonly List<string> voiceFiles = new();
         private readonly string extraFile;
@@ -67,7 +67,7 @@ namespace MirishitaMusicPlayer.Forms
             this.assetsManager = assetsManager;
             this.muteScenarios = muteScenarios;
 
-            Regex normalRegex = new($"song3_{songID}.acb.unity3d");
+            Regex originalBgmRegex = new($"song3_{songID}.acb.unity3d");
             Regex bgmRegex = new($"song3_{songID}_bgm.acb.unity3d");
             Regex voiceRegex = new($"song3_{songID}_([0-9]{{3}})([a-z]{{3}}).acb.unity3d");
             Regex extraRegex = new($"song3_{songID}_ex.acb.unity3d");
@@ -75,8 +75,8 @@ namespace MirishitaMusicPlayer.Forms
             // Assign matching filenames to their corresponding audio type
             foreach (var asset in assetList.Assets)
             {
-                if (normalRegex.IsMatch(asset.Name))
-                    normalFile = asset.Name;
+                if (originalBgmRegex.IsMatch(asset.Name))
+                    originalBgmFile = asset.Name;
                 if (bgmRegex.IsMatch(asset.Name))
                     bgmFile = asset.Name;
                 if (voiceRegex.IsMatch(asset.Name))
@@ -124,11 +124,14 @@ namespace MirishitaMusicPlayer.Forms
                 Height = 745;
             }
 
+            if (!string.IsNullOrEmpty(originalBgmFile))
+                originalBgmRadioButton.Enabled = true;
+
             if (voiceCount > 0)
-                soloCheckBox.Enabled = true;
+                soloRadioButton.Enabled = true;
 
             if (hasExtraBgm)
-                extraCheckBox.Enabled = true;
+                extraRadioButton.Enabled = true;
         }
 
         public bool ExtraBgmEnabled { get; private set; }
@@ -136,6 +139,8 @@ namespace MirishitaMusicPlayer.Forms
         public SongMixer SongMixer { get; private set; }
 
         public WaveOutEvent OutputDevice { get; private set; } = new() { DesiredLatency = 100 };
+
+        public Idol[] Order => resultOrder;
 
         public void ProcessSong()
         {
@@ -233,30 +238,30 @@ namespace MirishitaMusicPlayer.Forms
         {
             LoadingMode(true);
 
-            int orderLength = soloCheckBox.Checked ? 1 : voiceCount;
-
-            resultOrder = new Idol[orderLength];
-
             requiredAssets.Clear();
             requiredAssets.Add(
                 assetList.Assets.First(a =>
                 {
-                    if (hasExtraBgm && extraCheckBox.Checked)
+                    if (hasExtraBgm && extraRadioButton.Checked)
                     {
                         ExtraBgmEnabled = true;
                         return a.Name == extraFile;
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(bgmFile))
-                            return a.Name == normalFile;
+                        if (string.IsNullOrEmpty(bgmFile) || originalBgmRadioButton.Checked)
+                            return a.Name == originalBgmFile;
                         else
                             return a.Name == bgmFile;
                     }
                 }));
 
-            if (orderLength > 0)
+            int orderLength = soloRadioButton.Checked ? 1 : voiceCount;
+
+            if (orderLength > 0 && !originalBgmRadioButton.Checked)
             {
+                resultOrder = new Idol[orderLength];
+
                 foreach (var checkBox in idolCheckBoxes)
                 {
                     int index = (int)checkBox.Tag;

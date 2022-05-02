@@ -31,10 +31,12 @@
             this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.startButton = new System.Windows.Forms.Button();
-            this.soloCheckBox = new System.Windows.Forms.CheckBox();
+            this.soloRadioButton = new System.Windows.Forms.RadioButton();
             this.stashedIdolsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.extraCheckBox = new System.Windows.Forms.CheckBox();
+            this.extraRadioButton = new System.Windows.Forms.RadioButton();
+            this.originalBgmRadioButton = new System.Windows.Forms.RadioButton();
+            this.defaultRadioButton = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // fiveIdolPanel
@@ -86,18 +88,18 @@
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
-            // soloCheckBox
+            // soloRadioButton
             // 
-            this.soloCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.soloCheckBox.AutoSize = true;
-            this.soloCheckBox.Enabled = false;
-            this.soloCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.soloCheckBox.Location = new System.Drawing.Point(635, 663);
-            this.soloCheckBox.Name = "soloCheckBox";
-            this.soloCheckBox.Size = new System.Drawing.Size(60, 25);
-            this.soloCheckBox.TabIndex = 2;
-            this.soloCheckBox.Text = "Solo";
-            this.soloCheckBox.UseVisualStyleBackColor = true;
+            this.soloRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.soloRadioButton.AutoSize = true;
+            this.soloRadioButton.Enabled = false;
+            this.soloRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.soloRadioButton.Location = new System.Drawing.Point(547, 662);
+            this.soloRadioButton.Name = "soloRadioButton";
+            this.soloRadioButton.Size = new System.Drawing.Size(59, 25);
+            this.soloRadioButton.TabIndex = 2;
+            this.soloRadioButton.Text = "Solo";
+            this.soloRadioButton.UseVisualStyleBackColor = true;
             // 
             // stashedIdolsPanel
             // 
@@ -111,23 +113,50 @@
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressBar.Location = new System.Drawing.Point(12, 671);
+            this.progressBar.Location = new System.Drawing.Point(12, 662);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(267, 23);
+            this.progressBar.Size = new System.Drawing.Size(267, 25);
             this.progressBar.TabIndex = 4;
             // 
-            // extraCheckBox
+            // extraRadioButton
             // 
-            this.extraCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.extraCheckBox.AutoSize = true;
-            this.extraCheckBox.Enabled = false;
-            this.extraCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.extraCheckBox.Location = new System.Drawing.Point(701, 663);
-            this.extraCheckBox.Name = "extraCheckBox";
-            this.extraCheckBox.Size = new System.Drawing.Size(63, 25);
-            this.extraCheckBox.TabIndex = 2;
-            this.extraCheckBox.Text = "Extra";
-            this.extraCheckBox.UseVisualStyleBackColor = true;
+            this.extraRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.extraRadioButton.AutoSize = true;
+            this.extraRadioButton.Enabled = false;
+            this.extraRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.extraRadioButton.Location = new System.Drawing.Point(702, 662);
+            this.extraRadioButton.Name = "extraRadioButton";
+            this.extraRadioButton.Size = new System.Drawing.Size(62, 25);
+            this.extraRadioButton.TabIndex = 2;
+            this.extraRadioButton.Text = "Extra";
+            this.extraRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // originalBgmRadioButton
+            // 
+            this.originalBgmRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.originalBgmRadioButton.AutoSize = true;
+            this.originalBgmRadioButton.Enabled = false;
+            this.originalBgmRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.originalBgmRadioButton.Location = new System.Drawing.Point(612, 662);
+            this.originalBgmRadioButton.Name = "originalBgmRadioButton";
+            this.originalBgmRadioButton.Size = new System.Drawing.Size(84, 25);
+            this.originalBgmRadioButton.TabIndex = 2;
+            this.originalBgmRadioButton.Text = "Original";
+            this.originalBgmRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // defaultRadioButton
+            // 
+            this.defaultRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.defaultRadioButton.AutoSize = true;
+            this.defaultRadioButton.Checked = true;
+            this.defaultRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.defaultRadioButton.Location = new System.Drawing.Point(463, 662);
+            this.defaultRadioButton.Name = "defaultRadioButton";
+            this.defaultRadioButton.Size = new System.Drawing.Size(78, 25);
+            this.defaultRadioButton.TabIndex = 2;
+            this.defaultRadioButton.TabStop = true;
+            this.defaultRadioButton.Text = "Default";
+            this.defaultRadioButton.UseVisualStyleBackColor = true;
             // 
             // IdolOrderForm
             // 
@@ -135,8 +164,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(911, 706);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.extraCheckBox);
-            this.Controls.Add(this.soloCheckBox);
+            this.Controls.Add(this.extraRadioButton);
+            this.Controls.Add(this.defaultRadioButton);
+            this.Controls.Add(this.originalBgmRadioButton);
+            this.Controls.Add(this.soloRadioButton);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
@@ -157,9 +188,11 @@
         private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.CheckBox soloCheckBox;
+        private System.Windows.Forms.RadioButton soloRadioButton;
         private System.Windows.Forms.FlowLayoutPanel stashedIdolsPanel;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.CheckBox extraCheckBox;
+        private System.Windows.Forms.RadioButton extraRadioButton;
+        private System.Windows.Forms.RadioButton originalBgmRadioButton;
+        private System.Windows.Forms.RadioButton defaultRadioButton;
     }
 }

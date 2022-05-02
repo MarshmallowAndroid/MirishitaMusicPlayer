@@ -2,6 +2,7 @@
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,29 +10,70 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class PlayerForm : Form
     {
-        private readonly WaveOutEvent outputDevice;
+        private static readonly int[] positionToIndexTable = new int[]
+        {
+            2, 1, 3, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12
+        };
+
+        private readonly Idol[] singers;
         private readonly SongMixer songMixer;
+        private readonly WaveOutEvent outputDevice;
 
         private readonly int defaultWidth;
 
         private bool isSeeking = false;
         private bool extrasShown = false;
+        private List<PictureBox> idolPictureBoxes = new();
 
-        public PlayerForm(SongMixer mixer, WaveOutEvent device)
+        public PlayerForm(Idol[] order, SongMixer mixer, WaveOutEvent device)
         {
             InitializeComponent();
 
             /*
              * 
              * Normal: 440
-             * Extras shown: 640
+             * Extras shown: 900
              * 
              */
 
+            singers = order;
             songMixer = mixer;
             outputDevice = device;
 
             defaultWidth = Width;
+
+            if (singers != null)
+            {
+                for (int i = 0; i < singers.Length; i++)
+                {
+                    Idol idol = singers[i];
+
+                    PictureBox pictureBox = new();
+                    pictureBox.Anchor = AnchorStyles.None;
+                    pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
+                    pictureBox.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
+                    pictureBox.BackgroundImage.Tag = idol.IdolNameID;
+                    pictureBox.Dock = DockStyle.Fill;
+                    pictureBox.Visible = false;
+
+                    idolPictureBoxes.Add(pictureBox);
+                }
+
+                int idolPosition = 0;
+                for (int i = 0; i < singers.Length; i++)
+                {
+                    PictureBox checkBox = idolPictureBoxes[i];
+
+                    int column = positionToIndexTable[i];
+
+                    if (idolPosition < 5)
+                        fiveIdolPanel.Controls.Add(checkBox, column, 0);
+                    else if (idolPosition >= 5 && idolPosition < 13)
+                        eightIdolPanel.Controls.Add(checkBox, column % 5, 0);
+
+                    idolPosition++;
+                }
+            }
         }
 
         public void UpdateExpression(int expressionID, bool eyeClose)
@@ -66,6 +108,22 @@ namespace MirishitaMusicPlayer.Forms
             TryInvoke(() =>
             {
                 lyricsTextBox.Text = lyrics;
+            });
+        }
+
+        public void UpdateMute(byte[] mutes)
+        {
+            TryInvoke(() =>
+            {
+                for (int i = 0; i < idolPictureBoxes.Count; i++)
+                {
+                    PictureBox pictureBox = idolPictureBoxes[i];
+
+                    if (mutes[i] == 1)
+                        pictureBox.Visible = true;
+                    else
+                        pictureBox.Visible = false;
+                }
             });
         }
 

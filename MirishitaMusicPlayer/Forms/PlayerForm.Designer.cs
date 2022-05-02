@@ -39,7 +39,7 @@
             this.lyricsTextBox = new System.Windows.Forms.Label();
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.totalTimeLabel = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.controlPanel = new System.Windows.Forms.TableLayoutPanel();
             this.stopButton = new System.Windows.Forms.Button();
             this.toggleVoicesButton = new System.Windows.Forms.Button();
             this.ResetButton = new System.Windows.Forms.Button();
@@ -50,10 +50,12 @@
             this.showExtrasButton = new System.Windows.Forms.Button();
             this.extrasShowTimer = new System.Windows.Forms.Timer(this.components);
             this.volumeToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.controlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,7 +102,7 @@
             this.debugEyesIDLabel.AutoSize = true;
             this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIDLabel.Location = new System.Drawing.Point(440, 15);
+            this.debugEyesIDLabel.Location = new System.Drawing.Point(452, 285);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
             this.debugEyesIDLabel.Size = new System.Drawing.Size(106, 25);
             this.debugEyesIDLabel.TabIndex = 11;
@@ -111,7 +113,7 @@
             this.debugEyeCloseIDLabel.AutoSize = true;
             this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(440, 40);
+            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(452, 310);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
             this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(93, 25);
             this.debugEyeCloseIDLabel.TabIndex = 12;
@@ -122,7 +124,7 @@
             this.debugMouthIDLabel.AutoSize = true;
             this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIDLabel.Location = new System.Drawing.Point(440, 285);
+            this.debugMouthIDLabel.Location = new System.Drawing.Point(452, 335);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
             this.debugMouthIDLabel.Size = new System.Drawing.Size(72, 25);
             this.debugMouthIDLabel.TabIndex = 13;
@@ -157,26 +159,26 @@
             this.totalTimeLabel.Text = "0:00";
             this.totalTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // tableLayoutPanel1
+            // controlPanel
             // 
-            this.tableLayoutPanel1.ColumnCount = 5;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.stopButton, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.toggleVoicesButton, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.ResetButton, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.playButton, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.toggleBgmButton, 3, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 526);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(400, 75);
-            this.tableLayoutPanel1.TabIndex = 1;
+            this.controlPanel.ColumnCount = 5;
+            this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.controlPanel.Controls.Add(this.stopButton, 4, 0);
+            this.controlPanel.Controls.Add(this.toggleVoicesButton, 1, 0);
+            this.controlPanel.Controls.Add(this.ResetButton, 0, 0);
+            this.controlPanel.Controls.Add(this.playButton, 2, 0);
+            this.controlPanel.Controls.Add(this.toggleBgmButton, 3, 0);
+            this.controlPanel.Location = new System.Drawing.Point(12, 526);
+            this.controlPanel.Name = "controlPanel";
+            this.controlPanel.RowCount = 1;
+            this.controlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.controlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.controlPanel.Size = new System.Drawing.Size(400, 75);
+            this.controlPanel.TabIndex = 1;
             // 
             // stopButton
             // 
@@ -236,7 +238,7 @@
             // 
             // volumeTrackBar
             // 
-            this.volumeTrackBar.Location = new System.Drawing.Point(727, 418);
+            this.volumeTrackBar.Location = new System.Drawing.Point(827, 418);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -248,7 +250,7 @@
             // volumeLabel
             // 
             this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Location = new System.Drawing.Point(725, 400);
+            this.volumeLabel.Location = new System.Drawing.Point(825, 400);
             this.volumeLabel.Name = "volumeLabel";
             this.volumeLabel.Size = new System.Drawing.Size(47, 15);
             this.volumeLabel.TabIndex = 14;
@@ -269,15 +271,52 @@
             this.extrasShowTimer.Interval = 16;
             this.extrasShowTimer.Tick += new System.EventHandler(this.ExtrasShowTimer_Tick);
             // 
+            // fiveIdolPanel
+            // 
+            this.fiveIdolPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.fiveIdolPanel.ColumnCount = 5;
+            this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.fiveIdolPanel.Location = new System.Drawing.Point(458, 15);
+            this.fiveIdolPanel.Name = "fiveIdolPanel";
+            this.fiveIdolPanel.RowCount = 1;
+            this.fiveIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.fiveIdolPanel.Size = new System.Drawing.Size(414, 80);
+            this.fiveIdolPanel.TabIndex = 16;
+            // 
+            // eightIdolPanel
+            // 
+            this.eightIdolPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.eightIdolPanel.ColumnCount = 8;
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.eightIdolPanel.Location = new System.Drawing.Point(458, 101);
+            this.eightIdolPanel.Name = "eightIdolPanel";
+            this.eightIdolPanel.RowCount = 1;
+            this.eightIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.eightIdolPanel.Size = new System.Drawing.Size(414, 47);
+            this.eightIdolPanel.TabIndex = 16;
+            // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 696);
+            this.ClientSize = new System.Drawing.Size(884, 696);
+            this.Controls.Add(this.eightIdolPanel);
+            this.Controls.Add(this.fiveIdolPanel);
             this.Controls.Add(this.showExtrasButton);
             this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.controlPanel);
             this.Controls.Add(this.totalTimeLabel);
             this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.lyricsTextBox);
@@ -297,7 +336,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.controlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -316,7 +355,7 @@
         private System.Windows.Forms.Label lyricsTextBox;
         private System.Windows.Forms.Label currentTimeLabel;
         private System.Windows.Forms.Label totalTimeLabel;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel controlPanel;
         private System.Windows.Forms.Button toggleBgmButton;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button toggleVoicesButton;
@@ -327,5 +366,7 @@
         private System.Windows.Forms.Button showExtrasButton;
         private System.Windows.Forms.Timer extrasShowTimer;
         private System.Windows.Forms.ToolTip volumeToolTip;
+        private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
+        private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
     }
 }
