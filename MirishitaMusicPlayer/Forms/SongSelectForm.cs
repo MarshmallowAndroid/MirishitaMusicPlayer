@@ -1,6 +1,7 @@
 ﻿using MirishitaMusicPlayer.Forms.Classes;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,12 +15,16 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class SongSelectForm : Form
     {
+        private readonly WaveOutEvent outputDevice;
+
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
 
-        public SongSelectForm()
+        public SongSelectForm(WaveOutEvent waveOutEvent)
         {
             InitializeComponent();
+
+            outputDevice = waveOutEvent;
         }
 
         public string ResultSongID { get; private set; }
@@ -28,6 +33,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void SongSelectForm_Load(object sender, EventArgs e)
         {
+            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+
             ResultSongID = "";
 
             DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
@@ -296,6 +303,14 @@ namespace MirishitaMusicPlayer.Forms
             Cursor = loading ? Cursors.WaitCursor : Cursors.Default;
             getSongJacketsButton.Enabled = !loading;
             jacketsPanel.Enabled = !loading;
+        }
+
+        private void VolumeBar_Scroll(object sender, EventArgs e)
+        {
+            outputDevice.Volume = volumeTrackBar.Value / 100.0f;
+
+            if (volumeTrackBar.Capture)
+                volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }
     }
 }

@@ -24,8 +24,9 @@ namespace MirishitaMusicPlayer
 
             bool quit = false;
 
+            WaveOutEvent waveOutEvent = new() { DesiredLatency = 100 };
             AssetsManager assetsManager = new();
-            SongSelectForm songSelectForm = new();
+            SongSelectForm songSelectForm = new(waveOutEvent);
 
             while (!quit)
             {

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.songIDTextBox = new System.Windows.Forms.TextBox();
             this.getSongJacketsButton = new System.Windows.Forms.Button();
             this.bySongIDCheckBox = new System.Windows.Forms.CheckBox();
@@ -36,6 +37,10 @@
             this.updateDatabaseButton = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.loadingBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.volumeTrackBar = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.volumeToolTip = new System.Windows.Forms.ToolTip(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // songIDTextBox
@@ -48,7 +53,7 @@
             // 
             // getSongJacketsButton
             // 
-            this.getSongJacketsButton.Location = new System.Drawing.Point(12, 12);
+            this.getSongJacketsButton.Location = new System.Drawing.Point(12, 11);
             this.getSongJacketsButton.Name = "getSongJacketsButton";
             this.getSongJacketsButton.Size = new System.Drawing.Size(127, 23);
             this.getSongJacketsButton.TabIndex = 2;
@@ -90,7 +95,7 @@
             // updateDatabaseButton
             // 
             this.updateDatabaseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateDatabaseButton.Location = new System.Drawing.Point(859, 10);
+            this.updateDatabaseButton.Location = new System.Drawing.Point(859, 11);
             this.updateDatabaseButton.Name = "updateDatabaseButton";
             this.updateDatabaseButton.Size = new System.Drawing.Size(112, 23);
             this.updateDatabaseButton.TabIndex = 6;
@@ -112,11 +117,32 @@
             this.loadingBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.LoadingBackgroundWorker_ProgressChanged);
             this.loadingBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.LoadingBackgroundWorker_RunWorkerCompleted);
             // 
+            // volumeBar
+            // 
+            this.volumeTrackBar.Location = new System.Drawing.Point(614, 12);
+            this.volumeTrackBar.Maximum = 100;
+            this.volumeTrackBar.Name = "volumeTrackBar";
+            this.volumeTrackBar.Size = new System.Drawing.Size(239, 45);
+            this.volumeTrackBar.TabIndex = 8;
+            this.volumeTrackBar.TickFrequency = 50;
+            this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeBar_Scroll);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(561, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 15);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Volume";
+            // 
             // SongSelectForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(983, 640);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.updateDatabaseButton);
             this.Controls.Add(this.availableSongsLabel);
@@ -128,6 +154,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Song Select";
             this.Load += new System.EventHandler(this.SongSelectForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,5 +170,8 @@
         private System.Windows.Forms.Button updateDatabaseButton;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker loadingBackgroundWorker;
+        private System.Windows.Forms.TrackBar volumeTrackBar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolTip volumeToolTip;
     }
 }

@@ -49,6 +49,7 @@
             this.volumeLabel = new System.Windows.Forms.Label();
             this.showExtrasButton = new System.Windows.Forms.Button();
             this.extrasShowTimer = new System.Windows.Forms.Timer(this.components);
+            this.volumeToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
@@ -319,5 +320,6 @@
         private System.Windows.Forms.Label volumeLabel;
         private System.Windows.Forms.Button showExtrasButton;
         private System.Windows.Forms.Timer extrasShowTimer;
+        private System.Windows.Forms.ToolTip volumeToolTip;
     }
 }

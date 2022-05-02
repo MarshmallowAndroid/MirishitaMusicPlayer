@@ -20,6 +20,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private readonly int defaultWidth;
 
+        private bool isSeeking = false;
+
         private bool extrasShown = false;
 
         public PlayerForm(SongMixer mixer, WaveOutEvent device)
@@ -91,8 +93,10 @@ namespace MirishitaMusicPlayer.Forms
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            if (!seekBar.Capture)
+            if (!seekBar.Capture || isSeeking)
                 seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
+            else
+                isSeeking = true;
 
             currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
             totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
@@ -100,8 +104,8 @@ namespace MirishitaMusicPlayer.Forms
 
         private void SeekBar_Scroll(object sender, EventArgs e)
         {
-            if (seekBar.Capture)
-                songMixer.Position = (long)(seekBar.Value / 100.0f * songMixer.Length);
+            isSeeking = true;
+            songMixer.Position = (long)(seekBar.Value / 100.0f * songMixer.Length);
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -122,29 +126,31 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Reset();
         private void ToggleBgmButton_Click(object sender, EventArgs e) => songMixer.MuteBackground = !songMixer.MuteBackground;
         private void ToggleVoicesButton_Click(object sender, EventArgs e) => songMixer.MuteVoices = !songMixer.MuteVoices;
+        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Reset();
         private void StopButton_Click(object sender, EventArgs e) => Stop(true);
-        private void VolumeTrackBar_Scroll(object sender, EventArgs e) => outputDevice.Volume = volumeTrackBar.Value / 100.0f;
-        private void PlayerForm_Load(object sender, EventArgs e) => volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e) => Stop();
+        private void PlayerForm_Load(object sender, EventArgs e)
+        {
+            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+        }
+
+        private void VolumeTrackBar_Scroll(object sender, EventArgs e)
+        {
+            outputDevice.Volume = volumeTrackBar.Value / 100.0f;
+
+            //volumeToolTip.SetToolTip(volumeTrackBar, volumeTrackBar.Value.ToString());
+            if (volumeTrackBar.Capture)
+            {
+                volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
+            }
+        }
 
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
-            int multiplier = 1;
-            int target = 0;
-
-            if (extrasShown)
-            {
-                multiplier = -1;
-                target = defaultWidth;
-            }
-            else
-            {
-                multiplier = 1;
-                target = defaultWidth + 200;
-            }    
+            int multiplier = extrasShown ? -1 : 1;
+            int target = extrasShown ? defaultWidth : defaultWidth + 200;
 
             Width += 10 * multiplier;
             Left -= 5 * multiplier;
@@ -154,18 +160,6 @@ namespace MirishitaMusicPlayer.Forms
                 Width = target;
                 extrasShowTimer.Enabled = false;
             }
-
-            //else
-            //{
-            //    Width -= 10;
-            //    Left += 5;
-
-            //    if (Width <= defaultWidth)
-            //    {
-            //        Width = defaultWidth;
-            //        extrasShowTimer.Enabled = false;
-            //    }
-            //}
         }
 
         private void ShowExtrasButton_Click(object sender, EventArgs e)
