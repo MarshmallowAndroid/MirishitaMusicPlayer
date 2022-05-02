@@ -87,7 +87,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            getSongJacketsButton.Text = bySongIDCheckBox.Checked ? "Get song jacket" : "Get all song jackets";
+            getSongJacketsButton.Text = bySongIDCheckBox.Checked ? "Play song" : "Get all song jackets";
             songIDTextBox.Enabled = bySongIDCheckBox.Checked;
         }
 
@@ -97,62 +97,68 @@ namespace MirishitaMusicPlayer.Forms
 
             List<Asset> filesToDownload = new();
 
-            Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
-
-            uint totalBytesToDownload = 0;
-            foreach (var file in AssetList.Assets)
+            if (!bySongIDCheckBox.Checked)
             {
-                string fileName = file.Name;
+                Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
-                if (File.Exists(Path.Combine("Cache\\Jackets", fileName))) continue;
-
-                //if (bySongIDCheckBox.Checked)
-                //{
-                //    if (fileName.Equals($"jacket_{songIDTextBox.Text}.unity3d"))
-                //    {
-                //        filesToDownload.Add(file);
-                //        totalBytesToDownload += file.Size;
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show($"Song ID \"{songIDTextBox.Text}\" doesn't exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //        LoadingMode(false);
-
-                //        return;
-                //    }
-                //}
-                //else
-                //{
-                if (allJacketsRegex.IsMatch(fileName))
+                uint totalBytesToDownload = 0;
+                foreach (var file in AssetList.Assets)
                 {
-                    filesToDownload.Add(file);
-                    totalBytesToDownload += file.Size;
+                    string fileName = file.Name;
+
+                    if (File.Exists(Path.Combine("Cache\\Jackets", fileName))) continue;
+                    
+                    if (allJacketsRegex.IsMatch(fileName))
+                    {
+                        filesToDownload.Add(file);
+                        totalBytesToDownload += file.Size;
+                    }
                 }
-                //}
-            }
 
-            if (totalBytesToDownload > 0)
-            {
-                DialogResult result = MessageBox.Show(
-                    $"Downloading {(float)totalBytesToDownload / 1000000:f2} MB. Continue?",
-                    $"{filesToDownload.Count} files selected",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
+                if (totalBytesToDownload > 0)
                 {
-                    await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
-                    UpdateList();
+                    DialogResult result = MessageBox.Show(
+                        $"Downloading {(float)totalBytesToDownload / 1000000:f2} MB. Continue?",
+                        $"{filesToDownload.Count} files selected",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        await DownloadAssetsAsync(filesToDownload, "Cache\\Jackets");
+                        UpdateList();
+                    }
+                }
+                else
+                {
+                    if (bySongIDCheckBox.Checked)
+                    {
+                        await PlaySong(songIDTextBox.Text);
+                    }
+                    else
+                        MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
             {
-                if (bySongIDCheckBox.Checked)
+                string songID = songIDTextBox.Text;
+
+                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songID}.unity3d");
+
+                if (songJacketAsset != null)
                 {
-                    await PlaySong(songIDTextBox.Text);
+                    if (!File.Exists(Path.Combine("Cache\\Jackets", songJacketAsset.Name)))
+                    {
+                        await DownloadAssetsAsync(new[] { songJacketAsset }.ToList(), "Cache\\Jackets");
+                        UpdateList();
+                    }
+
+                    await PlaySong(songID);
                 }
                 else
-                    MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                {
+                    MessageBox.Show($"Unable to find song with ID \"{songIDTextBox.Text}\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             LoadingMode(false);
@@ -309,8 +315,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             outputDevice.Volume = volumeTrackBar.Value / 100.0f;
 
-            if (volumeTrackBar.Capture)
-                volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
+            volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }
     }
 }
