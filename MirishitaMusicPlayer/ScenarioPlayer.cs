@@ -96,20 +96,27 @@ namespace MirishitaMusicPlayer
                 secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
                 EventScenarioData currentMuteScenario = muteScenarios[muteIndex];
-                if (secondsElapsed >= currentMuteScenario.AbsTime)
+                EventScenarioData targetMuteScenario = null;
+                while (secondsElapsed >= currentMuteScenario.AbsTime)
                 {
+                    targetMuteScenario = currentMuteScenario;
 
                     if (muteIndex < muteScenarios.Count - 1) muteIndex++;
+                    else break;
+                    currentMuteScenario = muteScenarios[muteIndex];
                 }
+                if (targetMuteScenario != null)
+                    MuteChanged?.Invoke(targetMuteScenario.Mute);
 
                 EventScenarioData currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
+                EventScenarioData targetExpressionScenario = null;
                 while (secondsElapsed >= currentExpressionScenario.AbsTime)
                 {
                     if (currentExpressionScenario.Type == ScenarioType.Expression)
                     {
                         if (currentExpressionScenario.Idol == 0 || currentExpressionScenario.Idol == 100)
                         {
-                            ExpressionChanged?.Invoke(currentExpressionScenario.Param, currentExpressionScenario.EyeClose == 1);
+                            targetExpressionScenario = currentExpressionScenario;
                         }
                     }
 
@@ -117,25 +124,33 @@ namespace MirishitaMusicPlayer
                     else break;
                     currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
                 }
+                if (targetExpressionScenario != null)
+                    ExpressionChanged?.Invoke(targetExpressionScenario.Param, targetExpressionScenario.EyeClose == 1);
 
                 EventScenarioData currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
+                EventScenarioData targetLipSyncScenario = null;
+                EventScenarioData targetLyricsScenario = null;
                 while (secondsElapsed >= currentMainScenario.AbsTime)
                 {
                     if (currentMainScenario.Type == ScenarioType.LipSync)
                     {
-                        LipSyncChanged?.Invoke(currentMainScenario.Param);
+                        targetLipSyncScenario = currentMainScenario;
+                        
                     }
 
                     if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
                     {
-                        LyricsChanged?.Invoke(currentMainScenario.Str);
-
+                        targetLyricsScenario = currentMainScenario;
                     }
 
                     if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                     else break;
                     currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
                 }
+                if (targetLipSyncScenario != null)
+                    LipSyncChanged?.Invoke(targetLipSyncScenario.Param);
+                if (targetLyricsScenario != null)
+                    LyricsChanged?.Invoke(targetLyricsScenario.Str);
 
                 Thread.Sleep(1);
             }
@@ -153,6 +168,9 @@ namespace MirishitaMusicPlayer
 
         public delegate void LyricsChangedEventHandler(string lyrics);
         public event LyricsChangedEventHandler LyricsChanged;
+
+        public delegate void MuteChangedEventHandler(byte[] mutes);
+        public event MuteChangedEventHandler MuteChanged;
 
         public delegate void SongStoppedEventHandler();
         public event SongStoppedEventHandler SongStopped;
