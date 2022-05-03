@@ -102,7 +102,7 @@
             this.debugEyesIDLabel.AutoSize = true;
             this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIDLabel.Location = new System.Drawing.Point(452, 285);
+            this.debugEyesIDLabel.Location = new System.Drawing.Point(452, 158);
             this.debugEyesIDLabel.Name = "debugEyesIDLabel";
             this.debugEyesIDLabel.Size = new System.Drawing.Size(106, 25);
             this.debugEyesIDLabel.TabIndex = 11;
@@ -113,7 +113,7 @@
             this.debugEyeCloseIDLabel.AutoSize = true;
             this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(452, 310);
+            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(452, 183);
             this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
             this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(93, 25);
             this.debugEyeCloseIDLabel.TabIndex = 12;
@@ -124,7 +124,7 @@
             this.debugMouthIDLabel.AutoSize = true;
             this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIDLabel.Location = new System.Drawing.Point(452, 335);
+            this.debugMouthIDLabel.Location = new System.Drawing.Point(452, 208);
             this.debugMouthIDLabel.Name = "debugMouthIDLabel";
             this.debugMouthIDLabel.Size = new System.Drawing.Size(72, 25);
             this.debugMouthIDLabel.TabIndex = 13;
@@ -238,7 +238,7 @@
             // 
             // volumeTrackBar
             // 
-            this.volumeTrackBar.Location = new System.Drawing.Point(827, 418);
+            this.volumeTrackBar.Location = new System.Drawing.Point(452, 418);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -250,7 +250,7 @@
             // volumeLabel
             // 
             this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Location = new System.Drawing.Point(825, 400);
+            this.volumeLabel.Location = new System.Drawing.Point(452, 400);
             this.volumeLabel.Name = "volumeLabel";
             this.volumeLabel.Size = new System.Drawing.Size(47, 15);
             this.volumeLabel.TabIndex = 14;
@@ -280,11 +280,11 @@
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.fiveIdolPanel.Location = new System.Drawing.Point(458, 15);
+            this.fiveIdolPanel.Location = new System.Drawing.Point(452, 15);
             this.fiveIdolPanel.Name = "fiveIdolPanel";
             this.fiveIdolPanel.RowCount = 1;
             this.fiveIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.fiveIdolPanel.Size = new System.Drawing.Size(414, 80);
+            this.fiveIdolPanel.Size = new System.Drawing.Size(420, 80);
             this.fiveIdolPanel.TabIndex = 16;
             // 
             // eightIdolPanel
@@ -299,18 +299,18 @@
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.eightIdolPanel.Location = new System.Drawing.Point(458, 101);
+            this.eightIdolPanel.Location = new System.Drawing.Point(452, 101);
             this.eightIdolPanel.Name = "eightIdolPanel";
             this.eightIdolPanel.RowCount = 1;
             this.eightIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.eightIdolPanel.Size = new System.Drawing.Size(414, 47);
+            this.eightIdolPanel.Size = new System.Drawing.Size(420, 54);
             this.eightIdolPanel.TabIndex = 16;
             // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 696);
+            this.ClientSize = new System.Drawing.Size(424, 696);
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
             this.Controls.Add(this.showExtrasButton);
