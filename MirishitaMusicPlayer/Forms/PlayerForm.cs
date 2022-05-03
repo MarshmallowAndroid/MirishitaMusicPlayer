@@ -234,15 +234,11 @@ namespace MirishitaMusicPlayer.Forms
             {
                 Width = AnimateValue(currentWidth, defaultWidth, animatePercentage);
                 Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), animatePercentage);
-
-                Console.WriteLine($"From {currentLeft} to {currentLeft + (defaultWidth / 2)}");
             }
             else
             {
                 Width = AnimateValue(currentWidth, 900, animatePercentage);
                 Left = AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), animatePercentage);
-
-                Console.WriteLine($"From {currentLeft} to {currentLeft - (defaultWidth / 2)}");
             }
 
             animatePercentage += 60f / 1000f;
