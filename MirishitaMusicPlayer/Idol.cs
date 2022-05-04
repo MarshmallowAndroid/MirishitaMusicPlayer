@@ -58,6 +58,10 @@ namespace MirishitaMusicPlayer
             { 050, new[] { "050jul", "050jul", "Julia" } },
             { 051, new[] { "051tmg", "051tmg", "Tsumugi Shiraishi" } },
             { 052, new[] { "052kao", "052kao", "Kaori Sakuramori" } },
+            { 201, new[] { "201xxx", "201xxx", "Shika" } },
+            { 202, new[] { "202xxx", "202xxx", "Leon" } },
+            { 204, new[] { "204xxx", "204xxx", "Frederica Miyamoto" } },
+            { 205, new[] { "205xxx", "205xxx", "Shiki Ichinose" } },
         };
 
         public Idol(int idolIDNumber)
