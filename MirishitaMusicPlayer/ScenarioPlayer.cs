@@ -99,7 +99,8 @@ namespace MirishitaMusicPlayer
                 EventScenarioData targetMuteScenario = null;
                 while (secondsElapsed >= currentMuteScenario.AbsTime)
                 {
-                    targetMuteScenario = currentMuteScenario;
+                    if (currentMuteScenario.Layer == 0)
+                        targetMuteScenario = currentMuteScenario;
 
                     if (muteIndex < muteScenarios.Count - 1) muteIndex++;
                     else break;
@@ -116,7 +117,8 @@ namespace MirishitaMusicPlayer
                     {
                         if (currentExpressionScenario.Idol == 0 || currentExpressionScenario.Idol == 100)
                         {
-                            targetExpressionScenario = currentExpressionScenario;
+                            if (currentExpressionScenario.Layer == 0)
+                                targetExpressionScenario = currentExpressionScenario;
                         }
                     }
 
@@ -134,13 +136,14 @@ namespace MirishitaMusicPlayer
                 {
                     if (currentMainScenario.Type == ScenarioType.LipSync)
                     {
-                        targetLipSyncScenario = currentMainScenario;
-                        
+                        if (currentMainScenario.Layer == 0)
+                            targetLipSyncScenario = currentMainScenario;
                     }
 
                     if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
                     {
-                        targetLyricsScenario = currentMainScenario;
+                        if (currentMainScenario.Layer == 0)
+                            targetLyricsScenario = currentMainScenario;
                     }
 
                     if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
