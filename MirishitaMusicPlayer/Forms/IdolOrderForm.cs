@@ -157,11 +157,15 @@ namespace MirishitaMusicPlayer.Forms
             {
                 Idol idol = singers[i];
 
+                Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
+                if (idolImage == null)
+                    idolImage = Resources.ResourceManager.GetObject($"icon_butterfly") as Bitmap;
+
                 CheckBox checkBox = new();
                 checkBox.Appearance = Appearance.Button;
                 checkBox.Anchor = AnchorStyles.None;
                 checkBox.BackgroundImageLayout = ImageLayout.Zoom;
-                checkBox.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
+                checkBox.BackgroundImage = idolImage;
                 checkBox.BackgroundImage.Tag = idol.IdolNameID;
                 checkBox.Dock = DockStyle.Fill;
                 checkBox.FlatAppearance.BorderSize = 0;
