@@ -13,74 +13,12 @@ namespace MirishitaMusicPlayer.Imas
 
             foreach (var data in (List<object>)typeDictionary["evts"])
             {
-                EventNoteData eventData = new();
-
-                foreach (DictionaryEntry item in (OrderedDictionary)data)
-                {
-                    switch (item.Key)
-                    {
-                        case "absTime":
-                            eventData.AbsTime = (double)item.Value;
-                            break;
-
-                        case "tick":
-                            eventData.Tick = (long)item.Value;
-                            break;
-
-                        case "track":
-                            eventData.Track = (int)item.Value;
-                            break;
-
-                        case "type":
-                            eventData.Type = (int)item.Value;
-                            break;
-
-                        case "endPosx":
-                            eventData.EndPosX = (float)item.Value;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                Evts.Add(eventData);
+                Evts.Add((EventNoteData)Common.TypeTreeToType<EventNoteData>(data));
             }
 
             foreach (var data in (List<object>)typeDictionary["ct"])
             {
-                EventConductorData eventData = new();
-
-                foreach (DictionaryEntry item in (OrderedDictionary)data)
-                {
-                    switch (item.Key)
-                    {
-                        case "absTime":
-                            eventData.AbsTime = (double)item.Value;
-                            break;
-
-                        case "tick":
-                            eventData.Tick = (long)item.Value;
-                            break;
-
-                        case "tempo":
-                            eventData.Tempo = (double)item.Value;
-                            break;
-
-                        case "tsigNumerator":
-                            eventData.TSigNumerator = (int)item.Value;
-                            break;
-
-                        case "tsigDenominator":
-                            eventData.TSigDenominator = (int)item.Value;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                Ct.Add(eventData);
+                Ct.Add((EventConductorData)Common.TypeTreeToType<EventConductorData>(data));
             }
         }
 
