@@ -75,7 +75,6 @@ namespace MirishitaMusicPlayer
                 scenarioPlayback.SongStopped += () => playerForm.Stop(true);
 
                 scenarioPlayback.Start();
-                outputDevice.Play();
 
                 playerForm.ShowDialog();
             }
