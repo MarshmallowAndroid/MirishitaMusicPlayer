@@ -26,6 +26,10 @@ namespace MirishitaMusicPlayer.Forms
         private bool extrasShown = false;
         private List<Label> idolLabels = new();
 
+        private float animatePercentage = 0.0f;
+        private int currentWidth;
+        private int currentLeft;
+
         public PlayerForm(Idol[] order, int voices, SongMixer mixer, WaveOutEvent device)
         {
             InitializeComponent();
@@ -44,50 +48,45 @@ namespace MirishitaMusicPlayer.Forms
 
             defaultWidth = Width;
 
-            if (singers != null)
+            int realCount = singers?.Length ?? voiceCount;
+
+            for (int i = 0; i < realCount; i++)
             {
-                for (int i = 0; i < singers.Length; i++)
+                Label label = new();
+                label.Anchor = AnchorStyles.None;
+
+                if (singers != null)
                 {
                     Idol idol = singers[i];
-
-                    Label label = new();
-                    label.Anchor = AnchorStyles.None;
                     label.BackgroundImageLayout = ImageLayout.Zoom;
                     label.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
-                    label.Dock = DockStyle.Fill;
-                    label.Enabled = false;
-                    label.Visible = false;
-
-                    idolLabels.Add(label);
                 }
-            }
-            else
-            {
-                for (int i = 0; i < voiceCount; i++)
+                else
                 {
-                    Label label = new();
-                    label.Anchor = AnchorStyles.None;
-                    label.Dock = DockStyle.Fill;
                     label.Font = new(label.Font.FontFamily, 16);
                     label.Text = i.ToString();
                     label.TextAlign = ContentAlignment.MiddleCenter;
-                    label.Visible = false;
-
-                    idolLabels.Add(label);
                 }
+
+                label.Dock = DockStyle.Fill;
+                label.Visible = false;
+
+                idolLabels.Add(label);
             }
 
             int idolPosition = 0;
             for (int i = 0; i < voiceCount; i++)
             {
-                Label button = idolLabels[i];
+                if (i >= singers?.Length) break;
+
+                Label label = idolLabels[i];
 
                 int column = positionToIndexTable[i];
 
                 if (idolPosition < 5)
-                    fiveIdolPanel.Controls.Add(button, column, 0);
+                    fiveIdolPanel.Controls.Add(label, column, 0);
                 else if (idolPosition >= 5 && idolPosition < 13)
-                    eightIdolPanel.Controls.Add(button, column % 5, 0);
+                    eightIdolPanel.Controls.Add(label, column - 5, 0);
 
                 idolPosition++;
             }
@@ -132,6 +131,9 @@ namespace MirishitaMusicPlayer.Forms
         {
             TryInvoke(() =>
             {
+                if (idolLabels.Count == 1)
+                    mutes[0] = 1;
+
                 for (int i = 0; i < idolLabels.Count; i++)
                 {
                     Label button = idolLabels[i];
@@ -150,8 +152,11 @@ namespace MirishitaMusicPlayer.Forms
             {
                 Invoke(action);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine();
             }
         }
 
@@ -172,6 +177,8 @@ namespace MirishitaMusicPlayer.Forms
                 toggleVoicesButton.Enabled = true;
 
             volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+
+            outputDevice.Play();
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -222,31 +229,27 @@ namespace MirishitaMusicPlayer.Forms
             volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }
 
-        private float animatePercentage = 0.0f;
-        private int currentWidth;
-        private int currentLeft;
-
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
-            if (animatePercentage >= 1.0f) animatePercentage = 1.0f;
-
             if (extrasShown)
             {
                 Width = AnimateValue(currentWidth, defaultWidth, animatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), animatePercentage);
+                //Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), animatePercentage);
             }
             else
             {
                 Width = AnimateValue(currentWidth, 900, animatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), animatePercentage);
+                //Left = AnimateValue(currentLeft, currentLeft - (currentWidth - defaultWidth / 2), animatePercentage);
             }
 
-            animatePercentage += 60f / 1000f;
+            animatePercentage += (1000f / 15f) / 1000f;
 
             if (animatePercentage >= 1.0f)
             {
-                extrasShown = !extrasShown;
                 animatePercentage = 0.0f;
+
+                extrasShown = !extrasShown;
+                showExtrasButton.Text = extrasShown ? "Hide extras" : "Show extras";
 
                 extrasShowTimer.Enabled = false;
             }
@@ -272,8 +275,10 @@ namespace MirishitaMusicPlayer.Forms
             //    extrasShown = false;
         }
 
-        private int AnimateValue(int from, int to, float progress)
+        private static int AnimateValue(int from, int to, float progress)
         {
+            progress = Math.Clamp(progress, 0.0f, 1.0f);
+
             float ease = EaseInOutCubic(progress);
             int progressedValue = to - from;
             if (progressedValue < 0)
