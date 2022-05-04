@@ -37,6 +37,7 @@
             this.extraRadioButton = new System.Windows.Forms.RadioButton();
             this.originalBgmRadioButton = new System.Windows.Forms.RadioButton();
             this.defaultRadioButton = new System.Windows.Forms.RadioButton();
+            this.centerLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // fiveIdolPanel
@@ -48,7 +49,7 @@
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.fiveIdolPanel.Location = new System.Drawing.Point(12, 12);
+            this.fiveIdolPanel.Location = new System.Drawing.Point(12, 33);
             this.fiveIdolPanel.Name = "fiveIdolPanel";
             this.fiveIdolPanel.RowCount = 1;
             this.fiveIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -68,7 +69,7 @@
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.eightIdolPanel.Location = new System.Drawing.Point(12, 191);
+            this.eightIdolPanel.Location = new System.Drawing.Point(12, 212);
             this.eightIdolPanel.Name = "eightIdolPanel";
             this.eightIdolPanel.RowCount = 1;
             this.eightIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -80,7 +81,7 @@
             // 
             this.startButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.startButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.startButton.Location = new System.Drawing.Point(770, 654);
+            this.startButton.Location = new System.Drawing.Point(770, 686);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(129, 40);
             this.startButton.TabIndex = 1;
@@ -94,7 +95,7 @@
             this.soloRadioButton.AutoSize = true;
             this.soloRadioButton.Enabled = false;
             this.soloRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.soloRadioButton.Location = new System.Drawing.Point(547, 662);
+            this.soloRadioButton.Location = new System.Drawing.Point(547, 694);
             this.soloRadioButton.Name = "soloRadioButton";
             this.soloRadioButton.Size = new System.Drawing.Size(59, 25);
             this.soloRadioButton.TabIndex = 2;
@@ -104,7 +105,7 @@
             // stashedIdolsPanel
             // 
             this.stashedIdolsPanel.AutoScroll = true;
-            this.stashedIdolsPanel.Location = new System.Drawing.Point(12, 354);
+            this.stashedIdolsPanel.Location = new System.Drawing.Point(12, 386);
             this.stashedIdolsPanel.Name = "stashedIdolsPanel";
             this.stashedIdolsPanel.Size = new System.Drawing.Size(887, 294);
             this.stashedIdolsPanel.TabIndex = 3;
@@ -113,7 +114,7 @@
             // progressBar
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressBar.Location = new System.Drawing.Point(12, 662);
+            this.progressBar.Location = new System.Drawing.Point(12, 694);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(267, 25);
             this.progressBar.TabIndex = 4;
@@ -124,7 +125,7 @@
             this.extraRadioButton.AutoSize = true;
             this.extraRadioButton.Enabled = false;
             this.extraRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.extraRadioButton.Location = new System.Drawing.Point(702, 662);
+            this.extraRadioButton.Location = new System.Drawing.Point(702, 694);
             this.extraRadioButton.Name = "extraRadioButton";
             this.extraRadioButton.Size = new System.Drawing.Size(62, 25);
             this.extraRadioButton.TabIndex = 2;
@@ -137,7 +138,7 @@
             this.originalBgmRadioButton.AutoSize = true;
             this.originalBgmRadioButton.Enabled = false;
             this.originalBgmRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.originalBgmRadioButton.Location = new System.Drawing.Point(612, 662);
+            this.originalBgmRadioButton.Location = new System.Drawing.Point(612, 694);
             this.originalBgmRadioButton.Name = "originalBgmRadioButton";
             this.originalBgmRadioButton.Size = new System.Drawing.Size(84, 25);
             this.originalBgmRadioButton.TabIndex = 2;
@@ -150,7 +151,7 @@
             this.defaultRadioButton.AutoSize = true;
             this.defaultRadioButton.Checked = true;
             this.defaultRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.defaultRadioButton.Location = new System.Drawing.Point(463, 662);
+            this.defaultRadioButton.Location = new System.Drawing.Point(463, 694);
             this.defaultRadioButton.Name = "defaultRadioButton";
             this.defaultRadioButton.Size = new System.Drawing.Size(78, 25);
             this.defaultRadioButton.TabIndex = 2;
@@ -158,11 +159,22 @@
             this.defaultRadioButton.Text = "Default";
             this.defaultRadioButton.UseVisualStyleBackColor = true;
             // 
+            // centerLabel
+            // 
+            this.centerLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.centerLabel.Location = new System.Drawing.Point(385, 9);
+            this.centerLabel.Name = "centerLabel";
+            this.centerLabel.Size = new System.Drawing.Size(141, 21);
+            this.centerLabel.TabIndex = 5;
+            this.centerLabel.Text = "Center";
+            this.centerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // IdolOrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(911, 706);
+            this.ClientSize = new System.Drawing.Size(911, 738);
+            this.Controls.Add(this.centerLabel);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.extraRadioButton);
             this.Controls.Add(this.defaultRadioButton);
@@ -194,5 +206,6 @@
         private System.Windows.Forms.RadioButton extraRadioButton;
         private System.Windows.Forms.RadioButton originalBgmRadioButton;
         private System.Windows.Forms.RadioButton defaultRadioButton;
+        private System.Windows.Forms.Label centerLabel;
     }
 }

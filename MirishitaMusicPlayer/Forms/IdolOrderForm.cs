@@ -103,6 +103,7 @@ namespace MirishitaMusicPlayer.Forms
 
             if (voiceCount == 0)
             {
+                centerLabel.Visible = false;
                 Height = 166;
             }
 
@@ -115,13 +116,13 @@ namespace MirishitaMusicPlayer.Forms
             if (voiceCount > 6)
             {
                 eightIdolPanel.Visible = true;
-                Height = 408;
+                Height = 417;
             }
 
             if (voiceCount > 13 || voiceFiles.Count > voiceCount)
             {
                 stashedIdolsPanel.Visible = true;
-                Height = 745;
+                Height = 777;
             }
 
             if (!string.IsNullOrEmpty(originalBgmFile))
@@ -186,7 +187,7 @@ namespace MirishitaMusicPlayer.Forms
                 if (idolPosition < 5)
                     fiveIdolPanel.Controls.Add(checkBox, column, 0);
                 else if (idolPosition >= 5 && idolPosition < 13)
-                    eightIdolPanel.Controls.Add(checkBox, column % 5, 0);
+                    eightIdolPanel.Controls.Add(checkBox, column - 5, 0);
 
                 idolPosition++;
             }
