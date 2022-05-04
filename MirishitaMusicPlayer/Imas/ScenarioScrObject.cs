@@ -1,7 +1,10 @@
 ﻿using AssetStudio;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
+using System.Reflection;
 
 namespace MirishitaMusicPlayer.Imas
 {
@@ -15,84 +18,41 @@ namespace MirishitaMusicPlayer.Imas
             {
                 EventScenarioData eventData = new();
 
-                foreach (DictionaryEntry property in (OrderedDictionary)data)
+                foreach (DictionaryEntry dataProperty in (OrderedDictionary)data)
                 {
-                    switch (property.Key)
+                    Type eventDataType = eventData.GetType();
+
+                    PropertyInfo matchingProperty = eventDataType.GetProperties()
+                        .FirstOrDefault(p => p.Name.ToLower().Equals(dataProperty.Key.ToString().ToLower()));
+
+                    if (matchingProperty != null)
                     {
-                        case "absTime":
-                            eventData.AbsTime = (double)property.Value;
-                            break;
+                        object value = null;
+                        if (dataProperty.Value.GetType() == typeof(List<object>))
+                        {
+                            List<object> list = (List<object>)dataProperty.Value;
 
-                        case "tick":
-                            eventData.Tick = (long)property.Value;
-                            break;
-
-                        case "track":
-                            eventData.Track = (int)property.Value;
-                            break;
-
-                        case "type":
-                            eventData.Type = (ScenarioType)property.Value;
-                            break;
-
-                        case "param":
-                            eventData.Param = (int)property.Value;
-                            break;
-
-                        case "target":
-                            eventData.Target = (int)property.Value;
-                            break;
-
-                        case "str":
-                            eventData.Str = (string)property.Value;
-                            break;
-
-                        case "on":
-                            eventData.On = (int)property.Value;
-                            break;
-
-                        case "on2":
-                            eventData.On2 = (int)property.Value;
-                            break;
-
-                        case "idol":
-                            eventData.Idol = (int)property.Value;
-                            break;
-
-                        case "camNo":
-                            eventData.CamNo = (int)property.Value;
-                            break;
-
-                        case "mute":
-                            var mute = (List<object>)property.Value;
-                            if (mute.Count > 0)
+                            Type elementType;
+                            if (list?.Count > 0)
                             {
-                                eventData.Mute = new byte[mute.Count];
-                                for (int i = 0; i < mute.Count; i++)
-                                {
-                                    eventData.Mute[i] = (byte)mute[i];
-                                }
+                                elementType = list[0].GetType();
+
+                                Array newArray = Array.CreateInstance(elementType, list.Count);
+                                list.ToArray().CopyTo(newArray, 0);
+
+                                value = newArray;
                             }
-                            break;
+                        }
+                        else
+                        {
+                            value = dataProperty.Value;
+                        }
 
-                        case "cheeklv":
-                            eventData.CheekLv = (int)property.Value;
-                            break;
-
-                        case "eyeclose":
-                            eventData.EyeClose = (byte)property.Value;
-                            break;
-
-                        case "seekFrame":
-                            eventData.SeekFrame = (int)property.Value;
-                            break;
-
-                        case "idol2":
-                            eventData.Idol2 = (int)property.Value;
-                            break;
-
-                        default:
-                            break;
+                        matchingProperty.SetValue(eventData, value);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"WARNING: Unable to find matching property \"{dataProperty.Key}\"");
                     }
                 }
 
