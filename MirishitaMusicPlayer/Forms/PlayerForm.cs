@@ -12,7 +12,7 @@ namespace MirishitaMusicPlayer.Forms
     {
         private static readonly int[] positionToIndexTable = new int[]
         {
-            2, 1, 3, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12
+            2, 1, 3, 0, 4, 8, 9, 7, 10, 6, 11, 5, 12
         };
 
         private readonly Idol[] singers;
