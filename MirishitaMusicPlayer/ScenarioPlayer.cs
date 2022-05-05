@@ -39,6 +39,10 @@ namespace MirishitaMusicPlayer
             scenarioThread = new Thread(DoScenarioPlayback);
         }
 
+        public int Idol { get; set; } = 0;
+
+        public int Layer { get; set; } = 0;
+
         public void Start()
         {
             scenarioThread.Start();
@@ -115,10 +119,9 @@ namespace MirishitaMusicPlayer
                 {
                     if (currentExpressionScenario.Type == ScenarioType.Expression)
                     {
-                        if (currentExpressionScenario.Idol == 0 || currentExpressionScenario.Idol == 100)
+                        if (currentExpressionScenario.Idol == Idol && currentExpressionScenario.Layer == Layer)
                         {
-                            if (currentExpressionScenario.Layer == 0)
-                                targetExpressionScenario = currentExpressionScenario;
+                            targetExpressionScenario = currentExpressionScenario;
                         }
                     }
 
@@ -136,13 +139,13 @@ namespace MirishitaMusicPlayer
                 {
                     if (currentMainScenario.Type == ScenarioType.LipSync)
                     {
-                        if (currentMainScenario.Layer == 0)
+                        if (currentMainScenario.Idol == Idol && currentMainScenario.Layer == Layer)
                             targetLipSyncScenario = currentMainScenario;
                     }
 
                     if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
                     {
-                        if (currentMainScenario.Layer == 0)
+                        if (currentMainScenario.Layer == Layer)
                             targetLyricsScenario = currentMainScenario;
                     }
 
