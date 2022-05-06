@@ -7,12 +7,6 @@ using System.Linq;
 
 namespace MirishitaMusicPlayer
 {
-    internal enum Orientation
-    {
-        Yoko,   // Landscape mode
-        Tate    // Portrait mode
-    }
-
     internal class ScenarioLoader
     {
         public ScenarioLoader(

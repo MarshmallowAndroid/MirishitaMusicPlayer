@@ -16,6 +16,8 @@ namespace MirishitaMusicPlayer
 {
     internal class Program
     {
+        public static string CachePath = @"Cache\";
+
         [STAThread]
         private static void Main(string[] args)
         {
