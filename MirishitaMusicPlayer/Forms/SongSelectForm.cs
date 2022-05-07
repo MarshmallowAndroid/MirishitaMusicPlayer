@@ -1,4 +1,5 @@
-﻿using MirishitaMusicPlayer.Forms.Classes;
+﻿using AssetStudio;
+using MirishitaMusicPlayer.Forms.Classes;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
 using NAudio.Wave;
@@ -20,11 +21,14 @@ namespace MirishitaMusicPlayer.Forms
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
 
-        public SongSelectForm(WaveOutEvent waveOutEvent)
+        private AssetsManager _assetsManager;
+
+        public SongSelectForm(WaveOutEvent waveOutEvent, AssetsManager assetsManager)
         {
             InitializeComponent();
 
             outputDevice = waveOutEvent;
+            _assetsManager = assetsManager;
         }
 
         public string ResultSongID { get; private set; }
@@ -169,6 +173,8 @@ namespace MirishitaMusicPlayer.Forms
             PictureBox jacket = sender as PictureBox;
 
             string songID = jacket.Tag.ToString();
+
+            Song song = new(AssetList, songID, _assetsManager);
 
             await PlaySong(songID);
         }

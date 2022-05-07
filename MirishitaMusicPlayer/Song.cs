@@ -12,47 +12,67 @@ namespace MirishitaMusicPlayer
 {
     internal class Song
     {
+        private readonly string scenarioFile;
+        private readonly string scenarioPlusFile;
+        private readonly string scenarioThirtyNineFile;
         private readonly string originalBgmFile;
         private readonly string bgmFile;
         private readonly List<string> voiceFiles = new();
+        private readonly string allFile;
         private readonly string extraFile;
+        private readonly string extraSecondFile;
 
         public Song(AssetList assets, string songID, AssetsManager assetsManager)
         {
+            // Required files
+            string scenarioString = $"scrobj_{songID}.unity3d";
+            string scenarioPlusString = $"scrobj_{songID[..^1]}+.unity3d";
+            string scenarioThirtyNineString = $"scrobj_{songID[..^2]}39.unity3d";
 
-
+            // Late files
             string originalBgmString = $"song3_{songID}.acb.unity3d";
             string bgmString = $"song3_{songID}_bgm.acb.unity3d";
             Regex voiceRegex = new($"song3_{songID}_([0-9]{{3}})([a-z]{{3}}).acb.unity3d");
+            string allString = $"song3_{songID}_all.acb.unity3d";
             string extraString = $"song3_{songID}_ex.acb.unity3d";
+            string extraSecondString = $"song3_{songID}_ex2.acb.unity3d";
 
             // Assign matching filenames to their corresponding audio type
             foreach (var asset in assets.Assets)
             {
-                if (originalBgmString.Equals(asset.Name))
+                if (scenarioString.Equals(asset.Name))
+                    scenarioFile = asset.Name;
+                else if (scenarioPlusString.Equals(asset.Name))
+                    scenarioPlusFile = asset.Name;
+                else if (scenarioThirtyNineString.Equals(asset.Name))
+                    scenarioThirtyNineFile = asset.Name;
+                else if (originalBgmString.Equals(asset.Name))
                     originalBgmFile = asset.Name;
-                if (bgmString.Equals(asset.Name))
+                else if (bgmString.Equals(asset.Name))
                     bgmFile = asset.Name;
-                if (voiceRegex.IsMatch(asset.Name))
+                else if (voiceRegex.IsMatch(asset.Name))
                     voiceFiles.Add(asset.Name);
-                if (extraString.Equals(asset.Name))
+                else if (allString.Equals(asset.Name))
+                    allFile = asset.Name;
+                else if (extraString.Equals(asset.Name))
                     extraFile = asset.Name;
+                else if (extraSecondString.Equals(asset.Name))
+                    extraSecondFile = asset.Name;
             }
 
             if (!string.IsNullOrEmpty(originalBgmFile))
-                SongFlags |= SongFlags.Normal;
+            {
+                VoiceConfigurations |= VoiceConfiguration.Normal;
+
+                if (!string.IsNullOrEmpty(extraFile))
+                    VoiceConfigurations |= VoiceConfiguration.OngenSentaku;
+            }
 
             if (!string.IsNullOrEmpty(bgmFile))
             {
-                if (voiceFiles.Count == 13)
-                    SongFlags |= SongFlags.Normal;
+                if (voiceFiles.Count > 0)
+                    VoiceConfigurations |= VoiceConfiguration.Utaiwake;
             }
-
-            if (!string.IsNullOrEmpty(originalBgmFile))
-                SongFlags |= SongFlags.Normal;
-
-            if (!string.IsNullOrEmpty(originalBgmFile))
-                SongFlags |= SongFlags.Normal;
 
             //// Load scenarios and notes first
             //string scenarioPath = Path.Combine(Program.CachePath, $"scrobj_{songID}.unity3d");
@@ -99,30 +119,34 @@ namespace MirishitaMusicPlayer
             //assetsManager.Clear();
         }
 
-        public ScenarioScrObject MainScenario { get; }
+        public VoiceConfiguration VoiceConfigurations { get; }
 
-        public ScenarioScrObject YokoScenario { get; }
+        public MemberConfiguration MemberConfigurations { get; }
 
-        public ScenarioScrObject TateScenario { get; }
+        public SongConfiguration LoadSongConfiguration(
+            VoiceConfiguration voiceConfiguration,
+            MemberConfiguration memberConfiguration)
+        {
 
-        public NoteScrObject Notes { get; }
-
-        public SongFlags SongFlags { get; }
-
-        public SongConfiguration SongConfiguration { get; }
+        }
     }
 
-    enum SongFlags
+    [Flags]
+    enum VoiceConfiguration
     {
         Normal,
-        OngenSentaku, // Sound source selection
-        Utaiwake, // (Singing) Interchangeable singers, all 765 MILLION STARS
-        GenteiUtaiwake, // (Limited Singing) Interchangeable, but only select idols
-        IchibuUtaiwake, // (Partial Singing) Interchangeable, but only during a certain part of the song
-        ThirteenLive,
-        ThirtyNineLive
+        Utaiwake = 0b0001,
+        OngenSentaku = 0b0010
     }
-    
+
+    [Flags]
+    enum MemberConfiguration
+    {
+        Default,
+        Thirteen = 0b0001,
+        ThirtyNine = 0b0010
+    }
+
     internal enum Orientation
     {
         Yoko,   // Landscape mode
@@ -132,8 +156,7 @@ namespace MirishitaMusicPlayer
     enum PerformanceConfiguration
     {
         Default,
-        Solo,
-
+        Solo
     }
 
     class SongConfiguration
@@ -148,10 +171,5 @@ namespace MirishitaMusicPlayer
         public PerformanceConfiguration ValidConfigurations { get; }
 
         public PerformanceConfiguration PerformanceConfiguration { get; set; }
-    }
-
-    class SongAsset
-    {
-
     }
 }
