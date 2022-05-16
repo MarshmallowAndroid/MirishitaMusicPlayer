@@ -7,6 +7,7 @@ namespace MirishitaMusicPlayer.Audio
 {
     public class AcbWaveStream : WaveStream
     {
+        private readonly Stream sourceStream;
         private readonly AcbReader acbReader;
         private readonly AwbReader awbReader;
         private readonly WaveStream waveStream;
@@ -17,6 +18,7 @@ namespace MirishitaMusicPlayer.Audio
 
         public AcbWaveStream(Stream stream)
         {
+            sourceStream = stream;
             acbReader = new(stream);
             awbReader = acbReader.GetAwb();
             waveStream = new HcaWaveStream(awbReader.GetWaveSubfileStream(awbReader.Waves[0]), 765765765765765);
@@ -39,5 +41,11 @@ namespace MirishitaMusicPlayer.Audio
 
         public override int Read(byte[] buffer, int offset, int count) =>
             waveStream.Read(buffer, offset, count);
+
+        protected override void Dispose(bool disposing)
+        {
+            sourceStream.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

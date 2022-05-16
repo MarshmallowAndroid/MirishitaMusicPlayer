@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MirishitaMusicPlayer.Audio
 {
-    public class SongMixer : ISampleProvider, IDisposable
+    public sealed class SongMixer : ISampleProvider, IDisposable
     {
         private readonly AcbWaveStream backgroundWaveStream;
         private readonly AcbWaveStream backgroundExWaveStream;
