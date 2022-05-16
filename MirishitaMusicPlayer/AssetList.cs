@@ -1,6 +1,8 @@
 ﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MirishitaMusicPlayer
 {
@@ -8,9 +10,15 @@ namespace MirishitaMusicPlayer
     {
         public AssetList(Stream assetListStream)
         {
-            var fileDictionary = (MessagePackSerializer.Deserialize<object>(assetListStream) as object[])[0] as Dictionary<object, object>;
+            object[] deserializedObjects = MessagePackSerializer.Deserialize<object>(assetListStream) as object[];
+            var fileDictionary = (deserializedObjects[0] as Dictionary<object, object>).Where(
+                a =>
+                {
+                    string fileName = a.Key.ToString();
+                    return fileName.StartsWith("jacket") || fileName.StartsWith("scrobj") || fileName.StartsWith("song3");
+                });
 
-            Assets = new Asset[fileDictionary.Count];
+            Assets = new Asset[fileDictionary.Count()];
 
             int index = 0;
             foreach (var file in fileDictionary)
@@ -19,13 +27,15 @@ namespace MirishitaMusicPlayer
                 var assetInfo = file.Value as object[];
 
                 uint fileSize = 0;
-                if (assetInfo[2].GetType().Name == "UInt16")
+                if (assetInfo[2].GetType() == typeof(ushort))
                     fileSize = (ushort)assetInfo[2];
-                else if (assetInfo[2].GetType().Name == "UInt32")
+                else if (assetInfo[2].GetType() == typeof(uint))
                     fileSize = (uint)assetInfo[2];
 
                 Assets[index++] = new(fileName, assetInfo[1].ToString(), fileSize);
             }
+
+            Array.Sort(Assets, (i1, i2) => i1.Name.CompareTo(i2.Name));
 
             assetListStream.Dispose();
         }

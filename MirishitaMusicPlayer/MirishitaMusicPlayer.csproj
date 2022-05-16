@@ -21,7 +21,7 @@
 		<ProjectReference Include="..\AssetStudio\AssetStudioUtility\AssetStudioUtility.csproj" />
 		<ProjectReference Include="..\AssetStudio\AssetStudio\AssetStudio.csproj" />
 		<ProjectReference Include="..\ClHcaSharp\ClHcaSharp\ClHcaSharp.csproj" />
-		<ProjectReference Include="..\CriAcb\CriAcb.csproj" />
+		<ProjectReference Include="..\CriWareTools\CriWareFormats\CriWareFormats.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

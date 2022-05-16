@@ -1,4 +1,5 @@
-﻿using MirishitaMusicPlayer.Forms.Classes;
+﻿using AssetStudio;
+using MirishitaMusicPlayer.Forms.Classes;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
 using NAudio.Wave;
@@ -15,27 +16,27 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class SongSelectForm : Form
     {
-        private readonly WaveOutEvent outputDevice;
-
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
 
-        public SongSelectForm(WaveOutEvent waveOutEvent)
+        private AssetsManager _assetsManager;
+
+        public SongSelectForm(AssetsManager assetsManager)
         {
             InitializeComponent();
 
-            outputDevice = waveOutEvent;
+            _assetsManager = assetsManager;
         }
 
-        public string ResultSongID { get; private set; }
+        public Song Song { get; private set; }
 
         public AssetList AssetList { get; private set; }
 
         private async void SongSelectForm_Load(object sender, EventArgs e)
         {
-            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+            volumeTrackBar.Value = (int)Math.Ceiling(Program.OutputDevice.Volume * 100.0f);
 
-            ResultSongID = "";
+            Song = null;
 
             DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
             cacheDirectory.CreateSubdirectory("Jackets");
@@ -85,10 +86,10 @@ namespace MirishitaMusicPlayer.Forms
             AssetList = new(databaseFile);
         }
 
-        private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void BySongIdCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            getSongJacketsButton.Text = bySongIDCheckBox.Checked ? "Play song" : "Get all song jackets";
-            songIDTextBox.Enabled = bySongIDCheckBox.Checked;
+            getSongJacketsButton.Text = bySongIdCheckBox.Checked ? "Play song" : "Get all song jackets";
+            songIdTextBox.Enabled = bySongIdCheckBox.Checked;
         }
 
         private async void GetSongJacketsButton_Click(object sender, EventArgs e)
@@ -97,7 +98,7 @@ namespace MirishitaMusicPlayer.Forms
 
             List<Asset> filesToDownload = new();
 
-            if (!bySongIDCheckBox.Checked)
+            if (!bySongIdCheckBox.Checked)
             {
                 Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
@@ -107,7 +108,7 @@ namespace MirishitaMusicPlayer.Forms
                     string fileName = file.Name;
 
                     if (File.Exists(Path.Combine("Cache\\Jackets", fileName))) continue;
-                    
+
                     if (allJacketsRegex.IsMatch(fileName))
                     {
                         filesToDownload.Add(file);
@@ -130,20 +131,13 @@ namespace MirishitaMusicPlayer.Forms
                     }
                 }
                 else
-                {
-                    if (bySongIDCheckBox.Checked)
-                    {
-                        await PlaySong(songIDTextBox.Text);
-                    }
-                    else
-                        MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                    MessageBox.Show("No files to download.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                string songID = songIDTextBox.Text;
+                string songId = songIdTextBox.Text;
 
-                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songID}.unity3d");
+                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songId}.unity3d");
 
                 if (songJacketAsset != null)
                 {
@@ -153,11 +147,11 @@ namespace MirishitaMusicPlayer.Forms
                         UpdateList();
                     }
 
-                    await PlaySong(songID);
+                    await PlaySong(songId);
                 }
                 else
                 {
-                    MessageBox.Show($"Unable to find song with ID \"{songIDTextBox.Text}\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Unable to find song with ID \"{songIdTextBox.Text}\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -167,17 +161,15 @@ namespace MirishitaMusicPlayer.Forms
         private async void SongJacket_Click(object sender, EventArgs e)
         {
             PictureBox jacket = sender as PictureBox;
-
-            string songID = jacket.Tag.ToString();
-
-            await PlaySong(songID);
+            await PlaySong(jacket.Tag.ToString());
         }
 
-        private async Task PlaySong(string songID)
+        private async Task PlaySong(string songId)
         {
             LoadingMode(true);
 
-            Asset scenarioAsset = AssetList.Assets.First(a => a.Name.StartsWith("scrobj_" + songID));
+            var song = new Song(AssetList, songId, _assetsManager);
+            var scenarioAsset = song.ScenarioAsset;
 
             bool shouldContinue;
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
@@ -186,7 +178,7 @@ namespace MirishitaMusicPlayer.Forms
             }
             else shouldContinue = true;
 
-            ResultSongID = songID;
+            Song = song;
 
             LoadingMode(false);
             if (shouldContinue) Hide();
@@ -229,7 +221,7 @@ namespace MirishitaMusicPlayer.Forms
             Invoke(() => LoadingMode(true));
 
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
-            AssetStudio.Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
+            Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
 
             if (jacketFiles.Length > 0)
                 UnityTextureHelpers.LoadFiles(jacketFiles);
@@ -240,7 +232,7 @@ namespace MirishitaMusicPlayer.Forms
             foreach (var item in jacketFiles)
             {
                 string name = Path.GetFileNameWithoutExtension(item);
-                string songID = name["jacket_".Length..];
+                string songId = name["jacket_".Length..];
                 PictureBox songJacket = new()
                 {
                     Width = 150,
@@ -248,11 +240,11 @@ namespace MirishitaMusicPlayer.Forms
                     BackgroundImage = UnityTextureHelpers.GetBitmap(name),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     Cursor = Cursors.Hand,
-                    Tag = songID
+                    Tag = songId
                 };
 
                 ToolTip toolTip = new();
-                toolTip.SetToolTip(songJacket, songID);
+                toolTip.SetToolTip(songJacket, songId);
 
                 songJacket.Click += SongJacket_Click;
                 jackets.Add(songJacket);
@@ -260,7 +252,7 @@ namespace MirishitaMusicPlayer.Forms
                 loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
             }
 
-            AssetStudio.Progress.Default = new Progress<int>();
+            Progress.Default = new Progress<int>();
 
             e.Result = jackets;
         }
@@ -313,7 +305,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void VolumeBar_Scroll(object sender, EventArgs e)
         {
-            outputDevice.Volume = volumeTrackBar.Value / 100.0f;
+            Program.OutputDevice.Volume = volumeTrackBar.Value / 100.0f;
 
             volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }

@@ -28,136 +28,79 @@ namespace MirishitaMusicPlayer.Forms
 
         private TDAssetsClient assetsClient;
 
-        private readonly string songID;
-
-        private readonly AssetList assetList;
-        private readonly List<EventScenarioData> muteScenarios;
-
-        private readonly string originalBgmFile;
-        private readonly string bgmFile;
-        private readonly List<string> voiceFiles = new();
-        private readonly string extraFile;
-
-        private readonly Idol[] singers;
-        private readonly int voiceCount;
-        private readonly bool hasExtraBgm;
-
         private readonly List<CheckBox> idolCheckBoxes = new();
         private CheckBox sourceCheckBox;
 
-        private Idol[] resultOrder;
+        private bool shouldPlaySong = false;
 
-        private readonly List<Asset> requiredAssets = new();
-        private readonly AssetsManager assetsManager;
-
-        private bool shouldInitializeSongMixer;
-
-        public IdolOrderForm(
-            AssetList assetList,
-            string songID,
-            int voiceCount,
-            AssetsManager assetsManager,
-            List<EventScenarioData> muteScenarios)
+        public IdolOrderForm(Song selectedSong)
         {
             InitializeComponent();
 
-            this.assetList = assetList;
-            this.songID = songID;
-            this.voiceCount = voiceCount;
-            this.assetsManager = assetsManager;
-            this.muteScenarios = muteScenarios;
+            Song = selectedSong;
+            selectedSong.LoadScenario(selectedSong.ScenarioAsset, Program.SongsPath);
+            Scenario = selectedSong.Scenario;
+            Configuration = Scenario.Configuration;
 
-            Regex originalBgmRegex = new($"song3_{songID}.acb.unity3d");
-            Regex bgmRegex = new($"song3_{songID}_bgm.acb.unity3d");
-            Regex voiceRegex = new($"song3_{songID}_([0-9]{{3}})([a-z]{{3}}).acb.unity3d");
-            Regex extraRegex = new($"song3_{songID}_ex.acb.unity3d");
-
-            // Assign matching filenames to their corresponding audio type
-            foreach (var asset in assetList.Assets)
-            {
-                if (originalBgmRegex.IsMatch(asset.Name))
-                    originalBgmFile = asset.Name;
-                if (bgmRegex.IsMatch(asset.Name))
-                    bgmFile = asset.Name;
-                if (voiceRegex.IsMatch(asset.Name))
-                    voiceFiles.Add(asset.Name);
-                if (extraRegex.IsMatch(asset.Name))
-                    extraFile = asset.Name;
-            }
-
-            if (voiceFiles.Count == 0 && !string.IsNullOrEmpty(extraFile))
-                hasExtraBgm = true;
-
-            singers = new Idol[voiceFiles.Count];
-            for (int i = 0; i < voiceFiles.Count; i++)
-            {
-                string fileNameOnly = Path.GetFileNameWithoutExtension(voiceFiles[i]);
-                string idolNameID = fileNameOnly.Substring($"song3_{songID}_".Length, 6);
-                singers[i] = new Idol(idolNameID);
-            }
-
-            Array.Sort(singers, (s1, s2) => s1.IdolNameID.CompareTo(s2.IdolNameID));
-
-            this.voiceCount = Math.Min(this.voiceCount, voiceFiles.Count);
-            if (this.voiceCount == 5 + 1) this.voiceCount = 5;
-
-            if (voiceCount == 0)
+            if (Scenario.StageMemberCount == 0)
             {
                 centerLabel.Visible = false;
                 Height = 166;
             }
 
-            if (voiceCount > 0)
+            if (Scenario.StageMemberCount > 0)
             {
                 fiveIdolPanel.Visible = true;
                 Height = 302;
             }
 
-            if (voiceCount > 6)
+            if (Scenario.StageMemberCount > 6)
             {
                 eightIdolPanel.Visible = true;
                 Height = 417;
             }
 
-            if (voiceCount > 13 || voiceFiles.Count > voiceCount)
+            if (Scenario.StageMemberCount > 13 || Song.Singers.Length > Scenario.StageMemberCount)
             {
                 stashedIdolsPanel.Visible = true;
                 Height = 777;
             }
 
-            if (!string.IsNullOrEmpty(originalBgmFile))
+            if (Configuration.Modes.HasFlag(SongMode.Normal))
                 originalBgmRadioButton.Enabled = true;
 
-            if (voiceCount > 0)
-                soloRadioButton.Enabled = true;
+            if (Configuration.Modes.HasFlag(SongMode.Utaiwake))
+            {
+                utaiwakeRadioButton.Enabled = true;
+            }
 
-            if (hasExtraBgm)
-                extraRadioButton.Enabled = true;
+            if (Configuration.Modes.HasFlag(SongMode.OngenSentaku))
+                ongenSentakuRadioButton.Enabled = true;
         }
 
-        public bool ExtraBgmEnabled { get; private set; }
+        private Song Song { get; }
 
-        public SongMixer SongMixer { get; private set; }
+        private SongScenario Scenario { get; }
 
-        public WaveOutEvent OutputDevice { get; private set; } = new() { DesiredLatency = 100 };
+        private SongScenarioConfiguration Configuration { get; }
 
-        public Idol[] Order => resultOrder;
-
-        public void ProcessSong()
+        public bool ProcessSong()
         {
-            if (voiceCount > 0)
+            if (Song.Singers.Length > 0 || Configuration.Modes.HasFlag(SongMode.OngenSentaku))
                 ShowDialog();
             else
                 Task.Run(() => InitializeAssetsAsync()).Wait();
+
+            return shouldPlaySong;
         }
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
-            for (int i = 0; i < singers.Length; i++)
+            for (int i = 0; i < Song.Singers.Length; i++)
             {
-                Idol idol = singers[i];
+                Idol idol = Song.Singers[i];
 
-                Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
+                Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
                 if (idolImage == null)
                     idolImage = Resources.ResourceManager.GetObject($"icon_butterfly") as Bitmap;
 
@@ -166,7 +109,7 @@ namespace MirishitaMusicPlayer.Forms
                 checkBox.Anchor = AnchorStyles.None;
                 checkBox.BackgroundImageLayout = ImageLayout.Zoom;
                 checkBox.BackgroundImage = idolImage;
-                checkBox.BackgroundImage.Tag = idol.IdolNameID;
+                checkBox.BackgroundImage.Tag = idol.IdolNameId;
                 checkBox.Dock = DockStyle.Fill;
                 checkBox.FlatAppearance.BorderSize = 0;
                 checkBox.FlatStyle = FlatStyle.Flat;
@@ -182,7 +125,7 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             int idolPosition = 0;
-            for (int i = 0; i < voiceCount; i++)
+            for (int i = 0; i < Scenario.StageMemberCount; i++)
             {
                 CheckBox checkBox = idolCheckBoxes[i];
 
@@ -196,7 +139,7 @@ namespace MirishitaMusicPlayer.Forms
                 idolPosition++;
             }
 
-            for (int i = voiceCount; i < singers.Length; i++)
+            for (int i = Scenario.StageMemberCount; i < Song.Singers.Length; i++)
             {
                 CheckBox checkBox = idolCheckBoxes[i];
                 checkBox.Dock = DockStyle.None;
@@ -243,29 +186,18 @@ namespace MirishitaMusicPlayer.Forms
         {
             LoadingMode(true);
 
-            requiredAssets.Clear();
-            requiredAssets.Add(
-                assetList.Assets.First(a =>
-                {
-                    if (hasExtraBgm && extraRadioButton.Checked)
-                    {
-                        ExtraBgmEnabled = true;
-                        return a.Name == extraFile;
-                    }
-                    else
-                    {
-                        if (string.IsNullOrEmpty(bgmFile) || originalBgmRadioButton.Checked)
-                            return a.Name == originalBgmFile;
-                        else
-                            return a.Name == bgmFile;
-                    }
-                }));
+            if (originalBgmRadioButton.Checked)
+                Configuration.Mode = SongMode.Normal;
+            else if (utaiwakeRadioButton.Checked)
+                Configuration.Mode = SongMode.Utaiwake;
+            else if (ongenSentakuRadioButton.Checked)
+                Configuration.Mode = SongMode.OngenSentaku;
 
-            int orderLength = soloRadioButton.Checked ? 1 : voiceCount;
+            int orderLength = soloCheckBox.Checked ? 1 : Scenario.StageMemberCount;
 
             if (orderLength > 0 && !originalBgmRadioButton.Checked)
             {
-                resultOrder = new Idol[orderLength];
+                Configuration.Order = new Idol[orderLength];
 
                 foreach (var checkBox in idolCheckBoxes)
                 {
@@ -274,83 +206,24 @@ namespace MirishitaMusicPlayer.Forms
                     if (index < orderLength)
                     {
                         Idol idol = new((string)checkBox.BackgroundImage.Tag);
-                        resultOrder[index] = idol;
-
-                        requiredAssets.Add(
-                            assetList.Assets.First(
-                                a => a.Name.StartsWith($"song3_{songID}_{idol.IdolAudioNameID}")));
+                        Configuration.Order[index] = idol;
                     }
                 }
-
-                Asset extraVoiceAsset = assetList.Assets.FirstOrDefault(a => a.Name == extraFile);
-                if (extraVoiceAsset != null) requiredAssets.Add(extraVoiceAsset);
             }
 
-            if (await ResolveMissingAssets(requiredAssets))
+            var requiredAssets = Configuration.GetRequiredAssets();
+
+            if (await ResolveMissingAssetsAsync(requiredAssets))
             {
-                InitializeSongMixer();
+                Configuration.Load(requiredAssets, "Cache\\Songs");
+                Program.OutputDevice.Init(Configuration.SongMixer);
                 Close();
             }
 
             LoadingMode(false);
         }
 
-        private void InitializeSongMixer()
-        {
-            List<string> loadPaths = new();
-
-            foreach (var asset in requiredAssets)
-            {
-                loadPaths.Add(Path.Combine("Cache\\Songs", asset.Name));
-            }
-
-            // Load the files into AssetStudio for reading
-            //
-            // The loaded files put into the assetsFileList array
-            // in the same order they were loaded in (very important)
-            assetsManager.LoadFiles(loadPaths.ToArray());
-
-            // Get the stream of the BGM file and initialize its WaveStream
-            //
-            // BGM is always the first in the array, as per how we loaded them
-            AcbWaveStream bgmAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[0]));
-
-            // Leave these null for now
-            AcbWaveStream[] voiceAcbs = null;
-            AcbWaveStream extraAcb = null;
-
-            // If order is not nu--
-            if (resultOrder != null)
-            {
-                // Get voice ACB streams and initialize their WaveStreams
-                voiceAcbs = new AcbWaveStream[resultOrder.Length];
-
-                for (int i = 0; i < resultOrder.Length; i++)
-                {
-                    // Voices are after BGM and before extra (if any)
-                    voiceAcbs[i] = new(GetStreamFromAsset(assetsManager.assetsFileList[i + 1]));
-                }
-            }
-
-            if (!string.IsNullOrEmpty(extraFile) && voiceCount > 13)
-            {
-                // Same as for the BGM and voices
-                //
-                // Extra ACB is always the last
-                extraAcb = new(GetStreamFromAsset(assetsManager.assetsFileList[^1]));
-            }
-
-            // We got what we wanted (their MemoryStreams) so no need to keep them loaded
-            assetsManager.Clear();
-
-            // Initialize the song mixer
-            SongMixer = new(muteScenarios, voiceAcbs, bgmAcb, extraAcb);
-
-            // Initialize the output device
-            OutputDevice.Init(SongMixer);
-        }
-
-        private async Task<bool> ResolveMissingAssets(List<Asset> requiredAssets)
+        private async Task<bool> ResolveMissingAssetsAsync(List<Asset> requiredAssets)
         {
             List<Asset> missingAssets = new();
 
@@ -358,7 +231,7 @@ namespace MirishitaMusicPlayer.Forms
             uint totalBytes = 0;
             foreach (var asset in requiredAssets)
             {
-                string assetFile = Path.Combine("Cache\\Songs", asset.Name);
+                string assetFile = Path.Combine(Program.SongsPath, asset.Name);
                 if (!File.Exists(assetFile) ||
                     (File.Exists(assetFile) && new FileInfo(assetFile).Length != asset.Size))
                 {
@@ -368,7 +241,7 @@ namespace MirishitaMusicPlayer.Forms
                 }
             }
 
-            shouldInitializeSongMixer = complete;
+            shouldPlaySong = complete;
 
             if (!complete)
             {
@@ -380,12 +253,12 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    shouldInitializeSongMixer = await DownloadAssetsAsync(missingAssets, "Cache\\Songs");
+                    shouldPlaySong = await DownloadAssetsAsync(missingAssets, "Cache\\Songs");
                 }
                 else return false;
             }
 
-            return shouldInitializeSongMixer;
+            return shouldPlaySong;
         }
 
         private async Task<bool> DownloadAssetsAsync(List<Asset> assetsToDownload, string directory)
@@ -446,6 +319,13 @@ namespace MirishitaMusicPlayer.Forms
             TextAsset asset = (TextAsset)file.Objects.FirstOrDefault(o => o.type == ClassIDType.TextAsset);
 
             return new MemoryStream(asset.m_Script);
+        }
+
+        private void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            bool checkedState = utaiwakeRadioButton.Checked;
+            soloCheckBox.Enabled = checkedState;
+            soloCheckBox.Visible = checkedState;
         }
     }
 }

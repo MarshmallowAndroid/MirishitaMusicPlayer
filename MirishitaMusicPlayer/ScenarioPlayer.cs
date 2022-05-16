@@ -12,7 +12,8 @@ namespace MirishitaMusicPlayer
 {
     internal class ScenarioPlayer
     {
-        private readonly WaveOutEvent outputDevice;
+        private readonly Song song;
+
         private readonly SongMixer songMixer;
         private readonly Thread scenarioThread;
 
@@ -22,19 +23,15 @@ namespace MirishitaMusicPlayer
 
         bool shouldStop = false;
 
-        public ScenarioPlayer(
-            WaveOutEvent output,
-            SongMixer mixer,
-            ScenarioScrObject main,
-            List<EventScenarioData> expressions,
-            List<EventScenarioData> mute)
+        public ScenarioPlayer(Song selectedSong)
         {
-            outputDevice = output;
-            songMixer = mixer;
+            song = selectedSong;
+            
+            songMixer = song.Scenario.Configuration.SongMixer;
 
-            mainScenario = main;
-            expressionScenarios = expressions;
-            muteScenarios = mute;
+            mainScenario = song.Scenario.MainScenario;
+            expressionScenarios = song.Scenario.ExpressionScenarios;
+            muteScenarios = song.Scenario.MuteScenarios;
 
             scenarioThread = new Thread(DoScenarioPlayback);
         }
@@ -61,10 +58,8 @@ namespace MirishitaMusicPlayer
 
             double secondsElapsed = 0;
 
-            while (!songMixer.HasEnded)
+            while (!songMixer.HasEnded && !shouldStop)
             {
-                if (shouldStop) break;
-
                 if (secondsElapsed > songMixer.CurrentTime.TotalSeconds)
                 {
                     muteIndex = 0;
@@ -120,9 +115,7 @@ namespace MirishitaMusicPlayer
                     if (currentExpressionScenario.Type == ScenarioType.Expression)
                     {
                         if (currentExpressionScenario.Idol == Idol && currentExpressionScenario.Layer == Layer)
-                        {
                             targetExpressionScenario = currentExpressionScenario;
-                        }
                     }
 
                     if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
@@ -166,10 +159,10 @@ namespace MirishitaMusicPlayer
             SongStopped?.Invoke();
         }
 
-        public delegate void ExpressionChangedEventHandler(int expressionID, bool eyeClose);
+        public delegate void ExpressionChangedEventHandler(int expressionId, bool eyeClose);
         public event ExpressionChangedEventHandler ExpressionChanged;
 
-        public delegate void LipSyncChangedEventHandler(int lipSyncID);
+        public delegate void LipSyncChangedEventHandler(int lipSyncId);
         public event LipSyncChangedEventHandler LipSyncChanged;
 
         public delegate void LyricsChangedEventHandler(string lyrics);

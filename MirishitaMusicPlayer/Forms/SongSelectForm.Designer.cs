@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.songIDTextBox = new System.Windows.Forms.TextBox();
+            this.songIdTextBox = new System.Windows.Forms.TextBox();
             this.getSongJacketsButton = new System.Windows.Forms.Button();
-            this.bySongIDCheckBox = new System.Windows.Forms.CheckBox();
+            this.bySongIdCheckBox = new System.Windows.Forms.CheckBox();
             this.jacketsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.availableSongsLabel = new System.Windows.Forms.Label();
             this.updateDatabaseButton = new System.Windows.Forms.Button();
@@ -43,13 +43,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
-            // songIDTextBox
+            // songIdTextBox
             // 
-            this.songIDTextBox.Enabled = false;
-            this.songIDTextBox.Location = new System.Drawing.Point(233, 12);
-            this.songIDTextBox.Name = "songIDTextBox";
-            this.songIDTextBox.Size = new System.Drawing.Size(100, 23);
-            this.songIDTextBox.TabIndex = 2;
+            this.songIdTextBox.Enabled = false;
+            this.songIdTextBox.Location = new System.Drawing.Point(233, 12);
+            this.songIdTextBox.Name = "songIdTextBox";
+            this.songIdTextBox.Size = new System.Drawing.Size(100, 23);
+            this.songIdTextBox.TabIndex = 2;
             // 
             // getSongJacketsButton
             // 
@@ -61,16 +61,16 @@
             this.getSongJacketsButton.UseVisualStyleBackColor = true;
             this.getSongJacketsButton.Click += new System.EventHandler(this.GetSongJacketsButton_Click);
             // 
-            // bySongIDCheckBox
+            // bySongIdCheckBox
             // 
-            this.bySongIDCheckBox.AutoSize = true;
-            this.bySongIDCheckBox.Location = new System.Drawing.Point(145, 14);
-            this.bySongIDCheckBox.Name = "bySongIDCheckBox";
-            this.bySongIDCheckBox.Size = new System.Drawing.Size(82, 19);
-            this.bySongIDCheckBox.TabIndex = 1;
-            this.bySongIDCheckBox.Text = "By song ID";
-            this.bySongIDCheckBox.UseVisualStyleBackColor = true;
-            this.bySongIDCheckBox.CheckedChanged += new System.EventHandler(this.BySongIDCheckBox_CheckedChanged);
+            this.bySongIdCheckBox.AutoSize = true;
+            this.bySongIdCheckBox.Location = new System.Drawing.Point(145, 14);
+            this.bySongIdCheckBox.Name = "bySongIdCheckBox";
+            this.bySongIdCheckBox.Size = new System.Drawing.Size(82, 19);
+            this.bySongIdCheckBox.TabIndex = 1;
+            this.bySongIdCheckBox.Text = "By song ID";
+            this.bySongIdCheckBox.UseVisualStyleBackColor = true;
+            this.bySongIdCheckBox.CheckedChanged += new System.EventHandler(this.BySongIdCheckBox_CheckedChanged);
             // 
             // jacketsPanel
             // 
@@ -148,9 +148,9 @@
             this.Controls.Add(this.updateDatabaseButton);
             this.Controls.Add(this.availableSongsLabel);
             this.Controls.Add(this.jacketsPanel);
-            this.Controls.Add(this.bySongIDCheckBox);
+            this.Controls.Add(this.bySongIdCheckBox);
             this.Controls.Add(this.getSongJacketsButton);
-            this.Controls.Add(this.songIDTextBox);
+            this.Controls.Add(this.songIdTextBox);
             this.Name = "SongSelectForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Song Select";
@@ -163,9 +163,9 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox songIDTextBox;
+        private System.Windows.Forms.TextBox songIdTextBox;
         private System.Windows.Forms.Button getSongJacketsButton;
-        private System.Windows.Forms.CheckBox bySongIDCheckBox;
+        private System.Windows.Forms.CheckBox bySongIdCheckBox;
         private System.Windows.Forms.FlowLayoutPanel jacketsPanel;
         private System.Windows.Forms.Label availableSongsLabel;
         private System.Windows.Forms.Button updateDatabaseButton;

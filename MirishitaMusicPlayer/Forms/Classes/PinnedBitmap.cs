@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace MirishitaMusicPlayer.Forms.Classes
@@ -16,7 +17,7 @@ namespace MirishitaMusicPlayer.Forms.Classes
                 width,
                 height,
                 width * 4,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb,
+                PixelFormat.Format32bppArgb,
                 bitmapHandle.AddrOfPinnedObject());
         }
 

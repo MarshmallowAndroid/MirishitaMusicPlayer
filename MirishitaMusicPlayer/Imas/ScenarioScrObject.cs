@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MirishitaMusicPlayer.Imas
 {
-    internal class ScenarioScrObject
+    public class ScenarioScrObject
     {
         public ScenarioScrObject(MonoBehaviour monoBehaviour)
         {

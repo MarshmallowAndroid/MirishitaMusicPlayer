@@ -16,6 +16,11 @@ namespace MirishitaMusicPlayer
 {
     internal class Program
     {
+        public static readonly string CachePath = "Cache";
+        public static readonly string JacketsPath = Path.Combine(CachePath, "Songs");
+        public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
+        public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
+
         [STAThread]
         private static void Main(string[] args)
         {
@@ -24,58 +29,31 @@ namespace MirishitaMusicPlayer
 
             bool quit = false;
 
-            WaveOutEvent waveOutEvent = new() { DesiredLatency = 100 };
             AssetsManager assetsManager = new();
-            SongSelectForm songSelectForm = new(waveOutEvent);
+            SongSelectForm songSelectForm = new(assetsManager);
 
             while (!quit)
             {
                 songSelectForm.ShowDialog();
 
-                string songID = songSelectForm.ResultSongID ?? "";
-                if (songID == "") return;
+                Song song = songSelectForm.Song;
+                if (song == null) return;
 
-                Console.Title = songID;
+                Console.Title = song.SongId;
 
-                string filesPath = "Cache\\Songs";
+                IdolOrderForm idolOrderForm = new(song);
 
-                ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
-                ScenarioScrObject mainScenario = scenarios.MainScenario;
-                List<EventScenarioData> expressionScenarios = scenarios.ExpressionScenarios;
-                List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
+                bool songProcessedSuccessfully = idolOrderForm.ProcessSong();
+                idolOrderForm.Dispose();
 
-                IdolOrderForm idolOrderForm = new(
-                    songSelectForm.AssetList,
-                    songID,
-                    scenarios.VoiceCount,
-                    assetsManager,
-                    scenarios.MuteScenarios);
-                idolOrderForm.ProcessSong();
-
-                SongMixer songMixer = idolOrderForm.SongMixer;
-                WaveOutEvent outputDevice = idolOrderForm.OutputDevice;
-
-                if (songMixer == null) continue;
+                if (songProcessedSuccessfully)
+                    OutputDevice.Play();
+                else
+                    continue;
 
                 idolOrderForm.Dispose();
 
-                ScenarioPlayer scenarioPlayback = new(
-                    outputDevice,
-                    songMixer,
-                    mainScenario,
-                    expressionScenarios,
-                    muteScenarios);
-
-                PlayerForm playerForm = new(idolOrderForm.Order, scenarios.VoiceCount, songMixer, outputDevice);
-
-                scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
-                scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
-                scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
-                scenarioPlayback.MuteChanged += (m) => playerForm.UpdateMute(m);
-                scenarioPlayback.SongStopped += () => playerForm.Stop(true);
-
-                scenarioPlayback.Start();
-
+                PlayerForm playerForm = new(song);
                 playerForm.ShowDialog();
             }
         }
