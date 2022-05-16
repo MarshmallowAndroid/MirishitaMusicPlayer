@@ -53,18 +53,20 @@
             this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.centerLabel = new System.Windows.Forms.Label();
+            this.extrasPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
             this.controlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
+            this.extrasPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // expressionPictureBox
             // 
             this.expressionPictureBox.BackgroundImage = global::MirishitaMusicPlayer.Properties.Resources.open_0;
             this.expressionPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.expressionPictureBox.Location = new System.Drawing.Point(12, 15);
+            this.expressionPictureBox.Location = new System.Drawing.Point(3, 3);
             this.expressionPictureBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.expressionPictureBox.Name = "expressionPictureBox";
             this.expressionPictureBox.Size = new System.Drawing.Size(400, 400);
@@ -75,7 +77,7 @@
             // 
             this.lipSyncPictureBox.BackgroundImage = global::MirishitaMusicPlayer.Properties.Resources.mouth_0;
             this.lipSyncPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.lipSyncPictureBox.Location = new System.Drawing.Point(12, 285);
+            this.lipSyncPictureBox.Location = new System.Drawing.Point(3, 273);
             this.lipSyncPictureBox.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.lipSyncPictureBox.Name = "lipSyncPictureBox";
             this.lipSyncPictureBox.Size = new System.Drawing.Size(400, 130);
@@ -85,10 +87,11 @@
             // 
             // seekBar
             // 
-            this.seekBar.Location = new System.Drawing.Point(12, 639);
+            this.seekBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.seekBar.Location = new System.Drawing.Point(12, 538);
             this.seekBar.Maximum = 100;
             this.seekBar.Name = "seekBar";
-            this.seekBar.Size = new System.Drawing.Size(400, 45);
+            this.seekBar.Size = new System.Drawing.Size(412, 45);
             this.seekBar.TabIndex = 10;
             this.seekBar.TickFrequency = 0;
             this.seekBar.TickStyle = System.Windows.Forms.TickStyle.Both;
@@ -104,7 +107,7 @@
             this.debugEyesIdLabel.AutoSize = true;
             this.debugEyesIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIdLabel.Location = new System.Drawing.Point(452, 170);
+            this.debugEyesIdLabel.Location = new System.Drawing.Point(3, 511);
             this.debugEyesIdLabel.Name = "debugEyesIdLabel";
             this.debugEyesIdLabel.Size = new System.Drawing.Size(106, 25);
             this.debugEyesIdLabel.TabIndex = 11;
@@ -115,7 +118,7 @@
             this.debugEyeCloseIdLabel.AutoSize = true;
             this.debugEyeCloseIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIdLabel.Location = new System.Drawing.Point(452, 195);
+            this.debugEyeCloseIdLabel.Location = new System.Drawing.Point(3, 536);
             this.debugEyeCloseIdLabel.Name = "debugEyeCloseIdLabel";
             this.debugEyeCloseIdLabel.Size = new System.Drawing.Size(93, 25);
             this.debugEyeCloseIdLabel.TabIndex = 12;
@@ -126,7 +129,7 @@
             this.debugMouthIdLabel.AutoSize = true;
             this.debugMouthIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIdLabel.Location = new System.Drawing.Point(452, 220);
+            this.debugMouthIdLabel.Location = new System.Drawing.Point(3, 561);
             this.debugMouthIdLabel.Name = "debugMouthIdLabel";
             this.debugMouthIdLabel.Size = new System.Drawing.Size(72, 25);
             this.debugMouthIdLabel.TabIndex = 13;
@@ -135,7 +138,7 @@
             // lyricsTextBox
             // 
             this.lyricsTextBox.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lyricsTextBox.Location = new System.Drawing.Point(12, 418);
+            this.lyricsTextBox.Location = new System.Drawing.Point(3, 406);
             this.lyricsTextBox.Name = "lyricsTextBox";
             this.lyricsTextBox.Size = new System.Drawing.Size(400, 105);
             this.lyricsTextBox.TabIndex = 0;
@@ -143,8 +146,9 @@
             // 
             // currentTimeLabel
             // 
+            this.currentTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.currentTimeLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentTimeLabel.Location = new System.Drawing.Point(12, 604);
+            this.currentTimeLabel.Location = new System.Drawing.Point(12, 503);
             this.currentTimeLabel.Name = "currentTimeLabel";
             this.currentTimeLabel.Size = new System.Drawing.Size(64, 32);
             this.currentTimeLabel.TabIndex = 7;
@@ -153,8 +157,9 @@
             // 
             // totalTimeLabel
             // 
+            this.totalTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.totalTimeLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.totalTimeLabel.Location = new System.Drawing.Point(348, 604);
+            this.totalTimeLabel.Location = new System.Drawing.Point(360, 503);
             this.totalTimeLabel.Name = "totalTimeLabel";
             this.totalTimeLabel.Size = new System.Drawing.Size(64, 32);
             this.totalTimeLabel.TabIndex = 9;
@@ -163,6 +168,7 @@
             // 
             // controlPanel
             // 
+            this.controlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.controlPanel.ColumnCount = 5;
             this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
@@ -174,20 +180,20 @@
             this.controlPanel.Controls.Add(this.ResetButton, 0, 0);
             this.controlPanel.Controls.Add(this.playButton, 2, 0);
             this.controlPanel.Controls.Add(this.toggleBgmButton, 3, 0);
-            this.controlPanel.Location = new System.Drawing.Point(12, 526);
+            this.controlPanel.Location = new System.Drawing.Point(12, 425);
             this.controlPanel.Name = "controlPanel";
             this.controlPanel.RowCount = 1;
             this.controlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.controlPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.controlPanel.Size = new System.Drawing.Size(400, 75);
+            this.controlPanel.Size = new System.Drawing.Size(412, 75);
             this.controlPanel.TabIndex = 1;
             // 
             // stopButton
             // 
-            this.stopButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.stopButton.Location = new System.Drawing.Point(323, 3);
+            this.stopButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stopButton.Location = new System.Drawing.Point(331, 3);
             this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(74, 69);
+            this.stopButton.Size = new System.Drawing.Size(78, 69);
             this.stopButton.TabIndex = 6;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
@@ -195,11 +201,11 @@
             // 
             // toggleVoicesButton
             // 
-            this.toggleVoicesButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.toggleVoicesButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toggleVoicesButton.Enabled = false;
-            this.toggleVoicesButton.Location = new System.Drawing.Point(83, 3);
+            this.toggleVoicesButton.Location = new System.Drawing.Point(85, 3);
             this.toggleVoicesButton.Name = "toggleVoicesButton";
-            this.toggleVoicesButton.Size = new System.Drawing.Size(74, 69);
+            this.toggleVoicesButton.Size = new System.Drawing.Size(76, 69);
             this.toggleVoicesButton.TabIndex = 3;
             this.toggleVoicesButton.Text = "Toggle Voices";
             this.toggleVoicesButton.UseVisualStyleBackColor = true;
@@ -207,10 +213,10 @@
             // 
             // ResetButton
             // 
-            this.ResetButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ResetButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResetButton.Location = new System.Drawing.Point(3, 3);
             this.ResetButton.Name = "ResetButton";
-            this.ResetButton.Size = new System.Drawing.Size(74, 69);
+            this.ResetButton.Size = new System.Drawing.Size(76, 69);
             this.ResetButton.TabIndex = 2;
             this.ResetButton.Text = "Reset";
             this.ResetButton.UseVisualStyleBackColor = true;
@@ -218,10 +224,10 @@
             // 
             // playButton
             // 
-            this.playButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.playButton.Location = new System.Drawing.Point(163, 3);
+            this.playButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.playButton.Location = new System.Drawing.Point(167, 3);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(74, 69);
+            this.playButton.Size = new System.Drawing.Size(76, 69);
             this.playButton.TabIndex = 4;
             this.playButton.Text = "Play/Pause";
             this.playButton.UseVisualStyleBackColor = true;
@@ -229,10 +235,10 @@
             // 
             // toggleBgmButton
             // 
-            this.toggleBgmButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.toggleBgmButton.Location = new System.Drawing.Point(243, 3);
+            this.toggleBgmButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toggleBgmButton.Location = new System.Drawing.Point(249, 3);
             this.toggleBgmButton.Name = "toggleBgmButton";
-            this.toggleBgmButton.Size = new System.Drawing.Size(74, 69);
+            this.toggleBgmButton.Size = new System.Drawing.Size(76, 69);
             this.toggleBgmButton.TabIndex = 5;
             this.toggleBgmButton.Text = "Toggle BGM";
             this.toggleBgmButton.UseVisualStyleBackColor = true;
@@ -240,19 +246,21 @@
             // 
             // volumeTrackBar
             // 
-            this.volumeTrackBar.Location = new System.Drawing.Point(452, 418);
+            this.volumeTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.volumeTrackBar.Location = new System.Drawing.Point(93, 604);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
-            this.volumeTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.volumeTrackBar.Size = new System.Drawing.Size(45, 266);
+            this.volumeTrackBar.Size = new System.Drawing.Size(251, 45);
             this.volumeTrackBar.TabIndex = 15;
             this.volumeTrackBar.TickFrequency = 50;
+            this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.volumeTrackBar.Scroll += new System.EventHandler(this.VolumeTrackBar_Scroll);
             // 
             // volumeLabel
             // 
+            this.volumeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.volumeLabel.AutoSize = true;
-            this.volumeLabel.Location = new System.Drawing.Point(452, 400);
+            this.volumeLabel.Location = new System.Drawing.Point(195, 586);
             this.volumeLabel.Name = "volumeLabel";
             this.volumeLabel.Size = new System.Drawing.Size(47, 15);
             this.volumeLabel.TabIndex = 14;
@@ -260,7 +268,8 @@
             // 
             // showExtrasButton
             // 
-            this.showExtrasButton.Location = new System.Drawing.Point(147, 607);
+            this.showExtrasButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.showExtrasButton.Location = new System.Drawing.Point(153, 506);
             this.showExtrasButton.Name = "showExtrasButton";
             this.showExtrasButton.Size = new System.Drawing.Size(131, 26);
             this.showExtrasButton.TabIndex = 8;
@@ -282,11 +291,11 @@
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.fiveIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.fiveIdolPanel.Location = new System.Drawing.Point(452, 27);
+            this.fiveIdolPanel.Location = new System.Drawing.Point(12, 27);
             this.fiveIdolPanel.Name = "fiveIdolPanel";
             this.fiveIdolPanel.RowCount = 1;
             this.fiveIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.fiveIdolPanel.Size = new System.Drawing.Size(420, 80);
+            this.fiveIdolPanel.Size = new System.Drawing.Size(412, 80);
             this.fiveIdolPanel.TabIndex = 16;
             // 
             // eightIdolPanel
@@ -301,26 +310,41 @@
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.eightIdolPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
-            this.eightIdolPanel.Location = new System.Drawing.Point(452, 113);
+            this.eightIdolPanel.Location = new System.Drawing.Point(12, 113);
             this.eightIdolPanel.Name = "eightIdolPanel";
             this.eightIdolPanel.RowCount = 1;
             this.eightIdolPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.eightIdolPanel.Size = new System.Drawing.Size(420, 54);
+            this.eightIdolPanel.Size = new System.Drawing.Size(412, 54);
             this.eightIdolPanel.TabIndex = 16;
             // 
             // centerLabel
             // 
-            this.centerLabel.Location = new System.Drawing.Point(641, 9);
+            this.centerLabel.Location = new System.Drawing.Point(191, 9);
             this.centerLabel.Name = "centerLabel";
             this.centerLabel.Size = new System.Drawing.Size(42, 15);
             this.centerLabel.TabIndex = 17;
             this.centerLabel.Text = "Center";
             // 
+            // extrasPanel
+            // 
+            this.extrasPanel.Controls.Add(this.lipSyncPictureBox);
+            this.extrasPanel.Controls.Add(this.expressionPictureBox);
+            this.extrasPanel.Controls.Add(this.lyricsTextBox);
+            this.extrasPanel.Controls.Add(this.debugEyesIdLabel);
+            this.extrasPanel.Controls.Add(this.debugEyeCloseIdLabel);
+            this.extrasPanel.Controls.Add(this.debugMouthIdLabel);
+            this.extrasPanel.Location = new System.Drawing.Point(466, 12);
+            this.extrasPanel.Name = "extrasPanel";
+            this.extrasPanel.Size = new System.Drawing.Size(406, 637);
+            this.extrasPanel.TabIndex = 18;
+            this.extrasPanel.Visible = false;
+            // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 696);
+            this.ClientSize = new System.Drawing.Size(884, 661);
+            this.Controls.Add(this.extrasPanel);
             this.Controls.Add(this.centerLabel);
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
@@ -330,13 +354,7 @@
             this.Controls.Add(this.controlPanel);
             this.Controls.Add(this.totalTimeLabel);
             this.Controls.Add(this.currentTimeLabel);
-            this.Controls.Add(this.lyricsTextBox);
-            this.Controls.Add(this.debugMouthIdLabel);
-            this.Controls.Add(this.debugEyeCloseIdLabel);
-            this.Controls.Add(this.debugEyesIdLabel);
             this.Controls.Add(this.seekBar);
-            this.Controls.Add(this.lipSyncPictureBox);
-            this.Controls.Add(this.expressionPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "PlayerForm";
@@ -349,6 +367,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).EndInit();
             this.controlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
+            this.extrasPanel.ResumeLayout(false);
+            this.extrasPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -380,5 +400,6 @@
         private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
         private System.Windows.Forms.Label centerLabel;
+        private System.Windows.Forms.Panel extrasPanel;
     }
 }

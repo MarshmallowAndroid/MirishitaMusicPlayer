@@ -22,24 +22,33 @@ namespace MirishitaMusicPlayer.Forms
         private readonly WaveOutEvent outputDevice;
         private readonly List<Label> idolLabels = new();
 
-        private readonly int defaultWidth;
+        private readonly int defaultWidth = 452;
+        private readonly int defaultHeight = 460;
 
         private bool isSeeking = false;
         private bool extrasShown = false;
 
-        private float animatePercentage = 0.0f;
+        private bool horizontalAnimationDone = false;
+        private float horizontalAnimatePercentage = 0.0f;
+        private bool verticalAnimationDone = false;
+        private float verticalAnimatePercentage = 0.0f;
         private int currentWidth;
+        private int currentHeight;
         private int currentLeft;
+        private int currentTop;
 
         public PlayerForm(Song song)
         {
             InitializeComponent();
 
             /*
+             * Width:
+             *  Normal: 440
+             *  Extras shown: 900
              * 
-             * Normal: 440
-             * Extras shown: 900
-             * 
+             * Height:
+             *  Normal: 460
+             *  Extras shown: 700
              */
 
             singers = song.Scenario.Configuration.Order;
@@ -47,8 +56,9 @@ namespace MirishitaMusicPlayer.Forms
             songMixer = song.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
 
-            defaultWidth = Width;
-
+            Width = defaultWidth;
+            Height = defaultHeight;
+            
             int realCount = singers?.Length ?? stageMemberCount;
 
             for (int i = 0; i < realCount; i++)
@@ -228,22 +238,41 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (extrasShown)
             {
-                Width = AnimateValue(currentWidth, defaultWidth, animatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), animatePercentage);
+                Width = AnimateValue(currentWidth, defaultWidth, horizontalAnimatePercentage);
+                Height = AnimateValue(currentHeight, defaultHeight, verticalAnimatePercentage);
+
+                Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), horizontalAnimatePercentage);
+                Top = AnimateValue(currentTop, currentTop + (defaultHeight / 2 / 2), verticalAnimatePercentage);
             }
             else
             {
-                Width = AnimateValue(currentWidth, 900, animatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft - (currentWidth - defaultWidth / 2), animatePercentage);
+                Width = AnimateValue(currentWidth, 900, horizontalAnimatePercentage);
+                Height = AnimateValue(currentHeight, 700, verticalAnimatePercentage);
+
+                Left = AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), horizontalAnimatePercentage);
+                Top = AnimateValue(currentTop, currentTop - (defaultHeight / 2 / 2), verticalAnimatePercentage);
             }
 
-            animatePercentage += extrasShowTimer.Interval / 300f;
+            if (!horizontalAnimationDone)
+                horizontalAnimatePercentage += extrasShowTimer.Interval / 300f;
 
-            if (animatePercentage >= 1.0f)
+            if (!verticalAnimationDone)
+                verticalAnimatePercentage += extrasShowTimer.Interval / 200f;
+
+            if (horizontalAnimatePercentage >= 1.0f)
             {
-                animatePercentage = 0.0f;
+                horizontalAnimationDone = true;
+            }
 
+            if (verticalAnimatePercentage >= 1.0f)
+            {
+                verticalAnimationDone = true;
+            }
+
+            if (horizontalAnimationDone && verticalAnimationDone)
+            {
                 extrasShown = !extrasShown;
+                extrasPanel.Visible = extrasShown;
                 showExtrasButton.Text = extrasShown ? "Hide extras" : "Show extras";
 
                 extrasShowTimer.Enabled = false;
@@ -253,23 +282,18 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ShowExtrasButton_Click(object sender, EventArgs e)
         {
-            if (animatePercentage > 0.0f && animatePercentage < 1.0f)
-            {
-                extrasShown = !extrasShown;
-            }
-
-            animatePercentage = 0.0f;
+            horizontalAnimatePercentage = 0.0f;
+            horizontalAnimationDone = false;
+            verticalAnimatePercentage = 0.0f;
+            verticalAnimationDone = false;
 
             currentWidth = Width;
+            currentHeight = Height;
             currentLeft = Left;
+            currentTop = Top;
 
             extrasShowTimer.Enabled = true;
             showExtrasButton.Enabled = false;
-
-            //if (Width > defaultWidth)
-            //    extrasShown = true;
-            //else
-            //    extrasShown = false;
         }
 
         private static int AnimateValue(int from, int to, float progress)
