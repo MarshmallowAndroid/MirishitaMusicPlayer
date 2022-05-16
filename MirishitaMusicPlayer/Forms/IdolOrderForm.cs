@@ -124,26 +124,29 @@ namespace MirishitaMusicPlayer.Forms
                 idolCheckBoxes.Add(checkBox);
             }
 
-            int idolPosition = 0;
-            for (int i = 0; i < Scenario.StageMemberCount; i++)
+            if (idolCheckBoxes.Count > 0)
             {
-                CheckBox checkBox = idolCheckBoxes[i];
+                int idolPosition = 0;
+                for (int i = 0; i < Scenario.StageMemberCount; i++)
+                {
+                    CheckBox checkBox = idolCheckBoxes[i];
 
-                int column = positionToIndexTable[(int)checkBox.Tag];
+                    int column = positionToIndexTable[(int)checkBox.Tag];
 
-                if (idolPosition < 5)
-                    fiveIdolPanel.Controls.Add(checkBox, column, 0);
-                else if (idolPosition >= 5 && idolPosition < 13)
-                    eightIdolPanel.Controls.Add(checkBox, column - 5, 0);
+                    if (idolPosition < 5)
+                        fiveIdolPanel.Controls.Add(checkBox, column, 0);
+                    else if (idolPosition >= 5 && idolPosition < 13)
+                        eightIdolPanel.Controls.Add(checkBox, column - 5, 0);
 
-                idolPosition++;
-            }
+                    idolPosition++;
+                }
 
-            for (int i = Scenario.StageMemberCount; i < Song.Singers.Length; i++)
-            {
-                CheckBox checkBox = idolCheckBoxes[i];
-                checkBox.Dock = DockStyle.None;
-                stashedIdolsPanel.Controls.Add(checkBox);
+                for (int i = Scenario.StageMemberCount; i < Song.Singers.Length; i++)
+                {
+                    CheckBox checkBox = idolCheckBoxes[i];
+                    checkBox.Dock = DockStyle.None;
+                    stashedIdolsPanel.Controls.Add(checkBox);
+                }
             }
         }
 
