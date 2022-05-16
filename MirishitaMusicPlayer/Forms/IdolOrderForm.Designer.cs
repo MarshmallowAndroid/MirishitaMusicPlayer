@@ -31,13 +31,13 @@
             this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.startButton = new System.Windows.Forms.Button();
-            this.soloRadioButton = new System.Windows.Forms.RadioButton();
+            this.utaiwakeRadioButton = new System.Windows.Forms.RadioButton();
             this.stashedIdolsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.extraRadioButton = new System.Windows.Forms.RadioButton();
+            this.ongenSentakuRadioButton = new System.Windows.Forms.RadioButton();
             this.originalBgmRadioButton = new System.Windows.Forms.RadioButton();
-            this.defaultRadioButton = new System.Windows.Forms.RadioButton();
             this.centerLabel = new System.Windows.Forms.Label();
+            this.soloCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // fiveIdolPanel
@@ -89,18 +89,19 @@
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
-            // soloRadioButton
+            // utaiwakeRadioButton
             // 
-            this.soloRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.soloRadioButton.AutoSize = true;
-            this.soloRadioButton.Enabled = false;
-            this.soloRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.soloRadioButton.Location = new System.Drawing.Point(547, 694);
-            this.soloRadioButton.Name = "soloRadioButton";
-            this.soloRadioButton.Size = new System.Drawing.Size(59, 25);
-            this.soloRadioButton.TabIndex = 2;
-            this.soloRadioButton.Text = "Solo";
-            this.soloRadioButton.UseVisualStyleBackColor = true;
+            this.utaiwakeRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.utaiwakeRadioButton.AutoSize = true;
+            this.utaiwakeRadioButton.Enabled = false;
+            this.utaiwakeRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.utaiwakeRadioButton.Location = new System.Drawing.Point(531, 694);
+            this.utaiwakeRadioButton.Name = "utaiwakeRadioButton";
+            this.utaiwakeRadioButton.Size = new System.Drawing.Size(92, 25);
+            this.utaiwakeRadioButton.TabIndex = 2;
+            this.utaiwakeRadioButton.Text = "Utaiwake";
+            this.utaiwakeRadioButton.UseVisualStyleBackColor = true;
+            this.utaiwakeRadioButton.CheckedChanged += new System.EventHandler(this.UtaiwakeRadioButton_CheckedChanged);
             // 
             // stashedIdolsPanel
             // 
@@ -119,45 +120,33 @@
             this.progressBar.Size = new System.Drawing.Size(267, 25);
             this.progressBar.TabIndex = 4;
             // 
-            // extraRadioButton
+            // ongenSentakuRadioButton
             // 
-            this.extraRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.extraRadioButton.AutoSize = true;
-            this.extraRadioButton.Enabled = false;
-            this.extraRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.extraRadioButton.Location = new System.Drawing.Point(702, 694);
-            this.extraRadioButton.Name = "extraRadioButton";
-            this.extraRadioButton.Size = new System.Drawing.Size(62, 25);
-            this.extraRadioButton.TabIndex = 2;
-            this.extraRadioButton.Text = "Extra";
-            this.extraRadioButton.UseVisualStyleBackColor = true;
+            this.ongenSentakuRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ongenSentakuRadioButton.AutoSize = true;
+            this.ongenSentakuRadioButton.Enabled = false;
+            this.ongenSentakuRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ongenSentakuRadioButton.Location = new System.Drawing.Point(629, 694);
+            this.ongenSentakuRadioButton.Name = "ongenSentakuRadioButton";
+            this.ongenSentakuRadioButton.Size = new System.Drawing.Size(135, 25);
+            this.ongenSentakuRadioButton.TabIndex = 2;
+            this.ongenSentakuRadioButton.Text = "Ongen Sentaku";
+            this.ongenSentakuRadioButton.UseVisualStyleBackColor = true;
             // 
             // originalBgmRadioButton
             // 
             this.originalBgmRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.originalBgmRadioButton.AutoSize = true;
+            this.originalBgmRadioButton.Checked = true;
             this.originalBgmRadioButton.Enabled = false;
             this.originalBgmRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.originalBgmRadioButton.Location = new System.Drawing.Point(612, 694);
+            this.originalBgmRadioButton.Location = new System.Drawing.Point(441, 694);
             this.originalBgmRadioButton.Name = "originalBgmRadioButton";
             this.originalBgmRadioButton.Size = new System.Drawing.Size(84, 25);
             this.originalBgmRadioButton.TabIndex = 2;
+            this.originalBgmRadioButton.TabStop = true;
             this.originalBgmRadioButton.Text = "Original";
             this.originalBgmRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // defaultRadioButton
-            // 
-            this.defaultRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.defaultRadioButton.AutoSize = true;
-            this.defaultRadioButton.Checked = true;
-            this.defaultRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.defaultRadioButton.Location = new System.Drawing.Point(463, 694);
-            this.defaultRadioButton.Name = "defaultRadioButton";
-            this.defaultRadioButton.Size = new System.Drawing.Size(78, 25);
-            this.defaultRadioButton.TabIndex = 2;
-            this.defaultRadioButton.TabStop = true;
-            this.defaultRadioButton.Text = "Default";
-            this.defaultRadioButton.UseVisualStyleBackColor = true;
             // 
             // centerLabel
             // 
@@ -169,17 +158,31 @@
             this.centerLabel.Text = "Center";
             this.centerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // soloCheckBox
+            // 
+            this.soloCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.soloCheckBox.AutoSize = true;
+            this.soloCheckBox.Enabled = false;
+            this.soloCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.soloCheckBox.Location = new System.Drawing.Point(375, 695);
+            this.soloCheckBox.Name = "soloCheckBox";
+            this.soloCheckBox.Size = new System.Drawing.Size(60, 25);
+            this.soloCheckBox.TabIndex = 6;
+            this.soloCheckBox.Text = "Solo";
+            this.soloCheckBox.UseVisualStyleBackColor = true;
+            this.soloCheckBox.Visible = false;
+            // 
             // IdolOrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(911, 738);
+            this.Controls.Add(this.soloCheckBox);
             this.Controls.Add(this.centerLabel);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.extraRadioButton);
-            this.Controls.Add(this.defaultRadioButton);
+            this.Controls.Add(this.ongenSentakuRadioButton);
             this.Controls.Add(this.originalBgmRadioButton);
-            this.Controls.Add(this.soloRadioButton);
+            this.Controls.Add(this.utaiwakeRadioButton);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.eightIdolPanel);
             this.Controls.Add(this.fiveIdolPanel);
@@ -200,12 +203,12 @@
         private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.RadioButton soloRadioButton;
+        private System.Windows.Forms.RadioButton utaiwakeRadioButton;
         private System.Windows.Forms.FlowLayoutPanel stashedIdolsPanel;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.RadioButton extraRadioButton;
+        private System.Windows.Forms.RadioButton ongenSentakuRadioButton;
         private System.Windows.Forms.RadioButton originalBgmRadioButton;
-        private System.Windows.Forms.RadioButton defaultRadioButton;
         private System.Windows.Forms.Label centerLabel;
+        private System.Windows.Forms.CheckBox soloCheckBox;
     }
 }
