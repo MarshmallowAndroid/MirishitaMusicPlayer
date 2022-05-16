@@ -16,7 +16,10 @@ namespace MirishitaMusicPlayer
 {
     internal class Program
     {
-        public static string CachePath = @"Cache\";
+        public static readonly string CachePath = "Cache";
+        public static readonly string JacketsPath = Path.Combine(CachePath, "Songs");
+        public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
+        public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
 
         [STAThread]
         private static void Main(string[] args)
@@ -26,59 +29,45 @@ namespace MirishitaMusicPlayer
 
             bool quit = false;
 
-            WaveOutEvent waveOutEvent = new() { DesiredLatency = 100 };
             AssetsManager assetsManager = new();
-            SongSelectForm songSelectForm = new(waveOutEvent, assetsManager);
+            SongSelectForm songSelectForm = new(assetsManager);
 
             while (!quit)
             {
                 songSelectForm.ShowDialog();
 
-                string songID = songSelectForm.ResultSongID ?? "";
-                if (songID == "") return;
+                Song song = songSelectForm.Song;
+                if (song == null) return;
 
-                Console.Title = songID;
+                Console.Title = song.SongId;
 
-                string filesPath = "Cache\\Songs";
+                IdolOrderForm idolOrderForm = new(song);
 
-                ScenarioLoader scenarios = new(assetsManager, filesPath, songID);
-                ScenarioScrObject mainScenario = scenarios.MainScenario;
-                List<EventScenarioData> expressionScenarios = scenarios.ExpressionScenarios;
-                List<EventScenarioData> muteScenarios = scenarios.MuteScenarios;
-
-                IdolOrderForm idolOrderForm = new(
-                    songSelectForm.AssetList,
-                    songID,
-                    scenarios.VoiceCount,
-                    assetsManager,
-                    scenarios.MuteScenarios);
-                idolOrderForm.ProcessSong();
-
-                SongMixer songMixer = idolOrderForm.SongMixer;
-                WaveOutEvent outputDevice = idolOrderForm.OutputDevice;
-
-                if (songMixer == null) continue;
+                if (idolOrderForm.ProcessSong())
+                {
+                    OutputDevice.Play();
+                }
+                else continue;
 
                 idolOrderForm.Dispose();
+                //SongMixer songMixer = idolOrderForm.SongMixer;
+                //WaveOutEvent outputDevice = idolOrderForm.OutputDevice;
 
-                ScenarioPlayer scenarioPlayback = new(
-                    outputDevice,
-                    songMixer,
-                    mainScenario,
-                    expressionScenarios,
-                    muteScenarios);
+                //if (songMixer == null) continue;
 
-                PlayerForm playerForm = new(idolOrderForm.Order, scenarios.VoiceCount, songMixer, outputDevice);
+                ScenarioPlayer scenarioPlayer = new(song);
 
-                scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
-                scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
-                scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
-                scenarioPlayback.MuteChanged += (m) => playerForm.UpdateMute(m);
-                scenarioPlayback.SongStopped += () => playerForm.Stop(true);
+                //PlayerForm playerForm = new(idolOrderForm.Order, scenarios.VoiceCount, songMixer, outputDevice);
 
-                scenarioPlayback.Start();
+                //scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
+                //scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
+                //scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
+                //scenarioPlayback.MuteChanged += (m) => playerForm.UpdateMute(m);
+                //scenarioPlayback.SongStopped += () => playerForm.Stop(true);
 
-                playerForm.ShowDialog();
+                //scenarioPlayback.Start();
+
+                //playerForm.ShowDialog();
             }
         }
     }
