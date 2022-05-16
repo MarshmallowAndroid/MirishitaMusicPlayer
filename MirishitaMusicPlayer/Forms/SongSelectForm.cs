@@ -89,10 +89,10 @@ namespace MirishitaMusicPlayer.Forms
             AssetList = new(databaseFile);
         }
 
-        private void BySongIDCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void BySongIdCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            getSongJacketsButton.Text = bySongIDCheckBox.Checked ? "Play song" : "Get all song jackets";
-            songIDTextBox.Enabled = bySongIDCheckBox.Checked;
+            getSongJacketsButton.Text = bySongIdCheckBox.Checked ? "Play song" : "Get all song jackets";
+            songIdTextBox.Enabled = bySongIdCheckBox.Checked;
         }
 
         private async void GetSongJacketsButton_Click(object sender, EventArgs e)
@@ -101,7 +101,7 @@ namespace MirishitaMusicPlayer.Forms
 
             List<Asset> filesToDownload = new();
 
-            if (!bySongIDCheckBox.Checked)
+            if (!bySongIdCheckBox.Checked)
             {
                 Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
@@ -145,9 +145,9 @@ namespace MirishitaMusicPlayer.Forms
             }
             else
             {
-                string songID = songIDTextBox.Text;
+                string songId = songIdTextBox.Text;
 
-                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songID}.unity3d");
+                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songId}.unity3d");
 
                 if (songJacketAsset != null)
                 {
@@ -157,11 +157,11 @@ namespace MirishitaMusicPlayer.Forms
                         UpdateList();
                     }
 
-                    await PlaySong(songID);
+                    await PlaySong(songId);
                 }
                 else
                 {
-                    MessageBox.Show($"Unable to find song with ID \"{songIDTextBox.Text}\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Unable to find song with ID \"{songIdTextBox.Text}\".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -179,7 +179,7 @@ namespace MirishitaMusicPlayer.Forms
             await PlaySong(songID);
         }
 
-        private async Task PlaySong(string songID)
+        private async Task PlaySong(string songId)
         {
             LoadingMode(true);
 
@@ -246,7 +246,7 @@ namespace MirishitaMusicPlayer.Forms
             foreach (var item in jacketFiles)
             {
                 string name = Path.GetFileNameWithoutExtension(item);
-                string songID = name["jacket_".Length..];
+                string songId = name["jacket_".Length..];
                 PictureBox songJacket = new()
                 {
                     Width = 150,
@@ -254,11 +254,11 @@ namespace MirishitaMusicPlayer.Forms
                     BackgroundImage = UnityTextureHelpers.GetBitmap(name),
                     BackgroundImageLayout = ImageLayout.Zoom,
                     Cursor = Cursors.Hand,
-                    Tag = songID
+                    Tag = songId
                 };
 
                 ToolTip toolTip = new();
-                toolTip.SetToolTip(songJacket, songID);
+                toolTip.SetToolTip(songJacket, songId);
 
                 songJacket.Click += SongJacket_Click;
                 jackets.Add(songJacket);
@@ -266,7 +266,7 @@ namespace MirishitaMusicPlayer.Forms
                 loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
             }
 
-            AssetStudio.Progress.Default = new Progress<int>();
+            Progress.Default = new Progress<int>();
 
             e.Result = jackets;
         }

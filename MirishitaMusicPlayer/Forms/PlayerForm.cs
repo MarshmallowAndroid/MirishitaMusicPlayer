@@ -59,7 +59,7 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     Idol idol = singers[i];
                     label.BackgroundImageLayout = ImageLayout.Zoom;
-                    label.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameID}") as Bitmap;
+                    label.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
                 }
                 else
                 {
@@ -92,27 +92,27 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        public void UpdateExpression(int expressionID, bool eyeClose)
+        public void UpdateExpression(int expressionId, bool eyeClose)
         {
             TryInvoke(() =>
             {
-                debugEyesIDLabel.Text = "Expression: " + expressionID.ToString();
-                debugEyeCloseIDLabel.Text = $"Eye close: " + eyeClose;
+                debugEyesIdLabel.Text = "Expression: " + expressionId.ToString();
+                debugEyeCloseIdLabel.Text = $"Eye close: " + eyeClose;
             });
-            string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionID}";
+            string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionId}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
 
             expressionPictureBox.BackgroundImage = resource;
         }
 
-        public void UpdateLipSync(int lipSyncID)
+        public void UpdateLipSync(int lipSyncId)
         {
-            TryInvoke(() => debugMouthIDLabel.Text = "Mouth: " + lipSyncID.ToString());
+            TryInvoke(() => debugMouthIdLabel.Text = "Mouth: " + lipSyncId.ToString());
 
             //if (lipSyncID == 56 || lipSyncID == 59)
             //    lipSyncID = 1;
 
-            string resourceName = $"mouth_{lipSyncID}";
+            string resourceName = $"mouth_{lipSyncId}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
             if (resource == null) TryInvoke(() => lipSyncPictureBox.Visible = false);
             else TryInvoke(() => lipSyncPictureBox.Visible = true);

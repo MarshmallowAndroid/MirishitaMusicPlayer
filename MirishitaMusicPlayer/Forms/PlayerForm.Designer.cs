@@ -33,9 +33,9 @@
             this.lipSyncPictureBox = new System.Windows.Forms.PictureBox();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
-            this.debugEyesIDLabel = new System.Windows.Forms.Label();
-            this.debugEyeCloseIDLabel = new System.Windows.Forms.Label();
-            this.debugMouthIDLabel = new System.Windows.Forms.Label();
+            this.debugEyesIdLabel = new System.Windows.Forms.Label();
+            this.debugEyeCloseIdLabel = new System.Windows.Forms.Label();
+            this.debugMouthIdLabel = new System.Windows.Forms.Label();
             this.lyricsTextBox = new System.Windows.Forms.Label();
             this.currentTimeLabel = new System.Windows.Forms.Label();
             this.totalTimeLabel = new System.Windows.Forms.Label();
@@ -99,38 +99,38 @@
             this.updateTimer.Enabled = true;
             this.updateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
-            // debugEyesIDLabel
+            // debugEyesIdLabel
             // 
-            this.debugEyesIDLabel.AutoSize = true;
-            this.debugEyesIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.debugEyesIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyesIDLabel.Location = new System.Drawing.Point(452, 170);
-            this.debugEyesIDLabel.Name = "debugEyesIDLabel";
-            this.debugEyesIDLabel.Size = new System.Drawing.Size(106, 25);
-            this.debugEyesIDLabel.TabIndex = 11;
-            this.debugEyesIDLabel.Text = "Expression:";
+            this.debugEyesIdLabel.AutoSize = true;
+            this.debugEyesIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyesIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.debugEyesIdLabel.Location = new System.Drawing.Point(452, 170);
+            this.debugEyesIdLabel.Name = "debugEyesIdLabel";
+            this.debugEyesIdLabel.Size = new System.Drawing.Size(106, 25);
+            this.debugEyesIdLabel.TabIndex = 11;
+            this.debugEyesIdLabel.Text = "Expression:";
             // 
-            // debugEyeCloseIDLabel
+            // debugEyeCloseIdLabel
             // 
-            this.debugEyeCloseIDLabel.AutoSize = true;
-            this.debugEyeCloseIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.debugEyeCloseIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugEyeCloseIDLabel.Location = new System.Drawing.Point(452, 195);
-            this.debugEyeCloseIDLabel.Name = "debugEyeCloseIDLabel";
-            this.debugEyeCloseIDLabel.Size = new System.Drawing.Size(93, 25);
-            this.debugEyeCloseIDLabel.TabIndex = 12;
-            this.debugEyeCloseIDLabel.Text = "Eye close:";
+            this.debugEyeCloseIdLabel.AutoSize = true;
+            this.debugEyeCloseIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyeCloseIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.debugEyeCloseIdLabel.Location = new System.Drawing.Point(452, 195);
+            this.debugEyeCloseIdLabel.Name = "debugEyeCloseIdLabel";
+            this.debugEyeCloseIdLabel.Size = new System.Drawing.Size(93, 25);
+            this.debugEyeCloseIdLabel.TabIndex = 12;
+            this.debugEyeCloseIdLabel.Text = "Eye close:";
             // 
-            // debugMouthIDLabel
+            // debugMouthIdLabel
             // 
-            this.debugMouthIDLabel.AutoSize = true;
-            this.debugMouthIDLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.debugMouthIDLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.debugMouthIDLabel.Location = new System.Drawing.Point(452, 220);
-            this.debugMouthIDLabel.Name = "debugMouthIDLabel";
-            this.debugMouthIDLabel.Size = new System.Drawing.Size(72, 25);
-            this.debugMouthIDLabel.TabIndex = 13;
-            this.debugMouthIDLabel.Text = "Mouth:";
+            this.debugMouthIdLabel.AutoSize = true;
+            this.debugMouthIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugMouthIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.debugMouthIdLabel.Location = new System.Drawing.Point(452, 220);
+            this.debugMouthIdLabel.Name = "debugMouthIdLabel";
+            this.debugMouthIdLabel.Size = new System.Drawing.Size(72, 25);
+            this.debugMouthIdLabel.TabIndex = 13;
+            this.debugMouthIdLabel.Text = "Mouth:";
             // 
             // lyricsTextBox
             // 
@@ -331,9 +331,9 @@
             this.Controls.Add(this.totalTimeLabel);
             this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.lyricsTextBox);
-            this.Controls.Add(this.debugMouthIDLabel);
-            this.Controls.Add(this.debugEyeCloseIDLabel);
-            this.Controls.Add(this.debugEyesIDLabel);
+            this.Controls.Add(this.debugMouthIdLabel);
+            this.Controls.Add(this.debugEyeCloseIdLabel);
+            this.Controls.Add(this.debugEyesIdLabel);
             this.Controls.Add(this.seekBar);
             this.Controls.Add(this.lipSyncPictureBox);
             this.Controls.Add(this.expressionPictureBox);
@@ -360,9 +360,9 @@
         private System.Windows.Forms.PictureBox lipSyncPictureBox;
         private System.Windows.Forms.TrackBar seekBar;
         private System.Windows.Forms.Timer updateTimer;
-        private System.Windows.Forms.Label debugEyesIDLabel;
-        private System.Windows.Forms.Label debugEyeCloseIDLabel;
-        private System.Windows.Forms.Label debugMouthIDLabel;
+        private System.Windows.Forms.Label debugEyesIdLabel;
+        private System.Windows.Forms.Label debugEyeCloseIdLabel;
+        private System.Windows.Forms.Label debugMouthIdLabel;
         private System.Windows.Forms.Label lyricsTextBox;
         private System.Windows.Forms.Label currentTimeLabel;
         private System.Windows.Forms.Label totalTimeLabel;

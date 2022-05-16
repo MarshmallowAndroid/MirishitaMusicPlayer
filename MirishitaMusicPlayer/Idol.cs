@@ -66,21 +66,21 @@ namespace MirishitaMusicPlayer
 
         public Idol(int idolIDNumber)
         {
-            IdolIDNumber = idolIDNumber;
+            IdolIdNumber = idolIDNumber;
         }
 
         public Idol(string idolNameID)
         {
-            IdolIDNumber = int.Parse(idolNameID[0..3]);
+            IdolIdNumber = int.Parse(idolNameID[0..3]);
         }
 
-        public string IdolNameID => idols[IdolIDNumber][0];
+        public string IdolNameId => idols[IdolIdNumber][0];
 
-        public string IdolAudioNameID => idols[IdolIDNumber][1];
+        public string IdolAudioNameId => idols[IdolIdNumber][1];
 
-        public int IdolIDNumber { get; }
+        public int IdolIdNumber { get; }
 
-        public string IdolNameFull => idols[IdolIDNumber][2];
+        public string IdolNameFull => idols[IdolIdNumber][2];
 
         public string IdolFirstName => IdolNameFull.Split(' ')[0].Trim();
 
