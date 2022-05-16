@@ -319,7 +319,7 @@
             // 
             // centerLabel
             // 
-            this.centerLabel.Location = new System.Drawing.Point(191, 9);
+            this.centerLabel.Location = new System.Drawing.Point(197, 9);
             this.centerLabel.Name = "centerLabel";
             this.centerLabel.Size = new System.Drawing.Size(42, 15);
             this.centerLabel.TabIndex = 17;
