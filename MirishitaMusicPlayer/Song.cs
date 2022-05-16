@@ -274,7 +274,7 @@ namespace MirishitaMusicPlayer
             AcbWaveStream extraAcb = null;
 
             // If order is not null
-            if (Order != null)
+            if (Mode == SongMode.Utaiwake)
             {
                 // Get voice ACB streams and initialize their WaveStreams
                 voiceAcbs = new AcbWaveStream[Order.Length];
