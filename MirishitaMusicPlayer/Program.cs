@@ -43,31 +43,18 @@ namespace MirishitaMusicPlayer
 
                 IdolOrderForm idolOrderForm = new(song);
 
-                if (idolOrderForm.ProcessSong())
-                {
+                bool songProcessedSuccessfully = idolOrderForm.ProcessSong();
+                idolOrderForm.Dispose();
+
+                if (songProcessedSuccessfully)
                     OutputDevice.Play();
-                }
-                else continue;
+                else
+                    continue;
 
                 idolOrderForm.Dispose();
-                //SongMixer songMixer = idolOrderForm.SongMixer;
-                //WaveOutEvent outputDevice = idolOrderForm.OutputDevice;
 
-                //if (songMixer == null) continue;
-
-                ScenarioPlayer scenarioPlayer = new(song);
-
-                //PlayerForm playerForm = new(idolOrderForm.Order, scenarios.VoiceCount, songMixer, outputDevice);
-
-                //scenarioPlayback.ExpressionChanged += (ex, ey) => playerForm.UpdateExpression(ex, ey);
-                //scenarioPlayback.LipSyncChanged += (l) => playerForm.UpdateLipSync(l);
-                //scenarioPlayback.LyricsChanged += (l) => playerForm.UpdateLyrics(l);
-                //scenarioPlayback.MuteChanged += (m) => playerForm.UpdateMute(m);
-                //scenarioPlayback.SongStopped += () => playerForm.Stop(true);
-
-                //scenarioPlayback.Start();
-
-                //playerForm.ShowDialog();
+                PlayerForm playerForm = new(song);
+                playerForm.ShowDialog();
             }
         }
     }

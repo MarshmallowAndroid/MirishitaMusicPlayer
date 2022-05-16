@@ -222,7 +222,7 @@ namespace MirishitaMusicPlayer
             }
             else
             {
-                if (_song.OriginalBgmAsset != null && UseOriginalBgm)
+                if (_song.OriginalBgmAsset != null && (UseOriginalBgm || Mode != SongMode.Utaiwake))
                 {
                     assets.Add(_song.OriginalBgmAsset);
                 }

@@ -58,10 +58,8 @@ namespace MirishitaMusicPlayer
 
             double secondsElapsed = 0;
 
-            while (!songMixer.HasEnded)
+            while (!songMixer.HasEnded && !shouldStop)
             {
-                if (shouldStop) break;
-
                 if (secondsElapsed > songMixer.CurrentTime.TotalSeconds)
                 {
                     muteIndex = 0;
