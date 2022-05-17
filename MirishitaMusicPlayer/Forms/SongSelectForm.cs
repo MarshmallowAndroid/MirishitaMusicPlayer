@@ -275,6 +275,7 @@ namespace MirishitaMusicPlayer.Forms
         private async Task UpdateDatabaseAsync()
         {
             LoadingMode(true);
+            _assetsClient = null;
             await InitializeAssetClientAsync();
             await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
             MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
