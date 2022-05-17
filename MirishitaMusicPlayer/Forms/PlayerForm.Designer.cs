@@ -105,35 +105,35 @@
             // debugEyesIdLabel
             // 
             this.debugEyesIdLabel.AutoSize = true;
-            this.debugEyesIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyesIdLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyesIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugEyesIdLabel.Location = new System.Drawing.Point(3, 511);
             this.debugEyesIdLabel.Name = "debugEyesIdLabel";
-            this.debugEyesIdLabel.Size = new System.Drawing.Size(106, 25);
+            this.debugEyesIdLabel.Size = new System.Drawing.Size(130, 22);
             this.debugEyesIdLabel.TabIndex = 11;
-            this.debugEyesIdLabel.Text = "Expression:";
+            this.debugEyesIdLabel.Text = "Expression :";
             // 
             // debugEyeCloseIdLabel
             // 
             this.debugEyeCloseIdLabel.AutoSize = true;
-            this.debugEyeCloseIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugEyeCloseIdLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugEyeCloseIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugEyeCloseIdLabel.Location = new System.Drawing.Point(3, 536);
             this.debugEyeCloseIdLabel.Name = "debugEyeCloseIdLabel";
-            this.debugEyeCloseIdLabel.Size = new System.Drawing.Size(93, 25);
+            this.debugEyeCloseIdLabel.Size = new System.Drawing.Size(130, 22);
             this.debugEyeCloseIdLabel.TabIndex = 12;
-            this.debugEyeCloseIdLabel.Text = "Eye close:";
+            this.debugEyeCloseIdLabel.Text = "Eye close  :";
             // 
             // debugMouthIdLabel
             // 
             this.debugMouthIdLabel.AutoSize = true;
-            this.debugMouthIdLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.debugMouthIdLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.debugMouthIdLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.debugMouthIdLabel.Location = new System.Drawing.Point(3, 561);
             this.debugMouthIdLabel.Name = "debugMouthIdLabel";
-            this.debugMouthIdLabel.Size = new System.Drawing.Size(72, 25);
+            this.debugMouthIdLabel.Size = new System.Drawing.Size(130, 22);
             this.debugMouthIdLabel.TabIndex = 13;
-            this.debugMouthIdLabel.Text = "Mouth:";
+            this.debugMouthIdLabel.Text = "Mouth      :";
             // 
             // lyricsTextBox
             // 

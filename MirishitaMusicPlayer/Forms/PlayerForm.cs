@@ -114,8 +114,8 @@ namespace MirishitaMusicPlayer.Forms
         {
             Invoke(() =>
             {
-                debugEyesIdLabel.Text = "Expression: " + expressionId.ToString();
-                debugEyeCloseIdLabel.Text = $"Eye close: " + eyeClose;
+                debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
+                debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
             });
             string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionId}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
@@ -125,7 +125,7 @@ namespace MirishitaMusicPlayer.Forms
 
         public void UpdateLipSync(int lipSyncId)
         {
-            Invoke(() => debugMouthIdLabel.Text = "Mouth: " + lipSyncId.ToString());
+            Invoke(() => debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString());
 
             //if (lipSyncID == 56 || lipSyncID == 59)
             //    lipSyncID = 1;
