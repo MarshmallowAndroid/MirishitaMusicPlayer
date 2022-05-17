@@ -192,27 +192,29 @@ namespace MirishitaMusicPlayer.Forms
             if (originalBgmRadioButton.Checked)
                 Configuration.Mode = SongMode.Normal;
             else if (utaiwakeRadioButton.Checked)
-                Configuration.Mode = SongMode.Utaiwake;
-            else if (ongenSentakuRadioButton.Checked)
-                Configuration.Mode = SongMode.OngenSentaku;
-
-            int orderLength = soloCheckBox.Checked ? 1 : Scenario.StageMemberCount;
-
-            if (orderLength > 0 && !originalBgmRadioButton.Checked)
             {
-                Configuration.Order = new Idol[orderLength];
+                Configuration.Mode = SongMode.Utaiwake;
 
-                foreach (var checkBox in idolCheckBoxes)
+                int orderLength = soloCheckBox.Checked ? 1 : Scenario.StageMemberCount;
+
+                if (orderLength > 0 && !originalBgmRadioButton.Checked)
                 {
-                    int index = (int)checkBox.Tag;
+                    Configuration.Order = new Idol[orderLength];
 
-                    if (index < orderLength)
+                    foreach (var checkBox in idolCheckBoxes)
                     {
-                        Idol idol = new((string)checkBox.BackgroundImage.Tag);
-                        Configuration.Order[index] = idol;
+                        int index = (int)checkBox.Tag;
+
+                        if (index < orderLength)
+                        {
+                            Idol idol = new((string)checkBox.BackgroundImage.Tag);
+                            Configuration.Order[index] = idol;
+                        }
                     }
                 }
             }
+            else if (ongenSentakuRadioButton.Checked)
+                Configuration.Mode = SongMode.OngenSentaku;
 
             var requiredAssets = Configuration.GetRequiredAssets();
 
@@ -313,15 +315,6 @@ namespace MirishitaMusicPlayer.Forms
         {
             Cursor = loading ? Cursors.WaitCursor : Cursors.Default;
             startButton.Enabled = !loading;
-        }
-
-        private static Stream GetStreamFromAsset(SerializedFile file)
-        {
-            // CRIWARE ACB files are stored as TextAssets in the m_Script field
-
-            TextAsset asset = (TextAsset)file.Objects.FirstOrDefault(o => o.type == ClassIDType.TextAsset);
-
-            return new MemoryStream(asset.m_Script);
         }
 
         private void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
