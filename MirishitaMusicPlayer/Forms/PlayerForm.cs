@@ -58,15 +58,15 @@ namespace MirishitaMusicPlayer.Forms
 
             Width = defaultWidth;
             Height = defaultHeight;
-            
-            int realCount = singers?.Length ?? stageMemberCount;
 
-            for (int i = 0; i < realCount; i++)
+            for (int i = 0; i < stageMemberCount; i++)
             {
                 Label label = new();
-                label.Anchor = AnchorStyles.None;
+                {
+                    label.Anchor = AnchorStyles.None;
+                };
 
-                if (singers != null)
+                if (singers?.Length > 0)
                 {
                     Idol idol = singers[i];
                     label.BackgroundImageLayout = ImageLayout.Zoom;
@@ -153,10 +153,10 @@ namespace MirishitaMusicPlayer.Forms
 
                 Invoke(() =>
                 {
-                if (mutes[i] == 1)
-                    button.Visible = true;
-                else
-                    button.Visible = false;
+                    if (mutes[i] == 1)
+                        button.Visible = true;
+                    else
+                        button.Visible = false;
                 });
             }
         }
@@ -196,7 +196,7 @@ namespace MirishitaMusicPlayer.Forms
         private void SeekBar_Scroll(object sender, EventArgs e)
         {
             isSeeking = true;
-            songMixer.Position = (long)(seekBar.Value / 100.0f * songMixer.Length);
+            songMixer.Position = (long)Math.Ceiling(seekBar.Value / 100.0f * songMixer.Length);
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
