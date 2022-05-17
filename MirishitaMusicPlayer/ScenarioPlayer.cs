@@ -66,6 +66,11 @@ namespace MirishitaMusicPlayer
                     expressionScenarioIndex = 0;
                     mainScenarioIndex = 0;
                 }
+                else if (secondsElapsed == songMixer.CurrentTime.TotalSeconds)
+                {
+                    Thread.Sleep(1);
+                    continue;
+                }
 
                 secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
@@ -130,7 +135,6 @@ namespace MirishitaMusicPlayer
             }
 
             songMixer.Dispose();
-
             SongStopped?.Invoke();
         }
 
