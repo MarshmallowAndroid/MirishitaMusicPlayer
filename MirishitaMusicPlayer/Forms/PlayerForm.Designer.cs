@@ -48,7 +48,6 @@
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
             this.volumeLabel = new System.Windows.Forms.Label();
             this.showExtrasButton = new System.Windows.Forms.Button();
-            this.extrasShowTimer = new System.Windows.Forms.Timer(this.components);
             this.volumeToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.fiveIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -277,11 +276,6 @@
             this.showExtrasButton.UseVisualStyleBackColor = true;
             this.showExtrasButton.Click += new System.EventHandler(this.ShowExtrasButton_Click);
             // 
-            // extrasShowTimer
-            // 
-            this.extrasShowTimer.Interval = 16;
-            this.extrasShowTimer.Tick += new System.EventHandler(this.ExtrasShowTimer_Tick);
-            // 
             // fiveIdolPanel
             // 
             this.fiveIdolPanel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
@@ -395,7 +389,6 @@
         private System.Windows.Forms.TrackBar volumeTrackBar;
         private System.Windows.Forms.Label volumeLabel;
         private System.Windows.Forms.Button showExtrasButton;
-        private System.Windows.Forms.Timer extrasShowTimer;
         private System.Windows.Forms.ToolTip volumeToolTip;
         private System.Windows.Forms.TableLayoutPanel fiveIdolPanel;
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;

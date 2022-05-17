@@ -25,6 +25,8 @@ namespace MirishitaMusicPlayer.Forms
         private readonly int defaultWidth = 452;
         private readonly int defaultHeight = 460;
 
+        private readonly System.Timers.Timer extrasShowTimer;
+
         private bool isSeeking = false;
         private bool extrasShown = false;
 
@@ -58,6 +60,10 @@ namespace MirishitaMusicPlayer.Forms
 
             Width = defaultWidth;
             Height = defaultHeight;
+
+            extrasShowTimer = new(1000f / 60f);
+            extrasShowTimer.SynchronizingObject = this;
+            extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
 
             for (int i = 0; i < stageMemberCount; i++)
             {
@@ -168,7 +174,21 @@ namespace MirishitaMusicPlayer.Forms
             outputDevice.Stop();
             outputDevice.Dispose();
 
+            extrasShowTimer.Stop();
+            extrasShowTimer.Dispose();
+
             if (Visible) Invoke(() => Close());
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+
+                return cp;
+            }
         }
 
         private void PlayerForm_Load(object sender, EventArgs e)
@@ -254,10 +274,10 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             if (!horizontalAnimationDone)
-                horizontalAnimatePercentage += extrasShowTimer.Interval / 400f;
+                horizontalAnimatePercentage += (float)extrasShowTimer.Interval / 400f;
 
             if (!verticalAnimationDone)
-                verticalAnimatePercentage += extrasShowTimer.Interval / 600f;
+                verticalAnimatePercentage += (float)extrasShowTimer.Interval / 600f;
 
             if (horizontalAnimatePercentage >= 1.0f)
             {
@@ -274,7 +294,7 @@ namespace MirishitaMusicPlayer.Forms
                 extrasShown = !extrasShown;
                 showExtrasButton.Text = extrasShown ? "Hide extras" : "Show extras";
 
-                extrasShowTimer.Enabled = false;
+                extrasShowTimer.Stop();
                 showExtrasButton.Enabled = true;
 
                 extrasPanel.Visible = extrasShown;
@@ -293,7 +313,7 @@ namespace MirishitaMusicPlayer.Forms
             currentLeft = Left;
             currentTop = Top;
 
-            extrasShowTimer.Enabled = true;
+            extrasShowTimer.Start();
             showExtrasButton.Enabled = false;
         }
 
