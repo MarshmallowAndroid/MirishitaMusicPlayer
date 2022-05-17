@@ -239,25 +239,25 @@ namespace MirishitaMusicPlayer.Forms
             if (extrasShown)
             {
                 Width = AnimateValue(currentWidth, defaultWidth, horizontalAnimatePercentage);
-                Height = AnimateValue(currentHeight, defaultHeight, verticalAnimatePercentage);
-
                 Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), horizontalAnimatePercentage);
+
+                Height = AnimateValue(currentHeight, defaultHeight, verticalAnimatePercentage);
                 Top = AnimateValue(currentTop, currentTop + (defaultHeight / 2 / 2), verticalAnimatePercentage);
             }
             else
             {
                 Width = AnimateValue(currentWidth, 900, horizontalAnimatePercentage);
-                Height = AnimateValue(currentHeight, 700, verticalAnimatePercentage);
-
                 Left = AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), horizontalAnimatePercentage);
+
+                Height = AnimateValue(currentHeight, 700, verticalAnimatePercentage);
                 Top = AnimateValue(currentTop, currentTop - (defaultHeight / 2 / 2), verticalAnimatePercentage);
             }
 
             if (!horizontalAnimationDone)
-                horizontalAnimatePercentage += extrasShowTimer.Interval / 300f;
+                horizontalAnimatePercentage += extrasShowTimer.Interval / 400f;
 
             if (!verticalAnimationDone)
-                verticalAnimatePercentage += extrasShowTimer.Interval / 200f;
+                verticalAnimatePercentage += extrasShowTimer.Interval / 600f;
 
             if (horizontalAnimatePercentage >= 1.0f)
             {
@@ -272,11 +272,12 @@ namespace MirishitaMusicPlayer.Forms
             if (horizontalAnimationDone && verticalAnimationDone)
             {
                 extrasShown = !extrasShown;
-                extrasPanel.Visible = extrasShown;
                 showExtrasButton.Text = extrasShown ? "Hide extras" : "Show extras";
 
                 extrasShowTimer.Enabled = false;
                 showExtrasButton.Enabled = true;
+
+                extrasPanel.Visible = extrasShown;
             }
         }
 
