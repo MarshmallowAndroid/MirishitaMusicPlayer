@@ -22,7 +22,6 @@ namespace MirishitaMusicPlayer
         private readonly List<EventScenarioData> muteScenarios;
 
         private bool stopRequested = false;
-        private bool stopped = false;
 
         public ScenarioPlayer(Song selectedSong)
         {
@@ -49,11 +48,6 @@ namespace MirishitaMusicPlayer
         public void Stop()
         {
             stopRequested = true;
-
-            while (!stopped)
-            {
-                Thread.Sleep(1);
-            }
         }
 
         private void DoScenarioPlayback()
@@ -141,8 +135,6 @@ namespace MirishitaMusicPlayer
             }
 
             songMixer.Dispose();
-
-            stopped = true;
 
             SongStopped?.Invoke();
         }
