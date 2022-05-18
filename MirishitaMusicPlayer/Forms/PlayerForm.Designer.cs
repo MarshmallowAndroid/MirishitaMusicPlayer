@@ -29,8 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.expressionPictureBox = new System.Windows.Forms.PictureBox();
-            this.lipSyncPictureBox = new System.Windows.Forms.PictureBox();
+            MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource embeddedResourceFaceSource2 = new MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.debugEyesIdLabel = new System.Windows.Forms.Label();
@@ -53,41 +52,20 @@
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.centerLabel = new System.Windows.Forms.Label();
             this.extrasPanel = new System.Windows.Forms.Panel();
+            this.faceVisualizer = new MirishitaMusicPlayer.Forms.FaceVisualizer();
             this.extrasSecondPanel = new System.Windows.Forms.Panel();
+            this.lightsGroupBox = new System.Windows.Forms.GroupBox();
+            this.lightLabel = new System.Windows.Forms.Label();
             this.eventsGroupBox = new System.Windows.Forms.GroupBox();
             this.eventLabelPanel = new System.Windows.Forms.FlowLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
             this.controlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.extrasPanel.SuspendLayout();
             this.extrasSecondPanel.SuspendLayout();
+            this.lightsGroupBox.SuspendLayout();
             this.eventsGroupBox.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // expressionPictureBox
-            // 
-            this.expressionPictureBox.BackgroundImage = global::MirishitaMusicPlayer.Properties.Resources.open_0;
-            this.expressionPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.expressionPictureBox.Location = new System.Drawing.Point(3, 3);
-            this.expressionPictureBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
-            this.expressionPictureBox.Name = "expressionPictureBox";
-            this.expressionPictureBox.Size = new System.Drawing.Size(400, 400);
-            this.expressionPictureBox.TabIndex = 0;
-            this.expressionPictureBox.TabStop = false;
-            // 
-            // lipSyncPictureBox
-            // 
-            this.lipSyncPictureBox.BackgroundImage = global::MirishitaMusicPlayer.Properties.Resources.mouth_0;
-            this.lipSyncPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.lipSyncPictureBox.Location = new System.Drawing.Point(3, 273);
-            this.lipSyncPictureBox.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
-            this.lipSyncPictureBox.Name = "lipSyncPictureBox";
-            this.lipSyncPictureBox.Size = new System.Drawing.Size(400, 130);
-            this.lipSyncPictureBox.TabIndex = 0;
-            this.lipSyncPictureBox.TabStop = false;
-            this.lipSyncPictureBox.Visible = false;
             // 
             // seekBar
             // 
@@ -326,8 +304,7 @@
             // 
             // extrasPanel
             // 
-            this.extrasPanel.Controls.Add(this.lipSyncPictureBox);
-            this.extrasPanel.Controls.Add(this.expressionPictureBox);
+            this.extrasPanel.Controls.Add(this.faceVisualizer);
             this.extrasPanel.Controls.Add(this.lyricsTextBox);
             this.extrasPanel.Controls.Add(this.debugEyesIdLabel);
             this.extrasPanel.Controls.Add(this.debugEyeCloseIdLabel);
@@ -338,8 +315,18 @@
             this.extrasPanel.TabIndex = 18;
             this.extrasPanel.Visible = false;
             // 
+            // faceVisualizer
+            // 
+            this.faceVisualizer.FaceSource = embeddedResourceFaceSource2;
+            this.faceVisualizer.Location = new System.Drawing.Point(3, 3);
+            this.faceVisualizer.Name = "faceVisualizer";
+            this.faceVisualizer.Size = new System.Drawing.Size(400, 400);
+            this.faceVisualizer.TabIndex = 14;
+            this.faceVisualizer.TabStop = false;
+            // 
             // extrasSecondPanel
             // 
+            this.extrasSecondPanel.Controls.Add(this.lightsGroupBox);
             this.extrasSecondPanel.Controls.Add(this.eventsGroupBox);
             this.extrasSecondPanel.Location = new System.Drawing.Point(12, 173);
             this.extrasSecondPanel.Name = "extrasSecondPanel";
@@ -347,21 +334,40 @@
             this.extrasSecondPanel.TabIndex = 19;
             this.extrasSecondPanel.Visible = false;
             // 
+            // lightsGroupBox
+            // 
+            this.lightsGroupBox.Controls.Add(this.lightLabel);
+            this.lightsGroupBox.Location = new System.Drawing.Point(3, 144);
+            this.lightsGroupBox.Name = "lightsGroupBox";
+            this.lightsGroupBox.Size = new System.Drawing.Size(406, 98);
+            this.lightsGroupBox.TabIndex = 1;
+            this.lightsGroupBox.TabStop = false;
+            this.lightsGroupBox.Text = "Lights";
+            // 
+            // lightLabel
+            // 
+            this.lightLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lightLabel.Location = new System.Drawing.Point(6, 19);
+            this.lightLabel.Name = "lightLabel";
+            this.lightLabel.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel.TabIndex = 0;
+            // 
             // eventsGroupBox
             // 
             this.eventsGroupBox.Controls.Add(this.eventLabelPanel);
             this.eventsGroupBox.Location = new System.Drawing.Point(3, 3);
             this.eventsGroupBox.Name = "eventsGroupBox";
-            this.eventsGroupBox.Size = new System.Drawing.Size(406, 148);
+            this.eventsGroupBox.Size = new System.Drawing.Size(406, 141);
             this.eventsGroupBox.TabIndex = 0;
             this.eventsGroupBox.TabStop = false;
             this.eventsGroupBox.Text = "Events";
             // 
             // eventLabelPanel
             // 
+            this.eventLabelPanel.AutoScroll = true;
             this.eventLabelPanel.Location = new System.Drawing.Point(6, 22);
             this.eventLabelPanel.Name = "eventLabelPanel";
-            this.eventLabelPanel.Size = new System.Drawing.Size(394, 120);
+            this.eventLabelPanel.Size = new System.Drawing.Size(394, 113);
             this.eventLabelPanel.TabIndex = 0;
             // 
             // PlayerForm
@@ -388,14 +394,13 @@
             this.Text = "Player";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerForm_FormClosing);
             this.Load += new System.EventHandler(this.PlayerForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).EndInit();
             this.controlPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
             this.extrasPanel.ResumeLayout(false);
             this.extrasPanel.PerformLayout();
             this.extrasSecondPanel.ResumeLayout(false);
+            this.lightsGroupBox.ResumeLayout(false);
             this.eventsGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -403,9 +408,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox expressionPictureBox;
-        private System.Windows.Forms.PictureBox lipSyncPictureBox;
         private System.Windows.Forms.TrackBar seekBar;
         private System.Windows.Forms.Timer updateTimer;
         private System.Windows.Forms.Label debugEyesIdLabel;
@@ -431,5 +433,8 @@
         private System.Windows.Forms.Panel extrasSecondPanel;
         private System.Windows.Forms.GroupBox eventsGroupBox;
         private System.Windows.Forms.FlowLayoutPanel eventLabelPanel;
+        private FaceVisualizer faceVisualizer;
+        private System.Windows.Forms.GroupBox lightsGroupBox;
+        private System.Windows.Forms.Label lightLabel;
     }
 }

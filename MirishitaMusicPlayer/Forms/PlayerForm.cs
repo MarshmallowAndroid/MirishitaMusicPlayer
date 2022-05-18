@@ -1,4 +1,5 @@
 ﻿using MirishitaMusicPlayer.Audio;
+using MirishitaMusicPlayer.Forms.Classes;
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
 using System;
@@ -63,7 +64,7 @@ namespace MirishitaMusicPlayer.Forms
             Width = defaultWidth;
             Height = defaultHeight;
 
-            extrasShowTimer = new(1000f / 60f);
+            extrasShowTimer = new((float)(1000f / 60f));
             extrasShowTimer.SynchronizingObject = this;
             extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
 
@@ -116,11 +117,17 @@ namespace MirishitaMusicPlayer.Forms
             scenarioPlayer.LyricsChanged += (l) => UpdateLyrics(l);
             scenarioPlayer.MuteChanged += (m) => UpdateMute(m);
             scenarioPlayer.SongStopped += () => Stop();
-
-            var mainScenarios = song.Scenario.MainScenario.Scenario;
+            scenarioPlayer.ScenarioTriggered += ScenarioTriggered;
 
             List<int> eventTypes = new();
-            foreach (var item in mainScenarios)
+            foreach (var item in song.Scenario.MainScenario.Scenario)
+            {
+                if (!eventTypes.Contains((int)item.Type))
+                {
+                    eventTypes.Add((int)item.Type);
+                }
+            }
+            foreach (var item in song.Scenario.OrientationScenario.Scenario)
             {
                 if (!eventTypes.Contains((int)item.Type))
                 {
@@ -128,16 +135,32 @@ namespace MirishitaMusicPlayer.Forms
                 }
             }
 
+            eventTypes.Sort();
+
             foreach (var item in eventTypes)
             {
                 EventLabel label = new();
-                label.Text = item.ToString();
+                label.Font = new Font(label.Font.FontFamily, 12.0f);
+                label.Height = 36;
+                label.Margin = new Padding(0);
                 label.Tag = item;
+                label.Text = item.ToString();
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                label.Width = 36;
 
                 eventLabels.Add(label);
             }
 
             eventLabelPanel.Controls.AddRange(eventLabels.ToArray());
+        }
+
+        private void ScenarioTriggered(int type)
+        {
+            foreach (var eventLabel in eventLabels)
+            {
+                if ((int)eventLabel.Tag == type)
+                    TryInvoke(() => eventLabel.Trigger());
+            }
         }
 
         public void UpdateExpression(int expressionId, bool eyeClose)
@@ -146,25 +169,17 @@ namespace MirishitaMusicPlayer.Forms
             {
                 debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
                 debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
+                faceVisualizer.UpdateFace(expressionId, eyeClose);
             });
-            string resourceName = $"{(eyeClose ? "close" : "open")}_{expressionId}";
-            Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
-
-            expressionPictureBox.BackgroundImage = resource;
         }
 
         public void UpdateLipSync(int lipSyncId)
         {
-            TryInvoke(() => debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString());
-
-            //if (lipSyncID == 56 || lipSyncID == 59)
-            //    lipSyncID = 1;
-
-            string resourceName = $"mouth_{lipSyncId}";
-            Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
-            if (resource == null) TryInvoke(() => lipSyncPictureBox.Visible = false);
-            else TryInvoke(() => lipSyncPictureBox.Visible = true);
-            lipSyncPictureBox.BackgroundImage = resource;
+            TryInvoke(() =>
+            {
+                debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString();
+                faceVisualizer.UpdateMouth(lipSyncId);
+            });
         }
 
         public void UpdateLyrics(string lyrics)
@@ -193,14 +208,6 @@ namespace MirishitaMusicPlayer.Forms
 
         public void Stop()
         {
-            songMixer.Dispose();
-
-            outputDevice.Stop();
-            outputDevice.Dispose();
-
-            extrasShowTimer.Stop();
-            extrasShowTimer.Dispose();
-
             if (Visible) TryInvoke(() => Close());
         }
 
@@ -269,7 +276,18 @@ namespace MirishitaMusicPlayer.Forms
 
         private void StopButton_Click(object sender, EventArgs e) => scenarioPlayer.Stop();
 
-        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e) => scenarioPlayer.Stop();
+        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            songMixer.Dispose();
+
+            outputDevice.Stop();
+            outputDevice.Dispose();
+
+            extrasShowTimer.Stop();
+            extrasShowTimer.Dispose();
+
+            TryInvoke(() => faceVisualizer.Dispose());
+        }
 
         private void VolumeTrackBar_Scroll(object sender, EventArgs e)
         {

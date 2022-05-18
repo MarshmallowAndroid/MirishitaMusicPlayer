@@ -18,6 +18,7 @@ namespace MirishitaMusicPlayer
         private readonly Thread scenarioThread;
 
         private readonly ScenarioScrObject mainScenario;
+        private readonly ScenarioScrObject orientScenario;
         private readonly List<EventScenarioData> expressionScenarios;
         private readonly List<EventScenarioData> muteScenarios;
 
@@ -30,6 +31,7 @@ namespace MirishitaMusicPlayer
             songMixer = song.Scenario.Configuration.SongMixer;
 
             mainScenario = song.Scenario.MainScenario;
+            orientScenario = song.Scenario.OrientationScenario;
             expressionScenarios = song.Scenario.ExpressionScenarios;
             muteScenarios = song.Scenario.MuteScenarios;
 
@@ -53,6 +55,7 @@ namespace MirishitaMusicPlayer
         private void DoScenarioPlayback()
         {
             int mainScenarioIndex = 0;
+            int orientScenarioIndex = 0;
             int expressionScenarioIndex = 0;
             int muteIndex = 0;
 
@@ -65,6 +68,7 @@ namespace MirishitaMusicPlayer
                     muteIndex = 0;
                     expressionScenarioIndex = 0;
                     mainScenarioIndex = 0;
+                    orientScenarioIndex = 0;
                 }
                 else if (secondsElapsed == songMixer.CurrentTime.TotalSeconds)
                 {
@@ -122,14 +126,28 @@ namespace MirishitaMusicPlayer
                             targetLyricsScenario = currentMainScenario;
                     }
 
+                    ScenarioTriggered?.Invoke((int)currentMainScenario.Type);
+
                     if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                     else break;
                     currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
                 }
+
+
                 if (targetLipSyncScenario != null)
                     LipSyncChanged?.Invoke(targetLipSyncScenario.Param);
                 if (targetLyricsScenario != null)
                     LyricsChanged?.Invoke(targetLyricsScenario.Str);
+
+                EventScenarioData currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+                while (secondsElapsed >= currentOrientScenario.AbsTime)
+                {
+                    ScenarioTriggered?.Invoke((int)currentOrientScenario.Type);
+
+                    if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
+                    else break;
+                    currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+                }
 
                 Thread.Sleep(1);
             }
@@ -153,5 +171,8 @@ namespace MirishitaMusicPlayer
 
         public delegate void SongStoppedEventHandler();
         public event SongStoppedEventHandler SongStopped;
+
+        public delegate void ScenarioTriggeredEventHandler(int type);
+        public event ScenarioTriggeredEventHandler ScenarioTriggered;
     }
 }
