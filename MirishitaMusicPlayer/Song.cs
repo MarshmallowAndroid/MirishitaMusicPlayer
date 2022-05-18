@@ -140,21 +140,25 @@ namespace MirishitaMusicPlayer
                 }
             }
 
-            // Figure out where the expression events are: in main scenario or orientation scenario?
-            Func<EventScenarioData, bool> expressionPredicate = new(s => s.Type == ScenarioType.Expression);
-            ExpressionScenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
-            if (ExpressionScenarios.Count < 1) ExpressionScenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
-
-            // Figure out where the mute events are: in main scenario or orientation scenario?
-            Func<EventScenarioData, bool> mutePredicate = new(s => s.Type == ScenarioType.Mute);
-            MuteScenarios = OrientationScenario.Scenario.Where(mutePredicate).ToList();
-            if (MuteScenarios.Count < 1) MuteScenarios = MainScenario.Scenario.Where(mutePredicate).ToList();
+            ExpressionScenarios = FindScenarios(ScenarioType.Expression);
+            MuteScenarios = FindScenarios(ScenarioType.Mute);
+            LightScenarios = FindScenarios(ScenarioType.Lights);
 
             StageMemberCount = MuteScenarios[0].Mute.Length;
 
             assetsManager.Clear();
 
             Configuration = new(song, this, assetsManager);
+        }
+
+        private List<EventScenarioData> FindScenarios(ScenarioType scenarioType)
+        {
+            // Figure out where the events are: in main scenario or orientation scenario?
+            Func<EventScenarioData, bool> expressionPredicate = new(s => s.Type == scenarioType);
+            List<EventScenarioData> scenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
+            if (scenarios.Count < 1) scenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
+
+            return scenarios;
         }
 
         public int StageMemberCount { get; }
@@ -166,6 +170,8 @@ namespace MirishitaMusicPlayer
         public List<EventScenarioData> ExpressionScenarios { get; }
 
         public List<EventScenarioData> MuteScenarios { get; }
+
+        public List<EventScenarioData> LightScenarios { get; }
 
         public SongScenarioConfiguration Configuration { get; }
     }
