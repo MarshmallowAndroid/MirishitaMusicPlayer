@@ -34,7 +34,8 @@ namespace MirishitaMusicPlayer
 
             while (!quit)
             {
-                songSelectForm.ShowDialog();
+                songSelectForm.ProcessSong(args.Length > 0 ? args[0] : "");
+                if (args.Length > 0) args[0] = "";
 
                 Song song = songSelectForm.Song;
                 if (song == null) return;

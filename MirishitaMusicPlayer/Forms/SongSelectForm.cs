@@ -32,10 +32,22 @@ namespace MirishitaMusicPlayer.Forms
 
         public AssetList AssetList { get; private set; }
 
-        private async void SongSelectForm_Load(object sender, EventArgs e)
+        public void ProcessSong(string songId = "")
         {
-            volumeTrackBar.Value = (int)Math.Ceiling(Program.OutputDevice.Volume * 100.0f);
+            if (songId == "")
+                ShowDialog();
+            else
+            {
+                Task.Run(async () =>
+                {
+                    await InitializeDatabaseAsync();
+                    await PlaySong(songId);
+                }).Wait();
+            }
+        }
 
+        private async Task InitializeDatabaseAsync()
+        {
             Song = null;
 
             DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
@@ -61,6 +73,15 @@ namespace MirishitaMusicPlayer.Forms
             FileStream databaseFile = databaseFiles[^1].OpenRead();
 
             AssetList = new(databaseFile);
+        }
+
+        private async void SongSelectForm_Load(object sender, EventArgs e)
+        {
+            volumeTrackBar.Value = (int)Math.Ceiling(Program.OutputDevice.Volume * 100.0f);
+
+            Song = null;
+
+            await InitializeDatabaseAsync();
 
             if (jacketsPanel.Controls.Count < 1)
                 UpdateList();
