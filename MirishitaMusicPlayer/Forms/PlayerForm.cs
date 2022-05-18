@@ -20,7 +20,9 @@ namespace MirishitaMusicPlayer.Forms
         private readonly SongMixer songMixer;
         private readonly ScenarioPlayer scenarioPlayer;
         private readonly WaveOutEvent outputDevice;
+
         private readonly List<Label> idolLabels = new();
+        private readonly List<EventLabel> eventLabels = new();
 
         private readonly int defaultWidth = 452;
         private readonly int defaultHeight = 460;
@@ -114,11 +116,33 @@ namespace MirishitaMusicPlayer.Forms
             scenarioPlayer.LyricsChanged += (l) => UpdateLyrics(l);
             scenarioPlayer.MuteChanged += (m) => UpdateMute(m);
             scenarioPlayer.SongStopped += () => Stop();
+
+            var mainScenarios = song.Scenario.MainScenario.Scenario;
+
+            List<int> eventTypes = new();
+            foreach (var item in mainScenarios)
+            {
+                if (!eventTypes.Contains((int)item.Type))
+                {
+                    eventTypes.Add((int)item.Type);
+                }
+            }
+
+            foreach (var item in eventTypes)
+            {
+                EventLabel label = new();
+                label.Text = item.ToString();
+                label.Tag = item;
+
+                eventLabels.Add(label);
+            }
+
+            eventLabelPanel.Controls.AddRange(eventLabels.ToArray());
         }
 
         public void UpdateExpression(int expressionId, bool eyeClose)
         {
-            Invoke(() =>
+            TryInvoke(() =>
             {
                 debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
                 debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
@@ -131,21 +155,21 @@ namespace MirishitaMusicPlayer.Forms
 
         public void UpdateLipSync(int lipSyncId)
         {
-            Invoke(() => debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString());
+            TryInvoke(() => debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString());
 
             //if (lipSyncID == 56 || lipSyncID == 59)
             //    lipSyncID = 1;
 
             string resourceName = $"mouth_{lipSyncId}";
             Image resource = Resources.ResourceManager.GetObject(resourceName) as Image;
-            if (resource == null) Invoke(() => lipSyncPictureBox.Visible = false);
-            else Invoke(() => lipSyncPictureBox.Visible = true);
+            if (resource == null) TryInvoke(() => lipSyncPictureBox.Visible = false);
+            else TryInvoke(() => lipSyncPictureBox.Visible = true);
             lipSyncPictureBox.BackgroundImage = resource;
         }
 
         public void UpdateLyrics(string lyrics)
         {
-            Invoke(() => lyricsTextBox.Text = lyrics);
+            TryInvoke(() => lyricsTextBox.Text = lyrics);
         }
 
         public void UpdateMute(byte[] mutes)
@@ -157,7 +181,7 @@ namespace MirishitaMusicPlayer.Forms
             {
                 Label button = idolLabels[i];
 
-                Invoke(() =>
+                TryInvoke(() =>
                 {
                     if (mutes[i] == 1)
                         button.Visible = true;
@@ -177,7 +201,7 @@ namespace MirishitaMusicPlayer.Forms
             extrasShowTimer.Stop();
             extrasShowTimer.Dispose();
 
-            if (Visible) Invoke(() => Close());
+            if (Visible) TryInvoke(() => Close());
         }
 
         protected override CreateParams CreateParams
@@ -298,6 +322,7 @@ namespace MirishitaMusicPlayer.Forms
                 showExtrasButton.Enabled = true;
 
                 extrasPanel.Visible = extrasShown;
+                extrasSecondPanel.Visible = extrasShown;
             }
         }
 
@@ -315,6 +340,20 @@ namespace MirishitaMusicPlayer.Forms
 
             extrasShowTimer.Start();
             showExtrasButton.Enabled = false;
+
+            if (extrasShown)
+                extrasSecondPanel.Visible = !extrasShown;
+        }
+
+        private void TryInvoke(Action action)
+        {
+            try
+            {
+                Invoke(action);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private static int AnimateValue(int from, int to, float progress)

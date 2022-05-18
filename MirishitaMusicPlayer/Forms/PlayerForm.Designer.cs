@@ -53,12 +53,17 @@
             this.eightIdolPanel = new System.Windows.Forms.TableLayoutPanel();
             this.centerLabel = new System.Windows.Forms.Label();
             this.extrasPanel = new System.Windows.Forms.Panel();
+            this.extrasSecondPanel = new System.Windows.Forms.Panel();
+            this.eventsGroupBox = new System.Windows.Forms.GroupBox();
+            this.eventLabelPanel = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.expressionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lipSyncPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
             this.controlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
             this.extrasPanel.SuspendLayout();
+            this.extrasSecondPanel.SuspendLayout();
+            this.eventsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // expressionPictureBox
@@ -333,6 +338,32 @@
             this.extrasPanel.TabIndex = 18;
             this.extrasPanel.Visible = false;
             // 
+            // extrasSecondPanel
+            // 
+            this.extrasSecondPanel.Controls.Add(this.eventsGroupBox);
+            this.extrasSecondPanel.Location = new System.Drawing.Point(12, 173);
+            this.extrasSecondPanel.Name = "extrasSecondPanel";
+            this.extrasSecondPanel.Size = new System.Drawing.Size(412, 249);
+            this.extrasSecondPanel.TabIndex = 19;
+            this.extrasSecondPanel.Visible = false;
+            // 
+            // eventsGroupBox
+            // 
+            this.eventsGroupBox.Controls.Add(this.eventLabelPanel);
+            this.eventsGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.eventsGroupBox.Name = "eventsGroupBox";
+            this.eventsGroupBox.Size = new System.Drawing.Size(406, 148);
+            this.eventsGroupBox.TabIndex = 0;
+            this.eventsGroupBox.TabStop = false;
+            this.eventsGroupBox.Text = "Events";
+            // 
+            // eventLabelPanel
+            // 
+            this.eventLabelPanel.Location = new System.Drawing.Point(6, 22);
+            this.eventLabelPanel.Name = "eventLabelPanel";
+            this.eventLabelPanel.Size = new System.Drawing.Size(394, 120);
+            this.eventLabelPanel.TabIndex = 0;
+            // 
             // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -349,6 +380,7 @@
             this.Controls.Add(this.totalTimeLabel);
             this.Controls.Add(this.currentTimeLabel);
             this.Controls.Add(this.seekBar);
+            this.Controls.Add(this.extrasSecondPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "PlayerForm";
@@ -363,6 +395,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
             this.extrasPanel.ResumeLayout(false);
             this.extrasPanel.PerformLayout();
+            this.extrasSecondPanel.ResumeLayout(false);
+            this.eventsGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -394,5 +428,8 @@
         private System.Windows.Forms.TableLayoutPanel eightIdolPanel;
         private System.Windows.Forms.Label centerLabel;
         private System.Windows.Forms.Panel extrasPanel;
+        private System.Windows.Forms.Panel extrasSecondPanel;
+        private System.Windows.Forms.GroupBox eventsGroupBox;
+        private System.Windows.Forms.FlowLayoutPanel eventLabelPanel;
     }
 }
