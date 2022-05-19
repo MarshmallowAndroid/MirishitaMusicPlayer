@@ -24,13 +24,13 @@ namespace MirishitaMusicPlayer.Forms
         {
             animationTimer.Interval = 16;
             animationTimer.SynchronizingObject = this;
-            animationTimer.Elapsed += AnimationTimer_Elapsed;
+            animationTimer.Elapsed += FlashAnimationTimer_Elapsed;
 
             defaultForeColor = ForeColor;
             defaultBackColor = BackColor;
         }
 
-        private void AnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void FlashAnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             ForeColor = AnimateColor(currentForeColor, defaultForeColor, animationPercentage);
             BackColor = AnimateColor(currentBackColor, defaultBackColor, animationPercentage);
@@ -43,7 +43,7 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        public void Trigger()
+        public void Flash()
         {
             animationPercentage = 0.0f;
 
