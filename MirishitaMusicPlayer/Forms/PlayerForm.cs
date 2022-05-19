@@ -1,5 +1,4 @@
 ﻿using MirishitaMusicPlayer.Audio;
-using MirishitaMusicPlayer.Forms.Classes;
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
 using System;
@@ -15,6 +14,8 @@ namespace MirishitaMusicPlayer.Forms
         {
             2, 1, 3, 0, 4, 8, 9, 7, 10, 6, 11, 5, 12
         };
+
+        private readonly Song song;
 
         private readonly Idol[] singers;
         private readonly int stageMemberCount;
@@ -42,7 +43,9 @@ namespace MirishitaMusicPlayer.Forms
         private int currentLeft;
         private int currentTop;
 
-        public PlayerForm(Song song)
+        private Form lightsForm;
+
+        public PlayerForm(Song selectedSong)
         {
             InitializeComponent();
 
@@ -56,9 +59,10 @@ namespace MirishitaMusicPlayer.Forms
              *  Extras shown: 700
              */
 
-            singers = song.Scenario.Configuration.Order;
-            stageMemberCount = song.Scenario.StageMemberCount;
-            songMixer = song.Scenario.Configuration.SongMixer;
+            song = selectedSong;
+            singers = selectedSong.Scenario.Configuration.Order;
+            stageMemberCount = selectedSong.Scenario.StageMemberCount;
+            songMixer = selectedSong.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
 
             Width = defaultWidth;
@@ -113,23 +117,24 @@ namespace MirishitaMusicPlayer.Forms
                 idolPosition++;
             }
 
-            scenarioPlayer = new(song);
-            scenarioPlayer.ExpressionChanged += (ex, ey) => UpdateExpression(ex, ey);
-            scenarioPlayer.LipSyncChanged += (l) => UpdateLipSync(l);
-            scenarioPlayer.LyricsChanged += (l) => UpdateLyrics(l);
-            scenarioPlayer.MuteChanged += (m) => UpdateMute(m);
-            scenarioPlayer.SongStopped += () => Stop();
+            scenarioPlayer = new(selectedSong);
+            scenarioPlayer.ExpressionChanged += UpdateExpression;
+            scenarioPlayer.LipSyncChanged += UpdateLipSync;
+            scenarioPlayer.LyricsChanged += UpdateLyrics;
+            scenarioPlayer.MuteChanged += UpdateMute;
+            scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
+            scenarioPlayer.SongStopped += Stop;
             scenarioPlayer.ScenarioTriggered += ScenarioTriggered;
 
             List<int> eventTypes = new();
-            foreach (var item in song.Scenario.MainScenario.Scenario)
+            foreach (var item in selectedSong.Scenario.MainScenario.Scenario)
             {
                 if (!eventTypes.Contains((int)item.Type))
                 {
                     eventTypes.Add((int)item.Type);
                 }
             }
-            foreach (var item in song.Scenario.OrientationScenario.Scenario)
+            foreach (var item in selectedSong.Scenario.OrientationScenario.Scenario)
             {
                 if (!eventTypes.Contains((int)item.Type))
                 {
@@ -154,6 +159,46 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             eventLabelPanel.Controls.AddRange(eventLabels.ToArray());
+
+            List<int> targets = new();
+            foreach (var item in selectedSong.Scenario.LightScenarios)
+            {
+                if (!targets.Contains(item.Target))
+                    targets.Add(item.Target);
+            }
+            targets.Sort();
+
+            targetComboBox.Items.Add("All");
+            foreach (var item in targets)
+            {
+                targetComboBox.Items.Add(item);
+            }
+
+            targetComboBox.SelectedIndex = 0;
+        }
+
+        private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
+        {
+            TryInvoke(() =>
+            {
+                if (targetComboBox.SelectedIndex == 0 || lightPayload.Target == (int)targetComboBox.SelectedItem)
+                {
+                    if (lightPayload.Color != null)
+                        lightLabel1.FadeBackColor(lightPayload.Color.ToColor(), lightPayload.Duration);
+                    else
+                        lightLabel1.Visible = false;
+
+                    if (lightPayload.Color2 != null)
+                        lightLabel2.FadeBackColor(lightPayload.Color2.ToColor(), lightPayload.Duration);
+                    else
+                        lightLabel2.Visible = false;
+
+                    if (lightPayload.Color3 != null)
+                        lightLabel3.FadeBackColor(lightPayload.Color3.ToColor(), lightPayload.Duration);
+                    else
+                        lightLabel3.Visible = false;
+                }
+            });
         }
 
         private void ScenarioTriggered(int type)
@@ -161,7 +206,7 @@ namespace MirishitaMusicPlayer.Forms
             foreach (var eventLabel in eventLabels)
             {
                 if ((int)eventLabel.Tag == type)
-                    TryInvoke(() => eventLabel.Trigger());
+                    TryInvoke(() => eventLabel.Flash());
             }
         }
 
@@ -250,6 +295,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             isSeeking = true;
             songMixer.Position = (long)Math.Ceiling(seekBar.Value / 100.0f * songMixer.Length);
+            scenarioPlayer.Seek();
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -274,12 +320,18 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ToggleVoicesButton_Click(object sender, EventArgs e) => songMixer.MuteVoices = !songMixer.MuteVoices;
 
-        private void ResetButton_Click(object sender, EventArgs e) => songMixer.Position = 0;
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            songMixer.Position = 0;
+            scenarioPlayer.Seek();
+        }
 
         private void StopButton_Click(object sender, EventArgs e) => scenarioPlayer.Stop();
 
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            lightsForm.Dispose();
+
             songMixer.Dispose();
 
             outputDevice.Stop();
@@ -363,6 +415,16 @@ namespace MirishitaMusicPlayer.Forms
 
             if (extrasShown)
                 extrasSecondPanel.Visible = !extrasShown;
+        }
+
+        private void ShowAllLightsButton_Click(object sender, EventArgs e)
+        {
+            if (lightsForm == null)
+            {
+                lightsForm = new LightsForm(song, scenarioPlayer);
+                lightsForm.FormClosed += (s, e) => lightsForm = null;
+                lightsForm.Show();
+            }
         }
 
         private void TryInvoke(Action action)

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource embeddedResourceFaceSource2 = new MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource();
+            MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource embeddedResourceFaceSource3 = new MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.debugEyesIdLabel = new System.Windows.Forms.Label();
@@ -55,7 +55,12 @@
             this.faceVisualizer = new MirishitaMusicPlayer.Forms.FaceVisualizer();
             this.extrasSecondPanel = new System.Windows.Forms.Panel();
             this.lightsGroupBox = new System.Windows.Forms.GroupBox();
-            this.lightLabel = new System.Windows.Forms.Label();
+            this.showAllLightsButton = new System.Windows.Forms.Button();
+            this.targetComboBox = new System.Windows.Forms.ComboBox();
+            this.targetLabel = new System.Windows.Forms.Label();
+            this.lightLabel3 = new MirishitaMusicPlayer.Forms.LightLabel();
+            this.lightLabel2 = new MirishitaMusicPlayer.Forms.LightLabel();
+            this.lightLabel1 = new MirishitaMusicPlayer.Forms.LightLabel();
             this.eventsGroupBox = new System.Windows.Forms.GroupBox();
             this.eventLabelPanel = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
@@ -317,7 +322,7 @@
             // 
             // faceVisualizer
             // 
-            this.faceVisualizer.FaceSource = embeddedResourceFaceSource2;
+            this.faceVisualizer.FaceSource = embeddedResourceFaceSource3;
             this.faceVisualizer.Location = new System.Drawing.Point(3, 3);
             this.faceVisualizer.Name = "faceVisualizer";
             this.faceVisualizer.Size = new System.Drawing.Size(400, 400);
@@ -336,7 +341,12 @@
             // 
             // lightsGroupBox
             // 
-            this.lightsGroupBox.Controls.Add(this.lightLabel);
+            this.lightsGroupBox.Controls.Add(this.showAllLightsButton);
+            this.lightsGroupBox.Controls.Add(this.targetComboBox);
+            this.lightsGroupBox.Controls.Add(this.targetLabel);
+            this.lightsGroupBox.Controls.Add(this.lightLabel3);
+            this.lightsGroupBox.Controls.Add(this.lightLabel2);
+            this.lightsGroupBox.Controls.Add(this.lightLabel1);
             this.lightsGroupBox.Location = new System.Drawing.Point(3, 144);
             this.lightsGroupBox.Name = "lightsGroupBox";
             this.lightsGroupBox.Size = new System.Drawing.Size(406, 98);
@@ -344,13 +354,57 @@
             this.lightsGroupBox.TabStop = false;
             this.lightsGroupBox.Text = "Lights";
             // 
-            // lightLabel
+            // showAllLightsButton
             // 
-            this.lightLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lightLabel.Location = new System.Drawing.Point(6, 19);
-            this.lightLabel.Name = "lightLabel";
-            this.lightLabel.Size = new System.Drawing.Size(100, 76);
-            this.lightLabel.TabIndex = 0;
+            this.showAllLightsButton.Location = new System.Drawing.Point(7, 22);
+            this.showAllLightsButton.Name = "showAllLightsButton";
+            this.showAllLightsButton.Size = new System.Drawing.Size(75, 26);
+            this.showAllLightsButton.TabIndex = 3;
+            this.showAllLightsButton.Text = "Show all";
+            this.showAllLightsButton.UseVisualStyleBackColor = true;
+            this.showAllLightsButton.Click += new System.EventHandler(this.ShowAllLightsButton_Click);
+            // 
+            // targetComboBox
+            // 
+            this.targetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.targetComboBox.FormattingEnabled = true;
+            this.targetComboBox.Location = new System.Drawing.Point(6, 69);
+            this.targetComboBox.Name = "targetComboBox";
+            this.targetComboBox.Size = new System.Drawing.Size(76, 23);
+            this.targetComboBox.TabIndex = 2;
+            // 
+            // targetLabel
+            // 
+            this.targetLabel.AutoSize = true;
+            this.targetLabel.Location = new System.Drawing.Point(6, 51);
+            this.targetLabel.Name = "targetLabel";
+            this.targetLabel.Size = new System.Drawing.Size(39, 15);
+            this.targetLabel.TabIndex = 1;
+            this.targetLabel.Text = "Target";
+            // 
+            // lightLabel3
+            // 
+            this.lightLabel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lightLabel3.Location = new System.Drawing.Point(300, 19);
+            this.lightLabel3.Name = "lightLabel3";
+            this.lightLabel3.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel3.TabIndex = 0;
+            // 
+            // lightLabel2
+            // 
+            this.lightLabel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lightLabel2.Location = new System.Drawing.Point(194, 19);
+            this.lightLabel2.Name = "lightLabel2";
+            this.lightLabel2.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel2.TabIndex = 0;
+            // 
+            // lightLabel1
+            // 
+            this.lightLabel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lightLabel1.Location = new System.Drawing.Point(88, 19);
+            this.lightLabel1.Name = "lightLabel1";
+            this.lightLabel1.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel1.TabIndex = 0;
             // 
             // eventsGroupBox
             // 
@@ -401,6 +455,7 @@
             this.extrasPanel.PerformLayout();
             this.extrasSecondPanel.ResumeLayout(false);
             this.lightsGroupBox.ResumeLayout(false);
+            this.lightsGroupBox.PerformLayout();
             this.eventsGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -435,6 +490,11 @@
         private System.Windows.Forms.FlowLayoutPanel eventLabelPanel;
         private FaceVisualizer faceVisualizer;
         private System.Windows.Forms.GroupBox lightsGroupBox;
-        private System.Windows.Forms.Label lightLabel;
+        private LightLabel lightLabel1;
+        private LightLabel lightLabel3;
+        private LightLabel lightLabel2;
+        private System.Windows.Forms.Label targetLabel;
+        private System.Windows.Forms.ComboBox targetComboBox;
+        private System.Windows.Forms.Button showAllLightsButton;
     }
 }
