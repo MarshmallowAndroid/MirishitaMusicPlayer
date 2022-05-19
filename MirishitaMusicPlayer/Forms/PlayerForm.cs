@@ -318,6 +318,7 @@ namespace MirishitaMusicPlayer.Forms
                 }
                 catch (Exception)
                 {
+                    outputDevice.Stop();
                     outputDevice.Init(songMixer);
                     outputDevice.Play();
                 }
