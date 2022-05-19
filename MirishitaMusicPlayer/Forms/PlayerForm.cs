@@ -77,6 +77,8 @@ namespace MirishitaMusicPlayer.Forms
 
                 if (singers?.Length > 0)
                 {
+                    if (i >= singers.Length) break;
+
                     Idol idol = singers[i];
                     label.BackgroundImageLayout = ImageLayout.Zoom;
                     label.BackgroundImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
