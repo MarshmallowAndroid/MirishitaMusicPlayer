@@ -11,36 +11,57 @@ namespace MirishitaMusicPlayer.Imas
 {
     internal static class Common
     {
-        public static object TypeTreeToType<T>(object typeTree)
+        public static object TypeTreeToType(Type targetType, object typeTree)
         {
-            T targetObject = (T)Activator.CreateInstance(typeof(T));
+            object targetObject = Activator.CreateInstance(targetType);
 
             foreach (DictionaryEntry dataProperty in (OrderedDictionary)typeTree)
             {
-                PropertyInfo matchingProperty = typeof(T).GetProperties()
+                PropertyInfo matchingProperty = targetType.GetProperties()
                     .FirstOrDefault(p => p.Name.ToLower().Equals(dataProperty.Key.ToString().ToLower()));
+
+                object propertyValue = dataProperty.Value;
 
                 if (matchingProperty != null)
                 {
                     object value = null;
-                    if (dataProperty.Value.GetType() == typeof(List<object>))
+
+                    if (propertyValue.GetType() == typeof(List<object>))
                     {
-                        List<object> list = (List<object>)dataProperty.Value;
+                        List<object> list = (List<object>)propertyValue;
 
                         Type elementType;
                         if (list?.Count > 0)
                         {
                             elementType = list[0].GetType();
 
-                            Array newArray = Array.CreateInstance(elementType, list.Count);
-                            list.ToArray().CopyTo(newArray, 0);
+                            Array newArray = null;
+
+                            if (elementType == typeof(OrderedDictionary))
+                            {
+                                newArray = Array.CreateInstance(matchingProperty.PropertyType.GetElementType(), list.Count);
+
+                                for (int i = 0; i < newArray.Length; i++)
+                                {
+                                    newArray.SetValue(TypeTreeToType(matchingProperty.PropertyType.GetElementType(), list[0]), i);
+                                }
+                            }
+                            else
+                            {
+                                newArray = Array.CreateInstance(elementType, list.Count);
+                                list.ToArray().CopyTo(newArray, 0);
+                            }
 
                             value = newArray;
                         }
                     }
+                    else if (propertyValue.GetType() == typeof(OrderedDictionary))
+                    {
+                        value = TypeTreeToType(matchingProperty.PropertyType, propertyValue);
+                    }
                     else
                     {
-                        value = dataProperty.Value;
+                        value = propertyValue;
                     }
 
                     matchingProperty.SetValue(targetObject, value);

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace MirishitaMusicPlayer.Imas
+﻿namespace MirishitaMusicPlayer.Imas
 {
     public class EventScenarioData
     {
@@ -22,6 +20,10 @@ namespace MirishitaMusicPlayer.Imas
 
         public int Target { get; set; }
 
+        public long Duration { get; set; }
+
+        public double AbsEndTime { get; set; }
+
         public string Str { get; set; }
 
         public string Info { get; set; }
@@ -30,13 +32,13 @@ namespace MirishitaMusicPlayer.Imas
 
         public int On2 { get; set; }
 
-        public object Col { get; set; }
+        public Color Col { get; set; }
 
-        public object Col2 { get; set; }
+        public Color Col2 { get; set; }
 
-        public object Col3 { get; set; }
+        public Color Col3 { get; set; }
 
-        public object[] Cols { get; set; }
+        public Color[] Cols { get; set; }
 
         public int Trig { get; set; }
 
