@@ -68,9 +68,13 @@ namespace MirishitaMusicPlayer.Forms
             Width = defaultWidth;
             Height = defaultHeight;
 
-            extrasShowTimer = new((float)(1000f / 60f));
-            extrasShowTimer.SynchronizingObject = this;
+            extrasShowTimer = new((float)(1000f / 60f))
+            {
+                SynchronizingObject = this
+            };
             extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
+
+            Text = song.SongId;
 
             for (int i = 0; i < stageMemberCount; i++)
             {
@@ -117,15 +121,6 @@ namespace MirishitaMusicPlayer.Forms
                 idolPosition++;
             }
 
-            scenarioPlayer = new(selectedSong);
-            scenarioPlayer.ExpressionChanged += UpdateExpression;
-            scenarioPlayer.LipSyncChanged += UpdateLipSync;
-            scenarioPlayer.LyricsChanged += UpdateLyrics;
-            scenarioPlayer.MuteChanged += UpdateMute;
-            scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
-            scenarioPlayer.SongStopped += Stop;
-            scenarioPlayer.ScenarioTriggered += ScenarioTriggered;
-
             List<int> eventTypes = new();
             foreach (var item in selectedSong.Scenario.MainScenario.Scenario)
             {
@@ -168,6 +163,7 @@ namespace MirishitaMusicPlayer.Forms
             }
             targets.Sort();
 
+            targetComboBox.Items.Add("Disabled");
             targetComboBox.Items.Add("All");
             foreach (var item in targets)
             {
@@ -175,28 +171,40 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             targetComboBox.SelectedIndex = 0;
+
+            scenarioPlayer = new(selectedSong);
+            scenarioPlayer.ExpressionChanged += UpdateExpression;
+            scenarioPlayer.LipSyncChanged += UpdateLipSync;
+            scenarioPlayer.LyricsChanged += UpdateLyrics;
+            scenarioPlayer.MuteChanged += UpdateMute;
+            scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
+            scenarioPlayer.SongStopped += Stop;
+            scenarioPlayer.ScenarioTriggered += ScenarioTriggered;
         }
 
         private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
         {
             TryInvoke(() =>
             {
-                if (targetComboBox.SelectedIndex == 0 || lightPayload.Target == (int)targetComboBox.SelectedItem)
+                if (targetComboBox.SelectedIndex > 0)
                 {
-                    if (lightPayload.Color != null)
-                        lightLabel1.FadeBackColor(lightPayload.Color.ToColor(), lightPayload.Duration);
-                    else
-                        lightLabel1.Visible = false;
+                    if (targetComboBox.SelectedIndex == 1 || lightPayload.Target == (int)targetComboBox.SelectedItem)
+                    {
+                        if (lightPayload.Color != null)
+                            lightLabel1.FadeBackColor(lightPayload.Color.ToColor(), lightPayload.Duration);
+                        else
+                            lightLabel1.Visible = false;
 
-                    if (lightPayload.Color2 != null)
-                        lightLabel2.FadeBackColor(lightPayload.Color2.ToColor(), lightPayload.Duration);
-                    else
-                        lightLabel2.Visible = false;
+                        if (lightPayload.Color2 != null)
+                            lightLabel2.FadeBackColor(lightPayload.Color2.ToColor(), lightPayload.Duration);
+                        else
+                            lightLabel2.Visible = false;
 
-                    if (lightPayload.Color3 != null)
-                        lightLabel3.FadeBackColor(lightPayload.Color3.ToColor(), lightPayload.Duration);
-                    else
-                        lightLabel3.Visible = false;
+                        if (lightPayload.Color3 != null)
+                            lightLabel3.FadeBackColor(lightPayload.Color3.ToColor(), lightPayload.Duration);
+                        else
+                            lightLabel3.Visible = false;
+                    }
                 }
             });
         }
@@ -241,14 +249,14 @@ namespace MirishitaMusicPlayer.Forms
 
             for (int i = 0; i < idolLabels.Count; i++)
             {
-                Label button = idolLabels[i];
+                Label labels = idolLabels[i];
 
                 TryInvoke(() =>
                 {
                     if (mutes[i] == 1)
-                        button.Visible = true;
+                        labels.Visible = true;
                     else
-                        button.Visible = false;
+                        labels.Visible = false;
                 });
             }
         }
@@ -295,7 +303,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             isSeeking = true;
             songMixer.Position = (long)Math.Ceiling(seekBar.Value / 100.0f * songMixer.Length);
-            scenarioPlayer.Seek();
+            scenarioPlayer.UpdatePosition();
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -323,14 +331,14 @@ namespace MirishitaMusicPlayer.Forms
         private void ResetButton_Click(object sender, EventArgs e)
         {
             songMixer.Position = 0;
-            scenarioPlayer.Seek();
+            scenarioPlayer.UpdatePosition();
         }
 
         private void StopButton_Click(object sender, EventArgs e) => scenarioPlayer.Stop();
 
         private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            lightsForm.Dispose();
+            lightsForm?.Dispose();
 
             songMixer.Dispose();
 

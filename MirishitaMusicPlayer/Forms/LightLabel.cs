@@ -12,10 +12,6 @@ namespace MirishitaMusicPlayer.Forms
     {
         private readonly System.Timers.Timer animationTimer = new(1000f / 16f);
 
-        private readonly Color defaultForeColor;
-        private readonly Color defaultBackColor;
-
-        private Color currentForeColor;
         private Color currentBackColor;
 
         private Color toBackColor;
@@ -28,9 +24,6 @@ namespace MirishitaMusicPlayer.Forms
             animationTimer.Interval = 16;
             animationTimer.SynchronizingObject = this;
             animationTimer.Elapsed += FadeBackColorAnimationTimer_Elapsed;
-
-            defaultForeColor = ForeColor;
-            defaultBackColor = BackColor;
         }
 
         private void FadeBackColorAnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -49,7 +42,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             animationTimer.Stop();
 
-            if (duration == 0f)
+            if (duration <= 0f)
             {
                 BackColor = to;
                 return;

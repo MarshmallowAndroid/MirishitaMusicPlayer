@@ -40,14 +40,14 @@
             this.targetsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.targetsPanel.Location = new System.Drawing.Point(12, 12);
             this.targetsPanel.Name = "targetsPanel";
-            this.targetsPanel.Size = new System.Drawing.Size(445, 636);
+            this.targetsPanel.Size = new System.Drawing.Size(939, 787);
             this.targetsPanel.TabIndex = 0;
             // 
             // LightsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 660);
+            this.ClientSize = new System.Drawing.Size(963, 811);
             this.Controls.Add(this.targetsPanel);
             this.Name = "LightsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

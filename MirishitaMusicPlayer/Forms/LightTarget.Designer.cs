@@ -37,7 +37,6 @@
             // lightLabel3
             // 
             this.lightLabel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.lightLabel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lightLabel3.Location = new System.Drawing.Point(286, 3);
             this.lightLabel3.Name = "lightLabel3";
             this.lightLabel3.Size = new System.Drawing.Size(100, 62);
@@ -46,7 +45,6 @@
             // lightLabel2
             // 
             this.lightLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.lightLabel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lightLabel2.Location = new System.Drawing.Point(180, 3);
             this.lightLabel2.Name = "lightLabel2";
             this.lightLabel2.Size = new System.Drawing.Size(100, 62);
@@ -55,7 +53,6 @@
             // lightLabel1
             // 
             this.lightLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.lightLabel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lightLabel1.Location = new System.Drawing.Point(74, 3);
             this.lightLabel1.Name = "lightLabel1";
             this.lightLabel1.Size = new System.Drawing.Size(100, 62);

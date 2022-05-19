@@ -24,7 +24,7 @@ namespace MirishitaMusicPlayer
         private readonly List<EventScenarioData> lightScenarios;
 
         private bool stopRequested = false;
-        private bool seek = false;
+        private bool seeked = false;
 
         public ScenarioPlayer(Song selectedSong)
         {
@@ -55,9 +55,9 @@ namespace MirishitaMusicPlayer
             stopRequested = true;
         }
 
-        public void Seek()
+        public void UpdatePosition()
         {
-            seek = true;
+            seeked = true;
         }
 
         private void DoScenarioPlayback()
@@ -81,7 +81,7 @@ namespace MirishitaMusicPlayer
 
             while (!songMixer.HasEnded && !stopRequested)
             {
-                if (seek)
+                if (seeked)
                 {
                     muteIndex = 0;
                     expressionScenarioIndex = 0;
@@ -95,40 +95,48 @@ namespace MirishitaMusicPlayer
 
                     secondsElapsed = songMixer.CurrentTime.TotalSeconds;
 
-                    while (secondsElapsed >= currentMuteScenario.AbsTime)
+                    if (secondsElapsed > 0)
                     {
-                        if (muteIndex < muteScenarios.Count - 1) muteIndex++;
-                        else break;
-                        currentMuteScenario = muteScenarios[muteIndex];
+                        while (secondsElapsed >= currentMuteScenario.AbsTime)
+                        {
+                            if (muteIndex < muteScenarios.Count - 1) muteIndex++;
+                            else break;
+                            currentMuteScenario = muteScenarios[muteIndex];
+                        }
+
+                        while (secondsElapsed >= currentExpressionScenario.AbsTime)
+                        {
+                            if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
+                            else break;
+                            currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
+                        }
+
+                        while (secondsElapsed >= currentMainScenario.AbsTime)
+                        {
+                            if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
+                            else break;
+                            currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
+                        }
+
+                        while (secondsElapsed >= currentOrientScenario.AbsTime)
+                        {
+                            if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
+                            else break;
+                            currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+                        }
+
+                        //muteIndex -= 2;
+                        //expressionScenarioIndex -= 2;
+                        //mainScenarioIndex -= 2;
+                        //orientScenarioIndex -= 2;
+
+                        //currentMuteScenario = muteScenarios[muteIndex];
+                        //currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
+                        //currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
+                        //currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
                     }
 
-                    while (secondsElapsed >= currentExpressionScenario.AbsTime)
-                    {
-                        if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
-                        else break;
-                        currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
-                    }
-
-                    while (secondsElapsed >= currentMainScenario.AbsTime)
-                    {
-                        if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
-                        else break;
-                        currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
-                    }
-
-                    while (secondsElapsed >= currentOrientScenario.AbsTime)
-                    {
-                        if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
-                        else break;
-                        currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
-                    }
-
-                    muteIndex--;
-                    expressionScenarioIndex--;
-                    mainScenarioIndex--;
-                    orientScenarioIndex--;
-
-                    seek = false;
+                    seeked = false;
                 }
 
                 if (secondsElapsed == songMixer.CurrentTime.TotalSeconds)
