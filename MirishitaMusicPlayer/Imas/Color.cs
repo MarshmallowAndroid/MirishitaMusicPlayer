@@ -18,10 +18,10 @@ namespace MirishitaMusicPlayer.Imas
 
         public System.Drawing.Color ToColor()
         {
-            int a = (int)(255 * A);
-            int r = (int)(255 * R);
-            int g = (int)(255 * G);
-            int b = (int)(255 * B);
+            int a = (int)Math.Clamp(255 * A, 0, 255);
+            int r = (int)Math.Clamp(255 * R, 0, 255);
+            int g = (int)Math.Clamp(255 * G, 0, 255);
+            int b = (int)Math.Clamp(255 * B, 0, 255);
 
             return System.Drawing.Color.FromArgb(a, r, g, b);
         }
