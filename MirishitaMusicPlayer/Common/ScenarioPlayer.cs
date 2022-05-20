@@ -224,6 +224,10 @@ namespace MirishitaMusicPlayer.Common
             SongStopped?.Invoke();
         }
 
+
+        public delegate void MuteChangedEventHandler(byte[] mutes);
+        public event MuteChangedEventHandler MuteChanged;
+
         public delegate void ExpressionChangedEventHandler(int expressionId, bool eyeClose);
         public event ExpressionChangedEventHandler ExpressionChanged;
 
@@ -233,16 +237,13 @@ namespace MirishitaMusicPlayer.Common
         public delegate void LyricsChangedEventHandler(string lyrics);
         public event LyricsChangedEventHandler LyricsChanged;
 
-        public delegate void MuteChangedEventHandler(byte[] mutes);
-        public event MuteChangedEventHandler MuteChanged;
-
         public delegate void LightsChangedEventHandler(LightPayload lightPayload);
         public event LightsChangedEventHandler LightsChanged;
 
-        public delegate void SongStoppedEventHandler();
-        public event SongStoppedEventHandler SongStopped;
-
         public delegate void ScenarioTriggeredEventHandler(int type);
         public event ScenarioTriggeredEventHandler ScenarioTriggered;
+
+        public delegate void SongStoppedEventHandler();
+        public event SongStoppedEventHandler SongStopped;
     }
 }

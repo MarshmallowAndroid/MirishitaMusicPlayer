@@ -19,24 +19,29 @@ namespace MirishitaMusicPlayer.Forms
         };
 
         private readonly Song song;
-
         private readonly Idol[] singers;
         private readonly int stageMemberCount;
         private readonly SongMixer songMixer;
+
         private readonly ScenarioPlayer scenarioPlayer;
         private readonly WaveOutEvent outputDevice;
 
         private readonly List<Label> idolLabels = new();
         private readonly List<EventLabel> eventLabels = new();
 
+        private bool isSeeking = false;
+
         private readonly int defaultWidth = 452;
         private readonly int defaultHeight = 460;
 
+        private Form lightsForm;
+
+        #region Animation variables
         private readonly System.Timers.Timer extrasShowTimer;
 
-        private bool isSeeking = false;
-        private bool extrasShown = false;
+        private EasingFunctions.EasingFunction easingFunction = EasingFunctions.EaseInOutQuart;
 
+        private bool extrasShown = false;
         private bool horizontalAnimationDone = false;
         private float horizontalAnimatePercentage = 0.0f;
         private bool verticalAnimationDone = false;
@@ -45,21 +50,19 @@ namespace MirishitaMusicPlayer.Forms
         private int currentHeight;
         private int currentLeft;
         private int currentTop;
-
-        private Form lightsForm;
+        #endregion
 
         public PlayerForm(Song selectedSong)
         {
             InitializeComponent();
 
-            /*
-             * Width:
-             *  Normal: 440
-             *  Extras shown: 900
-             * 
-             * Height:
-             *  Normal: 460
-             *  Extras shown: 700
+            /* Sizes:
+             *  Width:
+             *      Normal: 440
+             *      Extras shown: 900
+             *  Height:
+             *      Normal: 460
+             *      Extras shown: 700
              */
 
             song = selectedSong;
@@ -68,17 +71,18 @@ namespace MirishitaMusicPlayer.Forms
             songMixer = selectedSong.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
 
-            Width = defaultWidth;
-            Height = defaultHeight;
+            Text = selectedSong.SongId;
 
-            extrasShowTimer = new((float)(1000f / 60f))
-            {
-                SynchronizingObject = this
-            };
-            extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
+            scenarioPlayer = new(selectedSong);
+            scenarioPlayer.MuteChanged += UpdateMute;
+            scenarioPlayer.ExpressionChanged += UpdateExpression;
+            scenarioPlayer.LipSyncChanged += UpdateLipSync;
+            scenarioPlayer.LyricsChanged += UpdateLyrics;
+            scenarioPlayer.ScenarioTriggered += UpdateScenario;
+            scenarioPlayer.LightsChanged += UpdateLights;
+            scenarioPlayer.SongStopped += Stop;
 
-            Text = song.SongId;
-
+            #region Idol mute visualizer setup
             for (int i = 0; i < stageMemberCount; i++)
             {
                 Label label = new();
@@ -123,7 +127,9 @@ namespace MirishitaMusicPlayer.Forms
 
                 idolPosition++;
             }
+            #endregion
 
+            #region Event trigger visualizer setup
             List<int> eventTypes = new();
             foreach (var item in selectedSong.Scenario.MainScenario.Scenario)
             {
@@ -157,7 +163,9 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             eventLabelPanel.Controls.AddRange(eventLabels.ToArray());
+            #endregion
 
+            #region Light target combo box select setup
             List<int> targets = new();
             foreach (var item in selectedSong.Scenario.LightScenarios)
             {
@@ -174,18 +182,104 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             targetComboBox.SelectedIndex = 0;
+            #endregion
 
-            scenarioPlayer = new(selectedSong);
-            scenarioPlayer.ExpressionChanged += UpdateExpression;
-            scenarioPlayer.LipSyncChanged += UpdateLipSync;
-            scenarioPlayer.LyricsChanged += UpdateLyrics;
-            scenarioPlayer.MuteChanged += UpdateMute;
-            scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
-            scenarioPlayer.SongStopped += Stop;
-            scenarioPlayer.ScenarioTriggered += ScenarioTriggered;
+            #region Animation setup
+            Width = defaultWidth;
+            Height = defaultHeight;
+
+            extrasShowTimer = new((float)(1000f / 60f))
+            {
+                SynchronizingObject = this
+            };
+            extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
+            #endregion
         }
 
-        private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+
+                return cp;
+            }
+        }
+
+        private void PlayerForm_Load(object sender, EventArgs e)
+        {
+            if (songMixer.VoiceCount > 0)
+                toggleVoicesButton.Enabled = true;
+
+            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
+
+            scenarioPlayer.Start();
+            outputDevice.Play();
+        }
+
+        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            outputDevice.Stop();
+            outputDevice.Dispose();
+
+            songMixer.Dispose();
+
+            scenarioPlayer.Stop();
+
+            extrasShowTimer.Stop();
+            extrasShowTimer.Dispose();
+
+            lightsForm?.Dispose();
+
+            faceVisualizer.Dispose();
+        }
+
+        #region Scenario player events
+        private void UpdateMute(byte[] mutes)
+        {
+            if (idolLabels.Count == 1)
+                mutes[0] = 1;
+
+            for (int i = 0; i < idolLabels.Count; i++)
+            {
+                Label labels = idolLabels[i];
+
+                TryInvoke(() =>
+                {
+                    if (mutes[i] == 1)
+                        labels.Visible = true;
+                    else
+                        labels.Visible = false;
+                });
+            }
+        }
+
+        private void UpdateExpression(int expressionId, bool eyeClose)
+        {
+            TryInvoke(() =>
+            {
+                debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
+                debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
+                faceVisualizer.UpdateFace(expressionId, eyeClose);
+            });
+        }
+
+        private void UpdateLipSync(int lipSyncId)
+        {
+            TryInvoke(() =>
+            {
+                debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString();
+                faceVisualizer.UpdateMouth(lipSyncId);
+            });
+        }
+
+        private void UpdateLyrics(string lyrics)
+        {
+            TryInvoke(() => lyricsTextBox.Text = lyrics);
+        }
+
+        private void UpdateLights(LightPayload lightPayload)
         {
             TryInvoke(() =>
             {
@@ -212,7 +306,7 @@ namespace MirishitaMusicPlayer.Forms
             });
         }
 
-        private void ScenarioTriggered(int type)
+        private void UpdateScenario(int type)
         {
             foreach (var eventLabel in eventLabels)
             {
@@ -221,94 +315,13 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        public void UpdateExpression(int expressionId, bool eyeClose)
-        {
-            TryInvoke(() =>
-            {
-                debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
-                debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
-                faceVisualizer.UpdateFace(expressionId, eyeClose);
-            });
-        }
-
-        public void UpdateLipSync(int lipSyncId)
-        {
-            TryInvoke(() =>
-            {
-                debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString();
-                faceVisualizer.UpdateMouth(lipSyncId);
-            });
-        }
-
-        public void UpdateLyrics(string lyrics)
-        {
-            TryInvoke(() => lyricsTextBox.Text = lyrics);
-        }
-
-        public void UpdateMute(byte[] mutes)
-        {
-            if (idolLabels.Count == 1)
-                mutes[0] = 1;
-
-            for (int i = 0; i < idolLabels.Count; i++)
-            {
-                Label labels = idolLabels[i];
-
-                TryInvoke(() =>
-                {
-                    if (mutes[i] == 1)
-                        labels.Visible = true;
-                    else
-                        labels.Visible = false;
-                });
-            }
-        }
-
         public void Stop()
         {
-            if (Visible) TryInvoke(() => Close());
+            TryInvoke(() => Close());
         }
+        #endregion
 
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                //cp.ExStyle |= 0x02000000;
-
-                return cp;
-            }
-        }
-
-        private void PlayerForm_Load(object sender, EventArgs e)
-        {
-            if (songMixer.VoiceCount > 0)
-                toggleVoicesButton.Enabled = true;
-
-            volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
-
-            scenarioPlayer.Start();
-            outputDevice.Play();
-        }
-
-        private void UpdateTimer_Tick(object sender, EventArgs e)
-        {
-            if (!seekBar.Capture || isSeeking)
-                seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
-            else
-                isSeeking = true;
-
-            currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
-            totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
-        }
-
-        private void SeekBar_Scroll(object sender, EventArgs e)
-        {
-            isSeeking = true;
-            songMixer.Position = (long)Math.Ceiling(seekBar.Value / 100.0f * songMixer.Length);
-            scenarioPlayer.UpdatePosition();
-        }
-
+        #region Player controls
         private void PlayButton_Click(object sender, EventArgs e)
         {
             if (outputDevice.PlaybackState == PlaybackState.Playing)
@@ -328,9 +341,9 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        private void ToggleBgmButton_Click(object sender, EventArgs e) => songMixer.MuteBackground = !songMixer.MuteBackground;
-
         private void ToggleVoicesButton_Click(object sender, EventArgs e) => songMixer.MuteVoices = !songMixer.MuteVoices;
+
+        private void ToggleBgmButton_Click(object sender, EventArgs e) => songMixer.MuteBackground = !songMixer.MuteBackground;
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
@@ -340,21 +353,6 @@ namespace MirishitaMusicPlayer.Forms
 
         private void StopButton_Click(object sender, EventArgs e) => scenarioPlayer.Stop();
 
-        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            lightsForm?.Dispose();
-
-            songMixer.Dispose();
-
-            outputDevice.Stop();
-            outputDevice.Dispose();
-
-            extrasShowTimer.Stop();
-            extrasShowTimer.Dispose();
-
-            TryInvoke(() => faceVisualizer.Dispose());
-        }
-
         private void VolumeTrackBar_Scroll(object sender, EventArgs e)
         {
             outputDevice.Volume = volumeTrackBar.Value / 100.0f;
@@ -362,23 +360,53 @@ namespace MirishitaMusicPlayer.Forms
             volumeToolTip.Show(volumeTrackBar.Value.ToString(), volumeTrackBar, volumeToolTip.AutoPopDelay);
         }
 
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            if (!seekBar.Capture || isSeeking)
+                seekBar.Value = (int)((float)songMixer.Position / songMixer.Length * 100.0f);
+            else
+                isSeeking = true;
+
+            currentTimeLabel.Text = $"{songMixer.CurrentTime:mm\\:ss}";
+            totalTimeLabel.Text = $"{songMixer.TotalTime:mm\\:ss}";
+        }
+
+        private void SeekBar_Scroll(object sender, EventArgs e)
+        {
+            isSeeking = true;
+            songMixer.Position = (long)Math.Ceiling(seekBar.Value / 100.0f * songMixer.Length);
+            scenarioPlayer.UpdatePosition();
+        }
+        #endregion
+
+        #region Animation functions
+        private void ShowAllLightsButton_Click(object sender, EventArgs e)
+        {
+            if (lightsForm == null)
+            {
+                lightsForm = new LightsForm(song, scenarioPlayer);
+                lightsForm.FormClosed += (s, e) => lightsForm = null;
+                lightsForm.Show();
+            }
+        }
+
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
             if (extrasShown)
             {
-                Width = AnimateValue(currentWidth, defaultWidth, horizontalAnimatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), horizontalAnimatePercentage);
+                Width = AnimationCommon.AnimateValue(currentWidth, defaultWidth, horizontalAnimatePercentage, easingFunction);
+                Left = AnimationCommon.AnimateValue(currentLeft, currentLeft + (defaultWidth / 2), horizontalAnimatePercentage, easingFunction);
 
-                Height = AnimateValue(currentHeight, defaultHeight, verticalAnimatePercentage);
-                Top = AnimateValue(currentTop, currentTop + (defaultHeight / 2 / 2), verticalAnimatePercentage);
+                Height = AnimationCommon.AnimateValue(currentHeight, defaultHeight, verticalAnimatePercentage, easingFunction);
+                Top = AnimationCommon.AnimateValue(currentTop, currentTop + (defaultHeight / 2 / 2), verticalAnimatePercentage, easingFunction);
             }
             else
             {
-                Width = AnimateValue(currentWidth, 900, horizontalAnimatePercentage);
-                Left = AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), horizontalAnimatePercentage);
+                Width = AnimationCommon.AnimateValue(currentWidth, 900, horizontalAnimatePercentage, easingFunction);
+                Left = AnimationCommon.AnimateValue(currentLeft, currentLeft - (defaultWidth / 2), horizontalAnimatePercentage, easingFunction);
 
-                Height = AnimateValue(currentHeight, 700, verticalAnimatePercentage);
-                Top = AnimateValue(currentTop, currentTop - (defaultHeight / 2 / 2), verticalAnimatePercentage);
+                Height = AnimationCommon.AnimateValue(currentHeight, 700, verticalAnimatePercentage, easingFunction);
+                Top = AnimationCommon.AnimateValue(currentTop, currentTop - (defaultHeight / 2 / 2), verticalAnimatePercentage, easingFunction);
             }
 
             if (!horizontalAnimationDone)
@@ -431,16 +459,7 @@ namespace MirishitaMusicPlayer.Forms
             if (extrasShown)
                 extrasSecondPanel.Visible = !extrasShown;
         }
-
-        private void ShowAllLightsButton_Click(object sender, EventArgs e)
-        {
-            if (lightsForm == null)
-            {
-                lightsForm = new LightsForm(song, scenarioPlayer);
-                lightsForm.FormClosed += (s, e) => lightsForm = null;
-                lightsForm.Show();
-            }
-        }
+        #endregion
 
         private void TryInvoke(Action action)
         {
@@ -451,33 +470,6 @@ namespace MirishitaMusicPlayer.Forms
             catch (Exception)
             {
             }
-        }
-
-        private static int AnimateValue(int from, int to, float progress)
-        {
-            progress = Math.Clamp(progress, 0.0f, 1.0f);
-
-            float ease = EaseInOutQuart(progress);
-            int progressedValue = to - from;
-            if (progressedValue < 0)
-            {
-                progressedValue = (int)Math.Floor(ease * progressedValue);
-            }
-            else
-            {
-                progressedValue = (int)Math.Ceiling(ease * progressedValue);
-            }
-            return from + progressedValue;
-        }
-
-        private static float EaseInOutCubic(float x)
-        {
-            return x < 0.5f ? 4 * x * x * x : 1 - (float)Math.Pow(-2 * x + 2, 3) / 2.0f;
-        }
-
-        private static float EaseInOutQuart(float x)
-        {
-            return (float)(x < 0.5f ? 8 * x * x * x * x : 1 - Math.Pow(-2 * x + 2, 4) / 2);
         }
     }
 }

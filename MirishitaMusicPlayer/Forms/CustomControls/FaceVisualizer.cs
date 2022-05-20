@@ -28,8 +28,10 @@ namespace MirishitaMusicPlayer.Forms
 
         private void FacePictureBox_DoubleClick(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog();
-            dialog.Filter = "ZIP archives (*.zip) | *.zip";
+            var dialog = new OpenFileDialog
+            {
+                Filter = "ZIP archives (*.zip) | *.zip"
+            };
 
             var result = dialog.ShowDialog();
 

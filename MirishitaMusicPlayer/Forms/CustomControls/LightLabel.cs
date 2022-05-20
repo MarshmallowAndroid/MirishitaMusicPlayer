@@ -16,10 +16,10 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
         public LightLabel() : base()
         {
             colorAnimator = new(BackColor);
-            colorAnimator.ColorAnimate += ColorAnimator_ColorAnimate;
+            colorAnimator.ValueAnimate += ColorAnimator_ValueAnimate;
         }
 
-        private void ColorAnimator_ColorAnimate(Color color)
+        private void ColorAnimator_ValueAnimate(IAnimator<Color> sender, Color color)
         {
             TryInvoke(() => BackColor = color);
         }
@@ -35,7 +35,7 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
 
             if (disposing)
             {
-                colorAnimator.ColorAnimate -= ColorAnimator_ColorAnimate;
+                colorAnimator.ValueAnimate -= ColorAnimator_ValueAnimate;
                 colorAnimator.Dispose();
             }
         }
