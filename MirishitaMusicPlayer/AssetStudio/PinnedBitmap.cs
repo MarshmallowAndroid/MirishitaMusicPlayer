@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace MirishitaMusicPlayer.Forms.Classes
+namespace MirishitaMusicPlayer.AssetStudio
 {
     class PinnedBitmap : IDisposable
     {

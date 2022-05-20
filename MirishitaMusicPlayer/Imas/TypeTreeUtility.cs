@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer.Imas
 {
-    internal static class Common
+    internal static class TypeTreeUtility
     {
         public static object TypeTreeToType(Type targetType, object typeTree)
         {

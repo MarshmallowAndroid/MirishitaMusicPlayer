@@ -32,7 +32,7 @@ namespace MirishitaMusicPlayer.Forms
             Color color1,
             Color color2,
             Color color3,
-            double duration)
+            float duration)
         {
             if (color1 != null)
                 lightLabel1.FadeBackColor(color1.ToColor(), duration);

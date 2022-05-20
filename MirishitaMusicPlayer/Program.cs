@@ -1,5 +1,7 @@
 ﻿using AssetStudio;
+using MirishitaMusicPlayer.AssetStudio;
 using MirishitaMusicPlayer.Audio;
+using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms;
 using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Net.TDAssets;
@@ -29,7 +31,7 @@ namespace MirishitaMusicPlayer
 
             bool quit = false;
 
-            AssetsManager assetsManager = new();
+            AssetsManager assetsManager = AssetStudioGlobal.AssetsManager;
             SongSelectForm songSelectForm = new(assetsManager);
 
             while (!quit)

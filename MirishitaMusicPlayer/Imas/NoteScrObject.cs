@@ -13,12 +13,12 @@ namespace MirishitaMusicPlayer.Imas
 
             foreach (var data in (List<object>)typeDictionary["evts"])
             {
-                Evts.Add((EventNoteData)Common.TypeTreeToType(typeof(EventNoteData), data));
+                Evts.Add((EventNoteData)TypeTreeUtility.TypeTreeToType(typeof(EventNoteData), data));
             }
 
             foreach (var data in (List<object>)typeDictionary["ct"])
             {
-                Ct.Add((EventConductorData)Common.TypeTreeToType(typeof(EventConductorData), data));
+                Ct.Add((EventConductorData)TypeTreeUtility.TypeTreeToType(typeof(EventConductorData), data));
             }
         }
 

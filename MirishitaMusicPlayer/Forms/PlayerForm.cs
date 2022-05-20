@@ -1,4 +1,7 @@
-﻿using MirishitaMusicPlayer.Audio;
+﻿using MirishitaMusicPlayer.Animation;
+using MirishitaMusicPlayer.Audio;
+using MirishitaMusicPlayer.Common;
+using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
 using System;
@@ -271,7 +274,7 @@ namespace MirishitaMusicPlayer.Forms
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;
+                //cp.ExStyle |= 0x02000000;
 
                 return cp;
             }
@@ -404,6 +407,9 @@ namespace MirishitaMusicPlayer.Forms
 
                 extrasPanel.Visible = extrasShown;
                 extrasSecondPanel.Visible = extrasShown;
+
+                horizontalAnimationDone = false;
+                verticalAnimationDone = false;
             }
         }
 

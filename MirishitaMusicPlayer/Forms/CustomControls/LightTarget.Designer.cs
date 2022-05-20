@@ -1,4 +1,6 @@
-﻿namespace MirishitaMusicPlayer.Forms
+﻿using MirishitaMusicPlayer.Forms.CustomControls;
+
+namespace MirishitaMusicPlayer.Forms
 {
     partial class LightTarget
     {
@@ -28,9 +30,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lightLabel3 = new MirishitaMusicPlayer.Forms.LightLabel();
-            this.lightLabel2 = new MirishitaMusicPlayer.Forms.LightLabel();
-            this.lightLabel1 = new MirishitaMusicPlayer.Forms.LightLabel();
+            this.lightLabel3 = new LightLabel();
+            this.lightLabel2 = new LightLabel();
+            this.lightLabel1 = new LightLabel();
             this.targetLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 

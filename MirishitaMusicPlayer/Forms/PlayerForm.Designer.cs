@@ -1,4 +1,7 @@
-﻿namespace MirishitaMusicPlayer.Forms
+﻿using MirishitaMusicPlayer.FaceSource;
+using MirishitaMusicPlayer.Forms.CustomControls;
+
+namespace MirishitaMusicPlayer.Forms
 {
     partial class PlayerForm
     {
@@ -29,7 +32,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource embeddedResourceFaceSource3 = new MirishitaMusicPlayer.Forms.Classes.EmbeddedResourceFaceSource();
+            EmbeddedResourceFaceSource embeddedResourceFaceSource = new EmbeddedResourceFaceSource();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.debugEyesIdLabel = new System.Windows.Forms.Label();
@@ -58,9 +61,9 @@
             this.showAllLightsButton = new System.Windows.Forms.Button();
             this.targetComboBox = new System.Windows.Forms.ComboBox();
             this.targetLabel = new System.Windows.Forms.Label();
-            this.lightLabel3 = new MirishitaMusicPlayer.Forms.LightLabel();
-            this.lightLabel2 = new MirishitaMusicPlayer.Forms.LightLabel();
-            this.lightLabel1 = new MirishitaMusicPlayer.Forms.LightLabel();
+            this.lightLabel3 = new LightLabel();
+            this.lightLabel2 = new LightLabel();
+            this.lightLabel1 = new LightLabel();
             this.eventsGroupBox = new System.Windows.Forms.GroupBox();
             this.eventLabelPanel = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
@@ -322,7 +325,7 @@
             // 
             // faceVisualizer
             // 
-            this.faceVisualizer.FaceSource = embeddedResourceFaceSource3;
+            this.faceVisualizer.FaceSource = embeddedResourceFaceSource;
             this.faceVisualizer.Location = new System.Drawing.Point(3, 3);
             this.faceVisualizer.Name = "faceVisualizer";
             this.faceVisualizer.Size = new System.Drawing.Size(400, 400);

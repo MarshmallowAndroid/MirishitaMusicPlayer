@@ -4,31 +4,33 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Timers;
 
-namespace MirishitaMusicPlayer.Forms
+namespace MirishitaMusicPlayer.Animation
 {
-    public class LightLabel : Label
+    public class ColorAnimator : IDisposable
     {
-        private readonly System.Timers.Timer animationTimer = new(1000f / 16f);
+        private readonly Timer animationTimer = new(1000f / 16f);
 
-        private Color currentBackColor;
+        private Color fromColor;
+        private Color lastColor;
+        private Color toColor;
 
-        private Color toBackColor;
+        private float animationDuration = 0f;
+        private float animationPercentage = 0f;
 
-        private float animationDuration = 500f;
-        private float animationPercentage = 0.0f;
-
-        public LightLabel() : base()
+        public ColorAnimator(Color initialColor)
         {
             animationTimer.Interval = 16;
-            animationTimer.SynchronizingObject = this;
-            animationTimer.Elapsed += FadeBackColorAnimationTimer_Elapsed;
+            animationTimer.Elapsed += AnimationTimer_Elapsed;
+
+            lastColor = initialColor;
         }
 
-        private void FadeBackColorAnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void AnimationTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            BackColor = AnimateColor(currentBackColor, toBackColor, animationPercentage);
+            lastColor = AnimateColor(fromColor, toColor, animationPercentage);
+            ColorAnimate?.Invoke(lastColor);
 
             animationPercentage += (float)animationTimer.Interval / animationDuration;
 
@@ -38,21 +40,22 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        public void FadeBackColor(Color to, double duration)
+        public void Animate(Color to, float duration)
         {
             animationTimer.Stop();
 
             if (duration <= 0f)
             {
-                BackColor = to;
+                lastColor = to;
+                ColorAnimate?.Invoke(to);
                 return;
             }
 
             animationPercentage = 0.0f;
 
-            currentBackColor = BackColor;
-            toBackColor = to;
-            animationDuration = (float)duration * 1000f;
+            fromColor = lastColor;
+            toColor = to;
+            animationDuration = duration;
 
             animationTimer.Start();
         }
@@ -110,11 +113,15 @@ namespace MirishitaMusicPlayer.Forms
             return (float)(x < 0.5f ? 8f * x * x * x * x : 1f - Math.Pow(-2f * x + 2f, 4f) / 2f);
         }
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            base.Dispose(disposing);
+            animationTimer.Stop();
 
+            animationTimer.Elapsed -= AnimationTimer_Elapsed;
             animationTimer.Dispose();
         }
+
+        public delegate void ColorAnimateEventHandler(Color color);
+        public event ColorAnimateEventHandler ColorAnimate;
     }
 }

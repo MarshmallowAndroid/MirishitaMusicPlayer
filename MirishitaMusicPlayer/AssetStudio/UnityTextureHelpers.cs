@@ -4,11 +4,11 @@ using SixLabors.ImageSharp.PixelFormats;
 using System.Drawing;
 using System.Linq;
 
-namespace MirishitaMusicPlayer.Forms.Classes
+namespace MirishitaMusicPlayer.AssetStudio
 {
     internal static class UnityTextureHelpers
     {
-        private static readonly AssetsManager assetsManager = new();
+        private static readonly AssetsManager assetsManager = AssetStudioGlobal.AssetsManager;
 
         public static AssetsManager Assets => assetsManager;
 

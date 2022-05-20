@@ -1,5 +1,6 @@
 ﻿using AssetStudio;
-using MirishitaMusicPlayer.Forms.Classes;
+using MirishitaMusicPlayer.AssetStudio;
+using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Net.Princess;
 using MirishitaMusicPlayer.Net.TDAssets;
 using NAudio.Wave;

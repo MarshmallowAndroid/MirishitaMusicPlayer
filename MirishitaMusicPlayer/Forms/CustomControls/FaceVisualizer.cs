@@ -1,4 +1,4 @@
-﻿using MirishitaMusicPlayer.Forms.Classes;
+﻿using MirishitaMusicPlayer.FaceSource;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

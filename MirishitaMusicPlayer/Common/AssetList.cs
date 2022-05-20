@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MirishitaMusicPlayer
+namespace MirishitaMusicPlayer.Common
 {
     public class AssetList
     {

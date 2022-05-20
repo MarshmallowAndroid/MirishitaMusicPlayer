@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MirishitaMusicPlayer
+namespace MirishitaMusicPlayer.Animation
 {
     public class LightPayload
     {
@@ -17,6 +17,6 @@ namespace MirishitaMusicPlayer
 
         public int Target { get; set; }
 
-        public double Duration { get; set; }
+        public float Duration { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MirishitaMusicPlayer.Forms.Classes
+namespace MirishitaMusicPlayer.FaceSource
 {
     public interface IFaceSource : IDisposable
     {

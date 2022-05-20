@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MirishitaMusicPlayer.Forms
+namespace MirishitaMusicPlayer.Forms.CustomControls
 {
     public class EventLabel : Label
     {

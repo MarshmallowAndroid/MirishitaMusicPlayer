@@ -16,7 +16,7 @@ namespace MirishitaMusicPlayer.Imas
 
             foreach (var data in (List<object>)typeTree["scenario"])
             {
-                Scenario.Add((EventScenarioData)Common.TypeTreeToType(typeof(EventScenarioData), data));
+                Scenario.Add((EventScenarioData)TypeTreeUtility.TypeTreeToType(typeof(EventScenarioData), data));
             }
         }
 

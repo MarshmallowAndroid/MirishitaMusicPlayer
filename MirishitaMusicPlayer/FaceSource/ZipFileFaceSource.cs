@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MirishitaMusicPlayer.Forms.Classes
+namespace MirishitaMusicPlayer.FaceSource
 {
     internal class ZipFileFaceSource : IFaceSource, IDisposable
     {

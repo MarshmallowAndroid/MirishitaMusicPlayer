@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MirishitaMusicPlayer
+namespace MirishitaMusicPlayer.Common
 {
     public class Idol
     {

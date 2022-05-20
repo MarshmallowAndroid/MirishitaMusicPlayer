@@ -1,4 +1,5 @@
-﻿using MirishitaMusicPlayer.Audio;
+﻿using MirishitaMusicPlayer.Animation;
+using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MirishitaMusicPlayer
+namespace MirishitaMusicPlayer.Common
 {
     public class ScenarioPlayer
     {
@@ -193,7 +194,7 @@ namespace MirishitaMusicPlayer
                                 Color = currentMainScenario.Col,
                                 Color2 = currentMainScenario.Col2,
                                 Color3 = currentMainScenario.Col3,
-                                Duration = currentMainScenario.AbsEndTime - currentMainScenario.AbsTime,
+                                Duration = (float)(currentMainScenario.AbsEndTime - currentMainScenario.AbsTime) * 1000f,
                                 Target = currentMainScenario.Target
                             });
                         }
