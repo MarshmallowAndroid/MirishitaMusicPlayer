@@ -23,11 +23,6 @@ namespace MirishitaMusicPlayer.Forms
 
         private bool closing = false;
 
-        private IOpenRGBClient client;
-        private Device rgbDevice;
-
-        private readonly ColorAnimator colorAnimator;
-
         public LightsForm(Song song, ScenarioPlayer scenarioPlayer)
         {
             InitializeComponent();
@@ -53,21 +48,6 @@ namespace MirishitaMusicPlayer.Forms
 
             scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
             _scenarioPlayer = scenarioPlayer;
-
-            client = new OpenRGBClient(name: "Mirishita Music Player RGB Client");
-            rgbDevice = client.GetAllControllerData()[0];
-
-            colorAnimator = new(Color.Black);
-            colorAnimator.ValueAnimate += UpdateRgb;
-        }
-
-        private void UpdateRgb(IAnimator<Color> sender, Color value)
-        {
-            rgbDevice.Colors[0].R = value.R;
-            rgbDevice.Colors[0].G = value.G;
-            rgbDevice.Colors[0].B = value.B;
-
-            client.UpdateLeds(0, rgbDevice.Colors);
         }
 
         private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
@@ -81,11 +61,6 @@ namespace MirishitaMusicPlayer.Forms
                         lightPayload.Color2,
                         lightPayload.Color3,
                         lightPayload.Duration);
-
-                    if (lightPayload.Target == 11)
-                    {
-                        colorAnimator.Animate(lightPayload.Color.ToColor(), lightPayload.Duration);
-                    }
                 });
             }
         }
