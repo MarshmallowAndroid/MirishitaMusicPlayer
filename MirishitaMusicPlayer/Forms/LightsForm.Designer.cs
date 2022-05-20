@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.targetsPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.hideLabelsCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // targetsPanel
@@ -37,28 +38,41 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.targetsPanel.AutoScroll = true;
-            this.targetsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.targetsPanel.Location = new System.Drawing.Point(12, 12);
+            this.targetsPanel.Location = new System.Drawing.Point(12, 37);
             this.targetsPanel.Name = "targetsPanel";
-            this.targetsPanel.Size = new System.Drawing.Size(939, 787);
+            this.targetsPanel.Size = new System.Drawing.Size(817, 546);
             this.targetsPanel.TabIndex = 0;
+            // 
+            // hideLabelsCheckBox
+            // 
+            this.hideLabelsCheckBox.AutoSize = true;
+            this.hideLabelsCheckBox.Location = new System.Drawing.Point(12, 12);
+            this.hideLabelsCheckBox.Name = "hideLabelsCheckBox";
+            this.hideLabelsCheckBox.Size = new System.Drawing.Size(84, 19);
+            this.hideLabelsCheckBox.TabIndex = 1;
+            this.hideLabelsCheckBox.Text = "Hide labels";
+            this.hideLabelsCheckBox.UseVisualStyleBackColor = true;
+            this.hideLabelsCheckBox.CheckedChanged += new System.EventHandler(this.HideLabelsCheckBox_CheckedChanged);
             // 
             // LightsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(963, 811);
+            this.ClientSize = new System.Drawing.Size(841, 595);
+            this.Controls.Add(this.hideLabelsCheckBox);
             this.Controls.Add(this.targetsPanel);
             this.Name = "LightsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Lights Visualizer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LightsForm_FormClosing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel targetsPanel;
+        private System.Windows.Forms.CheckBox hideLabelsCheckBox;
     }
 }

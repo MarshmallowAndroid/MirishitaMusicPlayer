@@ -71,5 +71,15 @@ namespace MirishitaMusicPlayer.Forms
 
             closing = true;
         }
+
+        private void HideLabelsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+
+            foreach (var item in lightTargets)
+            {
+                item.Value.HideLabel = !checkBox.Checked;
+            }
+        }
     }
 }

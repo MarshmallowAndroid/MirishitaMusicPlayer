@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MirishitaMusicPlayer.Animation;
 using MirishitaMusicPlayer.Imas;
 using Color = MirishitaMusicPlayer.Imas.Color;
 
@@ -14,9 +15,13 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class LightTarget : UserControl
     {
+        private readonly int defaultHeight;
+
         public LightTarget()
         {
             InitializeComponent();
+
+            defaultHeight = Height;
         }
 
         public LightTarget(int lightTarget) : this()
@@ -26,7 +31,35 @@ namespace MirishitaMusicPlayer.Forms
             targetLabel.Text = lightTarget.ToString();
         }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+
+                return cp;
+            }
+        }
+
         public int Target { get; }
+
+        public bool HideLabel
+        {
+            get
+            {
+                return targetLabel.Visible;
+            }
+            set
+            {
+                targetLabel.Visible = value;
+
+                if (!value)
+                    Height = defaultHeight - 64;
+                else
+                    Height = defaultHeight;
+            }
+        }
 
         public void UpdateColors(
             Color color1,
@@ -34,20 +67,9 @@ namespace MirishitaMusicPlayer.Forms
             Color color3,
             float duration)
         {
-            if (color1 != null)
-                lightLabel1.FadeBackColor(color1.ToColor(), duration);
-            else
-                lightLabel1.Visible = false;
-
-            if (color2 != null)
-                lightLabel2.FadeBackColor(color2.ToColor(), duration);
-            else
-                lightLabel2.Visible = false;
-
-            if (color3 != null)
-                lightLabel3.FadeBackColor(color3.ToColor(), duration);
-            else
-                lightLabel3.Visible = false;
+            lightLabel1.FadeBackColor(color1?.ToColor() ?? System.Drawing.Color.Black, duration);
+            lightLabel2.FadeBackColor(color2?.ToColor() ?? System.Drawing.Color.Black, duration);
+            lightLabel3.FadeBackColor(color3?.ToColor() ?? System.Drawing.Color.Black, duration);
         }
     }
 }
