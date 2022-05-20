@@ -32,7 +32,7 @@ namespace MirishitaMusicPlayer.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            EmbeddedResourceFaceSource embeddedResourceFaceSource = new EmbeddedResourceFaceSource();
+            MirishitaMusicPlayer.FaceSource.EmbeddedResourceFaceSource embeddedResourceFaceSource1 = new MirishitaMusicPlayer.FaceSource.EmbeddedResourceFaceSource();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.debugEyesIdLabel = new System.Windows.Forms.Label();
@@ -44,7 +44,7 @@ namespace MirishitaMusicPlayer.Forms
             this.controlPanel = new System.Windows.Forms.TableLayoutPanel();
             this.stopButton = new System.Windows.Forms.Button();
             this.toggleVoicesButton = new System.Windows.Forms.Button();
-            this.ResetButton = new System.Windows.Forms.Button();
+            this.resetButton = new System.Windows.Forms.Button();
             this.playButton = new System.Windows.Forms.Button();
             this.toggleBgmButton = new System.Windows.Forms.Button();
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
@@ -58,12 +58,12 @@ namespace MirishitaMusicPlayer.Forms
             this.faceVisualizer = new MirishitaMusicPlayer.Forms.FaceVisualizer();
             this.extrasSecondPanel = new System.Windows.Forms.Panel();
             this.lightsGroupBox = new System.Windows.Forms.GroupBox();
+            this.openRgbSettingsButton = new System.Windows.Forms.Button();
             this.showAllLightsButton = new System.Windows.Forms.Button();
             this.targetComboBox = new System.Windows.Forms.ComboBox();
-            this.targetLabel = new System.Windows.Forms.Label();
-            this.lightLabel3 = new LightLabel();
-            this.lightLabel2 = new LightLabel();
-            this.lightLabel1 = new LightLabel();
+            this.lightLabel3 = new MirishitaMusicPlayer.Forms.CustomControls.LightLabel();
+            this.lightLabel2 = new MirishitaMusicPlayer.Forms.CustomControls.LightLabel();
+            this.lightLabel1 = new MirishitaMusicPlayer.Forms.CustomControls.LightLabel();
             this.eventsGroupBox = new System.Windows.Forms.GroupBox();
             this.eventLabelPanel = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
@@ -167,7 +167,7 @@ namespace MirishitaMusicPlayer.Forms
             this.controlPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.controlPanel.Controls.Add(this.stopButton, 4, 0);
             this.controlPanel.Controls.Add(this.toggleVoicesButton, 1, 0);
-            this.controlPanel.Controls.Add(this.ResetButton, 0, 0);
+            this.controlPanel.Controls.Add(this.resetButton, 0, 0);
             this.controlPanel.Controls.Add(this.playButton, 2, 0);
             this.controlPanel.Controls.Add(this.toggleBgmButton, 3, 0);
             this.controlPanel.Location = new System.Drawing.Point(12, 425);
@@ -201,16 +201,16 @@ namespace MirishitaMusicPlayer.Forms
             this.toggleVoicesButton.UseVisualStyleBackColor = true;
             this.toggleVoicesButton.Click += new System.EventHandler(this.ToggleVoicesButton_Click);
             // 
-            // ResetButton
+            // resetButton
             // 
-            this.ResetButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ResetButton.Location = new System.Drawing.Point(3, 3);
-            this.ResetButton.Name = "ResetButton";
-            this.ResetButton.Size = new System.Drawing.Size(76, 69);
-            this.ResetButton.TabIndex = 2;
-            this.ResetButton.Text = "Reset";
-            this.ResetButton.UseVisualStyleBackColor = true;
-            this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            this.resetButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resetButton.Location = new System.Drawing.Point(3, 3);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(76, 69);
+            this.resetButton.TabIndex = 2;
+            this.resetButton.Text = "Reset";
+            this.resetButton.UseVisualStyleBackColor = true;
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
             // playButton
             // 
@@ -325,7 +325,7 @@ namespace MirishitaMusicPlayer.Forms
             // 
             // faceVisualizer
             // 
-            this.faceVisualizer.FaceSource = embeddedResourceFaceSource;
+            this.faceVisualizer.FaceSource = embeddedResourceFaceSource1;
             this.faceVisualizer.Location = new System.Drawing.Point(3, 3);
             this.faceVisualizer.Name = "faceVisualizer";
             this.faceVisualizer.Size = new System.Drawing.Size(400, 400);
@@ -344,24 +344,34 @@ namespace MirishitaMusicPlayer.Forms
             // 
             // lightsGroupBox
             // 
+            this.lightsGroupBox.Controls.Add(this.openRgbSettingsButton);
             this.lightsGroupBox.Controls.Add(this.showAllLightsButton);
             this.lightsGroupBox.Controls.Add(this.targetComboBox);
-            this.lightsGroupBox.Controls.Add(this.targetLabel);
             this.lightsGroupBox.Controls.Add(this.lightLabel3);
             this.lightsGroupBox.Controls.Add(this.lightLabel2);
             this.lightsGroupBox.Controls.Add(this.lightLabel1);
-            this.lightsGroupBox.Location = new System.Drawing.Point(3, 144);
+            this.lightsGroupBox.Location = new System.Drawing.Point(3, 154);
             this.lightsGroupBox.Name = "lightsGroupBox";
-            this.lightsGroupBox.Size = new System.Drawing.Size(406, 98);
+            this.lightsGroupBox.Size = new System.Drawing.Size(406, 92);
             this.lightsGroupBox.TabIndex = 1;
             this.lightsGroupBox.TabStop = false;
             this.lightsGroupBox.Text = "Lights";
             // 
+            // openRgbSettingsButton
+            // 
+            this.openRgbSettingsButton.Location = new System.Drawing.Point(6, 51);
+            this.openRgbSettingsButton.Name = "openRgbSettingsButton";
+            this.openRgbSettingsButton.Size = new System.Drawing.Size(120, 35);
+            this.openRgbSettingsButton.TabIndex = 3;
+            this.openRgbSettingsButton.Text = "OpenRGB settings...";
+            this.openRgbSettingsButton.UseVisualStyleBackColor = true;
+            this.openRgbSettingsButton.Click += new System.EventHandler(this.ShowAllLightsButton_Click);
+            // 
             // showAllLightsButton
             // 
-            this.showAllLightsButton.Location = new System.Drawing.Point(7, 22);
+            this.showAllLightsButton.Location = new System.Drawing.Point(132, 22);
             this.showAllLightsButton.Name = "showAllLightsButton";
-            this.showAllLightsButton.Size = new System.Drawing.Size(75, 26);
+            this.showAllLightsButton.Size = new System.Drawing.Size(70, 64);
             this.showAllLightsButton.TabIndex = 3;
             this.showAllLightsButton.Text = "Show all";
             this.showAllLightsButton.UseVisualStyleBackColor = true;
@@ -369,44 +379,38 @@ namespace MirishitaMusicPlayer.Forms
             // 
             // targetComboBox
             // 
-            this.targetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.targetComboBox.FormattingEnabled = true;
-            this.targetComboBox.Location = new System.Drawing.Point(6, 69);
+            this.targetComboBox.Location = new System.Drawing.Point(6, 22);
             this.targetComboBox.Name = "targetComboBox";
-            this.targetComboBox.Size = new System.Drawing.Size(76, 23);
+            this.targetComboBox.Size = new System.Drawing.Size(120, 23);
             this.targetComboBox.TabIndex = 2;
-            // 
-            // targetLabel
-            // 
-            this.targetLabel.AutoSize = true;
-            this.targetLabel.Location = new System.Drawing.Point(6, 51);
-            this.targetLabel.Name = "targetLabel";
-            this.targetLabel.Size = new System.Drawing.Size(39, 15);
-            this.targetLabel.TabIndex = 1;
-            this.targetLabel.Text = "Target";
+            this.targetComboBox.Text = "Target";
             // 
             // lightLabel3
             // 
-            this.lightLabel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lightLabel3.Location = new System.Drawing.Point(300, 19);
+            this.lightLabel3.BackColor = System.Drawing.Color.Black;
+            this.lightLabel3.Location = new System.Drawing.Point(336, 22);
+            this.lightLabel3.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.lightLabel3.Name = "lightLabel3";
-            this.lightLabel3.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel3.Size = new System.Drawing.Size(64, 64);
             this.lightLabel3.TabIndex = 0;
             // 
             // lightLabel2
             // 
-            this.lightLabel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lightLabel2.Location = new System.Drawing.Point(194, 19);
+            this.lightLabel2.BackColor = System.Drawing.Color.Black;
+            this.lightLabel2.Location = new System.Drawing.Point(272, 22);
+            this.lightLabel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.lightLabel2.Name = "lightLabel2";
-            this.lightLabel2.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel2.Size = new System.Drawing.Size(64, 64);
             this.lightLabel2.TabIndex = 0;
             // 
             // lightLabel1
             // 
-            this.lightLabel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lightLabel1.Location = new System.Drawing.Point(88, 19);
+            this.lightLabel1.BackColor = System.Drawing.Color.Black;
+            this.lightLabel1.Location = new System.Drawing.Point(208, 22);
+            this.lightLabel1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.lightLabel1.Name = "lightLabel1";
-            this.lightLabel1.Size = new System.Drawing.Size(100, 76);
+            this.lightLabel1.Size = new System.Drawing.Size(64, 64);
             this.lightLabel1.TabIndex = 0;
             // 
             // eventsGroupBox
@@ -414,7 +418,7 @@ namespace MirishitaMusicPlayer.Forms
             this.eventsGroupBox.Controls.Add(this.eventLabelPanel);
             this.eventsGroupBox.Location = new System.Drawing.Point(3, 3);
             this.eventsGroupBox.Name = "eventsGroupBox";
-            this.eventsGroupBox.Size = new System.Drawing.Size(406, 141);
+            this.eventsGroupBox.Size = new System.Drawing.Size(406, 145);
             this.eventsGroupBox.TabIndex = 0;
             this.eventsGroupBox.TabStop = false;
             this.eventsGroupBox.Text = "Events";
@@ -424,7 +428,7 @@ namespace MirishitaMusicPlayer.Forms
             this.eventLabelPanel.AutoScroll = true;
             this.eventLabelPanel.Location = new System.Drawing.Point(6, 22);
             this.eventLabelPanel.Name = "eventLabelPanel";
-            this.eventLabelPanel.Size = new System.Drawing.Size(394, 113);
+            this.eventLabelPanel.Size = new System.Drawing.Size(394, 117);
             this.eventLabelPanel.TabIndex = 0;
             // 
             // PlayerForm
@@ -458,7 +462,6 @@ namespace MirishitaMusicPlayer.Forms
             this.extrasPanel.PerformLayout();
             this.extrasSecondPanel.ResumeLayout(false);
             this.lightsGroupBox.ResumeLayout(false);
-            this.lightsGroupBox.PerformLayout();
             this.eventsGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -478,7 +481,7 @@ namespace MirishitaMusicPlayer.Forms
         private System.Windows.Forms.Button toggleBgmButton;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button toggleVoicesButton;
-        private System.Windows.Forms.Button ResetButton;
+        private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.TrackBar volumeTrackBar;
         private System.Windows.Forms.Label volumeLabel;
@@ -499,5 +502,6 @@ namespace MirishitaMusicPlayer.Forms
         private System.Windows.Forms.Label targetLabel;
         private System.Windows.Forms.ComboBox targetComboBox;
         private System.Windows.Forms.Button showAllLightsButton;
+        private System.Windows.Forms.Button openRgbSettingsButton;
     }
 }
