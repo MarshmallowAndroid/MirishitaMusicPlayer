@@ -196,6 +196,7 @@ namespace MirishitaMusicPlayer.Forms
             #endregion
         }
 
+        #region Form loading and unloading
         protected override CreateParams CreateParams
         {
             get
@@ -234,6 +235,7 @@ namespace MirishitaMusicPlayer.Forms
 
             faceVisualizer.Dispose();
         }
+        #endregion
 
         #region Scenario player events
         private void UpdateMute(byte[] mutes)
