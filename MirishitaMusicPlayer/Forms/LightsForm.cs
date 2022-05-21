@@ -17,7 +17,8 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class LightsForm : Form
     {
-        Dictionary<int, LightTarget> lightTargets = new();
+        private readonly Dictionary<int, LightTarget> lightTargets = new();
+        private readonly int targetsPerRow;
 
         private readonly ScenarioPlayer _scenarioPlayer;
 
@@ -48,6 +49,10 @@ namespace MirishitaMusicPlayer.Forms
 
             scenarioPlayer.LightsChanged += ScenarioPlayer_LightsChanged;
             _scenarioPlayer = scenarioPlayer;
+
+            targetsPerRow = (int)Math.Ceiling(lightTargets.Count / 2f);
+            Width = (targetsPerRow * 64) + 40 + 1;
+            Height = 40 + targetsPanel.Top + 512 + 10 + 1;
         }
 
         private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
@@ -80,6 +85,11 @@ namespace MirishitaMusicPlayer.Forms
             {
                 item.Value.HideLabel = !checkBox.Checked;
             }
+
+            int rows = (int)Math.Ceiling((float)lightTargets.Count / targetsPerRow);
+            int hideDifference = (rows * 64);
+
+            Height = checkBox.Checked ? Height -= hideDifference : Height += hideDifference;
         }
     }
 }

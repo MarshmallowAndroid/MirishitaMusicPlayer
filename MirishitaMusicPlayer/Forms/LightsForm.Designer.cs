@@ -40,7 +40,7 @@
             this.targetsPanel.AutoScroll = true;
             this.targetsPanel.Location = new System.Drawing.Point(12, 37);
             this.targetsPanel.Name = "targetsPanel";
-            this.targetsPanel.Size = new System.Drawing.Size(817, 546);
+            this.targetsPanel.Size = new System.Drawing.Size(769, 546);
             this.targetsPanel.TabIndex = 0;
             // 
             // hideLabelsCheckBox
@@ -58,7 +58,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(841, 595);
+            this.ClientSize = new System.Drawing.Size(793, 595);
             this.Controls.Add(this.hideLabelsCheckBox);
             this.Controls.Add(this.targetsPanel);
             this.Name = "LightsForm";
