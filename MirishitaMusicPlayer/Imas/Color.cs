@@ -18,7 +18,7 @@ namespace MirishitaMusicPlayer.Imas
 
         public System.Drawing.Color ToColor()
         {
-            int a = (int)Math.Clamp(255 * A, 0, 255);
+            int a = 255;
             int r = (int)Math.Clamp(255 * R, 0, 255);
             int g = (int)Math.Clamp(255 * G, 0, 255);
             int b = (int)Math.Clamp(255 * B, 0, 255);
