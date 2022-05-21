@@ -229,6 +229,7 @@ namespace MirishitaMusicPlayer.Forms
 
             songMixer.Dispose();
 
+            scenarioPlayer.SongStopped -= Stop;
             scenarioPlayer.Stop();
 
             extrasShowTimer.Stop();
