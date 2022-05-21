@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MirishitaMusicPlayer.Animation
+namespace MirishitaMusicPlayer.Common
 {
     public class LightPayload
     {

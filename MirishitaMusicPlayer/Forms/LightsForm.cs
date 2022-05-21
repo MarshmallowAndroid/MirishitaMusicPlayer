@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MirishitaMusicPlayer.Animation;
 using MirishitaMusicPlayer.Common;
 using OpenRGB.NET;
 using OpenRGB.NET.Models;

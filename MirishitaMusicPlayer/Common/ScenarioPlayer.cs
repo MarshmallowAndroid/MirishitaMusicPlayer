@@ -1,5 +1,4 @@
-﻿using MirishitaMusicPlayer.Animation;
-using MirishitaMusicPlayer.Audio;
+﻿using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Imas;
 using NAudio.Wave;
 using System;
