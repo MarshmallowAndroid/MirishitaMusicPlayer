@@ -132,6 +132,7 @@
             // 
             // volumeLabel
             // 
+            this.volumeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.volumeLabel.AutoSize = true;
             this.volumeLabel.Location = new System.Drawing.Point(561, 15);
             this.volumeLabel.Name = "volumeLabel";
