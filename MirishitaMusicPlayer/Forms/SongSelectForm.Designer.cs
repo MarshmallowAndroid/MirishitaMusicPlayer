@@ -80,7 +80,7 @@
             this.jacketsPanel.AutoScroll = true;
             this.jacketsPanel.Location = new System.Drawing.Point(12, 74);
             this.jacketsPanel.Name = "jacketsPanel";
-            this.jacketsPanel.Size = new System.Drawing.Size(959, 554);
+            this.jacketsPanel.Size = new System.Drawing.Size(960, 555);
             this.jacketsPanel.TabIndex = 8;
             // 
             // availableSongsLabel
@@ -95,7 +95,7 @@
             // updateDatabaseButton
             // 
             this.updateDatabaseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.updateDatabaseButton.Location = new System.Drawing.Point(859, 11);
+            this.updateDatabaseButton.Location = new System.Drawing.Point(860, 11);
             this.updateDatabaseButton.Name = "updateDatabaseButton";
             this.updateDatabaseButton.Size = new System.Drawing.Size(112, 23);
             this.updateDatabaseButton.TabIndex = 6;
@@ -105,6 +105,8 @@
             // 
             // progressBar
             // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(339, 12);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(216, 23);
@@ -119,6 +121,7 @@
             // 
             // volumeTrackBar
             // 
+            this.volumeTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.volumeTrackBar.Location = new System.Drawing.Point(614, 12);
             this.volumeTrackBar.Maximum = 100;
             this.volumeTrackBar.Name = "volumeTrackBar";
@@ -141,7 +144,7 @@
             this.AcceptButton = this.getSongJacketsButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(983, 640);
+            this.ClientSize = new System.Drawing.Size(984, 641);
             this.Controls.Add(this.volumeLabel);
             this.Controls.Add(this.volumeTrackBar);
             this.Controls.Add(this.progressBar);
