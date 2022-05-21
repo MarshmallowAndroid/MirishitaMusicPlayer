@@ -56,17 +56,14 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
         {
-            if (!closing || !IsDisposed)
+            TryInvoke(() =>
             {
-                Invoke(() =>
-                {
-                    lightTargets[lightPayload.Target].UpdateColors(
-                        lightPayload.Color,
-                        lightPayload.Color2,
-                        lightPayload.Color3,
-                        lightPayload.Duration);
-                });
-            }
+                lightTargets[lightPayload.Target].UpdateColors(
+                    lightPayload.Color,
+                    lightPayload.Color2,
+                    lightPayload.Color3,
+                    lightPayload.Duration);
+            });
         }
 
         private void LightsForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -89,6 +86,17 @@ namespace MirishitaMusicPlayer.Forms
             int hideDifference = (rows * 64);
 
             Height = checkBox.Checked ? Height -= hideDifference : Height += hideDifference;
+        }
+
+        private void TryInvoke(Action action)
+        {
+            try
+            {
+                Invoke(action);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
