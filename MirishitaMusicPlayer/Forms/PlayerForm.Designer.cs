@@ -499,7 +499,6 @@ namespace MirishitaMusicPlayer.Forms
         private LightLabel lightLabel1;
         private LightLabel lightLabel3;
         private LightLabel lightLabel2;
-        private System.Windows.Forms.Label targetLabel;
         private System.Windows.Forms.ComboBox targetComboBox;
         private System.Windows.Forms.Button showAllLightsButton;
         private System.Windows.Forms.Button openRgbSettingsButton;
