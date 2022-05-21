@@ -15,7 +15,7 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
 
         public LightLabel() : base()
         {
-            colorAnimator = new(BackColor);
+            colorAnimator = new(Color.Black);
             colorAnimator.ValueAnimate += ColorAnimator_ValueAnimate;
         }
 
