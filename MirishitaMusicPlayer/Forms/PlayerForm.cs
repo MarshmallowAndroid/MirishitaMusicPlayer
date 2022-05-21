@@ -4,6 +4,7 @@ using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
+using OpenRGB.NET;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,7 +40,7 @@ namespace MirishitaMusicPlayer.Forms
         #region Animation variables
         private readonly System.Timers.Timer extrasShowTimer;
 
-        private EasingFunctions.EasingFunction easingFunction = EasingFunctions.EaseInOutQuart;
+        private readonly EasingFunctions.EasingFunction easingFunction = EasingFunctions.EaseInOutQuart;
 
         private bool extrasShown = false;
         private bool horizontalAnimationDone = false;
@@ -52,13 +53,15 @@ namespace MirishitaMusicPlayer.Forms
         private int currentTop;
         #endregion
 
+        private IOpenRGBClient rgbClient;
+
         public PlayerForm(Song selectedSong)
         {
             InitializeComponent();
 
             /* Sizes:
              *  Width:
-             *      Normal: 440
+             *      Normal: 452
              *      Extras shown: 900
              *  Height:
              *      Normal: 460
@@ -324,6 +327,11 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         #region Player controls
+        private void OpenRgbSettingsButton_Click(object sender, EventArgs e)
+        {
+            new RgbSettingsForm(rgbClient).Show();
+        }
+
         private void PlayButton_Click(object sender, EventArgs e)
         {
             if (outputDevice.PlaybackState == PlaybackState.Playing)

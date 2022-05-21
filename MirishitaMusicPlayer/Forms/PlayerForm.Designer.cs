@@ -363,9 +363,9 @@ namespace MirishitaMusicPlayer.Forms
             this.openRgbSettingsButton.Name = "openRgbSettingsButton";
             this.openRgbSettingsButton.Size = new System.Drawing.Size(120, 35);
             this.openRgbSettingsButton.TabIndex = 3;
-            this.openRgbSettingsButton.Text = "OpenRGB settings...";
+            this.openRgbSettingsButton.Text = "RGB settings...";
             this.openRgbSettingsButton.UseVisualStyleBackColor = true;
-            this.openRgbSettingsButton.Click += new System.EventHandler(this.ShowAllLightsButton_Click);
+            this.openRgbSettingsButton.Click += new System.EventHandler(this.OpenRgbSettingsButton_Click);
             // 
             // showAllLightsButton
             // 
