@@ -75,14 +75,14 @@
             this.colorComboBox.FormattingEnabled = true;
             this.colorComboBox.Location = new System.Drawing.Point(326, 12);
             this.colorComboBox.Name = "colorComboBox";
-            this.colorComboBox.Size = new System.Drawing.Size(121, 23);
+            this.colorComboBox.Size = new System.Drawing.Size(119, 23);
             this.colorComboBox.TabIndex = 3;
             this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.ColorComboBox_SelectedIndexChanged);
             // 
             // targetLabel
             // 
             this.targetLabel.AutoSize = true;
-            this.targetLabel.Location = new System.Drawing.Point(453, 15);
+            this.targetLabel.Location = new System.Drawing.Point(12, 68);
             this.targetLabel.Name = "targetLabel";
             this.targetLabel.Size = new System.Drawing.Size(89, 15);
             this.targetLabel.TabIndex = 4;
@@ -90,7 +90,7 @@
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(12, 96);
+            this.connectButton.Location = new System.Drawing.Point(12, 165);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(75, 23);
             this.connectButton.TabIndex = 6;
@@ -100,7 +100,7 @@
             // 
             // disconnectButton
             // 
-            this.disconnectButton.Location = new System.Drawing.Point(174, 96);
+            this.disconnectButton.Location = new System.Drawing.Point(174, 165);
             this.disconnectButton.Name = "disconnectButton";
             this.disconnectButton.Size = new System.Drawing.Size(75, 23);
             this.disconnectButton.TabIndex = 6;
@@ -110,7 +110,7 @@
             // 
             // refreshButton
             // 
-            this.refreshButton.Location = new System.Drawing.Point(93, 96);
+            this.refreshButton.Location = new System.Drawing.Point(93, 165);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
             this.refreshButton.TabIndex = 7;
@@ -121,7 +121,7 @@
             // targetComboBox
             // 
             this.targetComboBox.FormattingEnabled = true;
-            this.targetComboBox.Location = new System.Drawing.Point(548, 12);
+            this.targetComboBox.Location = new System.Drawing.Point(107, 65);
             this.targetComboBox.Name = "targetComboBox";
             this.targetComboBox.Size = new System.Drawing.Size(108, 23);
             this.targetComboBox.TabIndex = 8;
@@ -135,7 +135,7 @@
             "Color",
             "Color2",
             "Color3"});
-            this.colorSourceComboBox.Location = new System.Drawing.Point(548, 41);
+            this.colorSourceComboBox.Location = new System.Drawing.Point(107, 94);
             this.colorSourceComboBox.Name = "colorSourceComboBox";
             this.colorSourceComboBox.Size = new System.Drawing.Size(108, 23);
             this.colorSourceComboBox.TabIndex = 8;
@@ -144,7 +144,7 @@
             // colorSourceLabel
             // 
             this.colorSourceLabel.AutoSize = true;
-            this.colorSourceLabel.Location = new System.Drawing.Point(468, 44);
+            this.colorSourceLabel.Location = new System.Drawing.Point(12, 97);
             this.colorSourceLabel.Name = "colorSourceLabel";
             this.colorSourceLabel.Size = new System.Drawing.Size(74, 15);
             this.colorSourceLabel.TabIndex = 4;
@@ -154,7 +154,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(668, 131);
+            this.ClientSize = new System.Drawing.Size(457, 200);
             this.Controls.Add(this.colorSourceComboBox);
             this.Controls.Add(this.targetComboBox);
             this.Controls.Add(this.refreshButton);
