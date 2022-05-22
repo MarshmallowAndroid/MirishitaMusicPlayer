@@ -13,8 +13,6 @@ namespace MirishitaMusicPlayer.Rgb
 {
     public class RgbManager
     {
-        //public 
-
         public RgbManager()
         {
 
@@ -59,11 +57,6 @@ namespace MirishitaMusicPlayer.Rgb
 
             RgbClient.Dispose();
             RgbClient = null;
-        }
-
-        public void LoadControllerConfiguration(ControllerConfiguration configuration)
-        {
-            ControllerConfigurations[configuration.ControllerId] = configuration;
         }
 
         public void UpdateRgb(LightPayload lightPayload)
