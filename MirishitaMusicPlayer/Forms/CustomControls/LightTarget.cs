@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MirishitaMusicPlayer.Animation;
 using MirishitaMusicPlayer.Imas;
-using Color = MirishitaMusicPlayer.Imas.Color;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -62,9 +61,9 @@ namespace MirishitaMusicPlayer.Forms
         }
 
         public void UpdateColors(
-            Color color1,
-            Color color2,
-            Color color3,
+            ColorRGBA color1,
+            ColorRGBA color2,
+            ColorRGBA color3,
             float duration)
         {
             lightLabel1.FadeBackColor(color1?.ToColor() ?? System.Drawing.Color.Black, duration);
