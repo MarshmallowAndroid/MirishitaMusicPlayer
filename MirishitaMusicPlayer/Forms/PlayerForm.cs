@@ -56,7 +56,7 @@ namespace MirishitaMusicPlayer.Forms
         private int currentTop;
         #endregion
 
-        private readonly RgbManager rgbManager = new();
+        private readonly RgbManager rgbManager = Program.RgbManager;
 
         public PlayerForm(Song selectedSong)
         {

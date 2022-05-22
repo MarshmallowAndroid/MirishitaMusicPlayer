@@ -5,6 +5,7 @@ using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms;
 using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Net.TDAssets;
+using MirishitaMusicPlayer.Rgb;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace MirishitaMusicPlayer
         public static readonly string JacketsPath = Path.Combine(CachePath, "Songs");
         public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
         public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
+        public static readonly RgbManager RgbManager = new();
 
         [STAThread]
         private static void Main(string[] args)
