@@ -32,13 +32,13 @@
 
         public int On2 { get; set; }
 
-        public Color Col { get; set; }
+        public ColorRGBA Col { get; set; }
 
-        public Color Col2 { get; set; }
+        public ColorRGBA Col2 { get; set; }
 
-        public Color Col3 { get; set; }
+        public ColorRGBA Col3 { get; set; }
 
-        public Color[] Cols { get; set; }
+        public ColorRGBA[] Cols { get; set; }
 
         public int Trig { get; set; }
 
@@ -56,7 +56,7 @@
 
         public float EyeY { get; set; }
 
-        public object[] Formation { get; set; }
+        public Vector4f[] Formation { get; set; }
 
         public byte Appeal { get; set; }
 
@@ -69,6 +69,10 @@
         public byte Talking { get; set; }
 
         public byte Delay { get; set; }
+
+        public int[] ClRatio { get; set; }
+
+        public int[] ClCols { get; set; }
 
         public int SeekFrame { get; set; }
 
