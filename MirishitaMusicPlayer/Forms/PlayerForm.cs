@@ -3,8 +3,10 @@ using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.Properties;
+using MirishitaMusicPlayer.Rgb;
 using NAudio.Wave;
 using OpenRGB.NET;
+using OpenRGB.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -36,6 +38,7 @@ namespace MirishitaMusicPlayer.Forms
         private readonly int defaultHeight = 460;
 
         private Form lightsForm;
+        private Form rgbSettingsForm;
 
         #region Animation variables
         private readonly System.Timers.Timer extrasShowTimer;
@@ -53,7 +56,11 @@ namespace MirishitaMusicPlayer.Forms
         private int currentTop;
         #endregion
 
-        private IOpenRGBClient rgbClient;
+        private readonly RgbManager rgbManager = new();
+
+        //private IOpenRGBClient rgbClient = new OpenRGBClient(name: "Mirishita Music Player");
+        //private Device rgbDevice;
+        //private readonly ColorAnimator colorAnimator;
 
         public PlayerForm(Song selectedSong)
         {
@@ -197,7 +204,20 @@ namespace MirishitaMusicPlayer.Forms
             };
             extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
             #endregion
+
+            //rgbDevice = rgbClient.GetControllerData(0);
+            //colorAnimator = new(System.Drawing.Color.Black);
+            //colorAnimator.ValueAnimate += UpdateRgb;
         }
+
+        //private void UpdateRgb(IAnimator<System.Drawing.Color> sender, System.Drawing.Color value)
+        //{
+        //    rgbDevice.Colors[0].R = value.R;
+        //    rgbDevice.Colors[0].G = value.G;
+        //    rgbDevice.Colors[0].B = value.B;
+
+        //    rgbClient.UpdateLeds(0, rgbDevice.Colors);
+        //}
 
         #region Form loading and unloading
         protected override CreateParams CreateParams
@@ -236,6 +256,7 @@ namespace MirishitaMusicPlayer.Forms
             extrasShowTimer.Dispose();
 
             lightsForm?.Dispose();
+            rgbSettingsForm?.Dispose();
 
             faceVisualizer.Dispose();
         }
@@ -299,12 +320,12 @@ namespace MirishitaMusicPlayer.Forms
                     }
                 }
 
-                        if (lightPayload.Color3 != null)
-                            lightLabel3.FadeBackColor(lightPayload.Color3.ToColor(), lightPayload.Duration);
-                        else
-                            lightLabel3.Visible = false;
-                    }
-                }
+                rgbManager.UpdateRgb(lightPayload);
+
+                //if (lightPayload.Target == 11)
+                //{
+                //    colorAnimator.Animate(lightPayload.Color.ToColor(), lightPayload.Duration);
+                //}
             });
         }
 
@@ -323,10 +344,25 @@ namespace MirishitaMusicPlayer.Forms
         }
         #endregion
 
-        #region Player controls
+        #region Player buttons
         private void OpenRgbSettingsButton_Click(object sender, EventArgs e)
         {
-            new RgbSettingsForm(rgbClient).Show();
+            if (rgbSettingsForm == null)
+            {
+                rgbSettingsForm = new RgbSettingsForm(rgbManager);
+                rgbSettingsForm.FormClosed += (s, e) => rgbSettingsForm = null;
+                rgbSettingsForm.Show();
+            }
+        }
+
+        private void ShowAllLightsButton_Click(object sender, EventArgs e)
+        {
+            if (lightsForm == null)
+            {
+                lightsForm = new LightsForm(song, scenarioPlayer);
+                lightsForm.FormClosed += (s, e) => lightsForm = null;
+                lightsForm.Show();
+            }
         }
 
         private void PlayButton_Click(object sender, EventArgs e)
@@ -387,16 +423,6 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         #region Animation functions
-        private void ShowAllLightsButton_Click(object sender, EventArgs e)
-        {
-            if (lightsForm == null)
-            {
-                lightsForm = new LightsForm(song, scenarioPlayer);
-                lightsForm.FormClosed += (s, e) => lightsForm = null;
-                lightsForm.Show();
-            }
-        }
-
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
             if (extrasShown)
