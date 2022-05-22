@@ -342,6 +342,8 @@ namespace MirishitaMusicPlayer.Forms
                 rgbSettingsForm.FormClosed += (s, e) => rgbSettingsForm = null;
                 rgbSettingsForm.Show();
             }
+            else
+                rgbSettingsForm.Focus();
         }
 
         private void ShowAllLightsButton_Click(object sender, EventArgs e)
@@ -352,6 +354,8 @@ namespace MirishitaMusicPlayer.Forms
                 lightsForm.FormClosed += (s, e) => lightsForm = null;
                 lightsForm.Show();
             }
+            else
+                lightsForm.Focus();
         }
         #endregion
 
