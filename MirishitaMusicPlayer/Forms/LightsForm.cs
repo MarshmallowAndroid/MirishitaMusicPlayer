@@ -21,8 +21,6 @@ namespace MirishitaMusicPlayer.Forms
 
         private readonly ScenarioPlayer _scenarioPlayer;
 
-        private bool closing = false;
-
         public LightsForm(Song song, ScenarioPlayer scenarioPlayer)
         {
             InitializeComponent();
@@ -69,8 +67,6 @@ namespace MirishitaMusicPlayer.Forms
         private void LightsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _scenarioPlayer.LightsChanged -= ScenarioPlayer_LightsChanged;
-
-            closing = true;
         }
 
         private void HideLabelsCheckBox_CheckedChanged(object sender, EventArgs e)
