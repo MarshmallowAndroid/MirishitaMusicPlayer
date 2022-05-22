@@ -333,7 +333,7 @@ namespace MirishitaMusicPlayer.Forms
             if (rgbSettingsForm == null)
             {
                 List<int> targets = new();
-                for (int i = 2; i < targetComboBox.Items.Count - 2; i++)
+                for (int i = 2; i < targetComboBox.Items.Count; i++)
                 {
                     targets.Add((int)targetComboBox.Items[i]);
                 }

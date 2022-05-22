@@ -24,12 +24,12 @@ namespace MirishitaMusicPlayer.Forms
 
             manager = rgbManager;
 
-            RefreshDevices();
-
             foreach (var item in targets)
             {
                 targetComboBox.Items.Add(item);
             }
+
+            RefreshDevices();
         }
 
         private void RefreshDevices()
@@ -71,7 +71,7 @@ namespace MirishitaMusicPlayer.Forms
             currentColorConfiguration = colorConfiguration;
 
             targetComboBox.SelectedItem = colorConfiguration.PreferredTarget;
-            colorSourceComboBox.SelectedItem = colorConfiguration.PreferredSource;
+            colorSourceComboBox.SelectedIndex = colorConfiguration.PreferredSource;
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
