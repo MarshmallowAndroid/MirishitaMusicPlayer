@@ -9,11 +9,11 @@ namespace MirishitaMusicPlayer.Common
 {
     public class LightPayload
     {
-        public Color Color { get; set; }
+        public ColorRGBA Color { get; set; }
 
-        public Color Color2 { get; set; }
+        public ColorRGBA Color2 { get; set; }
 
-        public Color Color3 { get; set; }
+        public ColorRGBA Color3 { get; set; }
 
         public int Target { get; set; }
 

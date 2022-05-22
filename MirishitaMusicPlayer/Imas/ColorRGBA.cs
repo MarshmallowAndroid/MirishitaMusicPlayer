@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer.Imas
 {
-    public class Color
+    public class ColorRGBA
     {
         public float A { get; set; }
 
@@ -16,7 +17,7 @@ namespace MirishitaMusicPlayer.Imas
 
         public float B { get; set; }
 
-        public System.Drawing.Color ToColor()
+        public Color ToColor()
         {
             int a = 255;
             int r = (int)Math.Clamp(255 * R, 0, 255);
