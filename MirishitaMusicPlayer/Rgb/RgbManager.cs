@@ -70,7 +70,23 @@ namespace MirishitaMusicPlayer.Rgb
                 {
                     if (lightPayload.Target == color.PreferredTarget)
                     {
-                        color.AnimateColor(lightPayload.Color.ToColor(), lightPayload.Duration);
+                        System.Drawing.Color colorFromSource;
+
+                        switch (color.PreferredSource)
+                        {
+                            case 1:
+                                colorFromSource = lightPayload.Color2.ToColor();
+                                break;
+                            case 2:
+                                colorFromSource = lightPayload.Color3.ToColor();
+                                break;
+                            default:
+                                colorFromSource = lightPayload.Color.ToColor();
+                                break;
+                        }
+
+
+                        color.AnimateColor(colorFromSource, lightPayload.Duration);
                     }
                 }
             }
@@ -131,6 +147,8 @@ namespace MirishitaMusicPlayer.Rgb
         public int ColorIndex { get; }
 
         public int PreferredTarget { get; set; } = 0;
+
+        public int PreferredSource { get; set; } = 0;
 
         public void AnimateColor(System.Drawing.Color color, float duration)
         {

@@ -332,7 +332,13 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (rgbSettingsForm == null)
             {
-                rgbSettingsForm = new RgbSettingsForm(rgbManager);
+                List<int> targets = new();
+                for (int i = 2; i < targetComboBox.Items.Count - 2; i++)
+                {
+                    targets.Add((int)targetComboBox.Items[i]);
+                }
+
+                rgbSettingsForm = new RgbSettingsForm(rgbManager, targets);
                 rgbSettingsForm.FormClosed += (s, e) => rgbSettingsForm = null;
                 rgbSettingsForm.Show();
             }

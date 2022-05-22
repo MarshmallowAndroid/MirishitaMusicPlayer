@@ -33,11 +33,12 @@
             this.colorLabel = new System.Windows.Forms.Label();
             this.colorComboBox = new System.Windows.Forms.ComboBox();
             this.targetLabel = new System.Windows.Forms.Label();
-            this.targetUpDown = new System.Windows.Forms.NumericUpDown();
             this.connectButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.refreshButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.targetUpDown)).BeginInit();
+            this.targetComboBox = new System.Windows.Forms.ComboBox();
+            this.colorSourceComboBox = new System.Windows.Forms.ComboBox();
+            this.colorSourceLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // deviceComboBox
@@ -87,14 +88,6 @@
             this.targetLabel.TabIndex = 4;
             this.targetLabel.Text = "Preferred target";
             // 
-            // targetUpDown
-            // 
-            this.targetUpDown.Location = new System.Drawing.Point(548, 13);
-            this.targetUpDown.Name = "targetUpDown";
-            this.targetUpDown.Size = new System.Drawing.Size(108, 23);
-            this.targetUpDown.TabIndex = 5;
-            this.targetUpDown.ValueChanged += new System.EventHandler(this.TargetUpDown_ValueChanged);
-            // 
             // connectButton
             // 
             this.connectButton.Location = new System.Drawing.Point(12, 96);
@@ -125,25 +118,59 @@
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
             // 
+            // targetComboBox
+            // 
+            this.targetComboBox.FormattingEnabled = true;
+            this.targetComboBox.Location = new System.Drawing.Point(548, 12);
+            this.targetComboBox.Name = "targetComboBox";
+            this.targetComboBox.Size = new System.Drawing.Size(108, 23);
+            this.targetComboBox.TabIndex = 8;
+            this.targetComboBox.SelectedIndexChanged += new System.EventHandler(this.TargetComboBox_SelectedIndexChanged);
+            // 
+            // colorSourceComboBox
+            // 
+            this.colorSourceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.colorSourceComboBox.FormattingEnabled = true;
+            this.colorSourceComboBox.Items.AddRange(new object[] {
+            "Color",
+            "Color2",
+            "Color3"});
+            this.colorSourceComboBox.Location = new System.Drawing.Point(548, 41);
+            this.colorSourceComboBox.Name = "colorSourceComboBox";
+            this.colorSourceComboBox.Size = new System.Drawing.Size(108, 23);
+            this.colorSourceComboBox.TabIndex = 8;
+            this.colorSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.ColorSourceComboBox_SelectedIndexChanged);
+            // 
+            // colorSourceLabel
+            // 
+            this.colorSourceLabel.AutoSize = true;
+            this.colorSourceLabel.Location = new System.Drawing.Point(468, 44);
+            this.colorSourceLabel.Name = "colorSourceLabel";
+            this.colorSourceLabel.Size = new System.Drawing.Size(74, 15);
+            this.colorSourceLabel.TabIndex = 4;
+            this.colorSourceLabel.Text = "Color source";
+            // 
             // RgbSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(668, 131);
+            this.Controls.Add(this.colorSourceComboBox);
+            this.Controls.Add(this.targetComboBox);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.connectButton);
-            this.Controls.Add(this.targetUpDown);
+            this.Controls.Add(this.colorSourceLabel);
             this.Controls.Add(this.targetLabel);
             this.Controls.Add(this.colorComboBox);
             this.Controls.Add(this.colorLabel);
             this.Controls.Add(this.deviceLabel);
             this.Controls.Add(this.deviceComboBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "RgbSettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RGB Settings";
-            ((System.ComponentModel.ISupportInitialize)(this.targetUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,9 +183,11 @@
         private System.Windows.Forms.Label colorLabel;
         private System.Windows.Forms.ComboBox colorComboBox;
         private System.Windows.Forms.Label targetLabel;
-        private System.Windows.Forms.NumericUpDown targetUpDown;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.Button refreshButton;
+        private System.Windows.Forms.ComboBox targetComboBox;
+        private System.Windows.Forms.ComboBox colorSourceComboBox;
+        private System.Windows.Forms.Label colorSourceLabel;
     }
 }

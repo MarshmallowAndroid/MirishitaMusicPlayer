@@ -18,13 +18,18 @@ namespace MirishitaMusicPlayer.Forms
         RgbManager manager;
         ColorConfiguration currentColorConfiguration;
 
-        public RgbSettingsForm(RgbManager rgbManager)
+        public RgbSettingsForm(RgbManager rgbManager, List<int> targets)
         {
             InitializeComponent();
 
             manager = rgbManager;
 
             RefreshDevices();
+
+            foreach (var item in targets)
+            {
+                targetComboBox.Items.Add(item);
+            }
         }
 
         private void RefreshDevices()
@@ -61,18 +66,12 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ColorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-            ColorConfiguration colorConfiguration = comboBox.SelectedItem as ColorConfiguration;
+            ColorConfiguration colorConfiguration = colorComboBox.SelectedItem as ColorConfiguration;
 
             currentColorConfiguration = colorConfiguration;
 
-            targetUpDown.Value = colorConfiguration.PreferredTarget;
-        }
-
-        private void TargetUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (currentColorConfiguration != null)
-                currentColorConfiguration.PreferredTarget = (int)targetUpDown.Value;
+            targetComboBox.SelectedItem = colorConfiguration.PreferredTarget;
+            colorSourceComboBox.SelectedItem = colorConfiguration.PreferredSource;
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -92,6 +91,18 @@ namespace MirishitaMusicPlayer.Forms
 
             deviceComboBox.Items.Clear();
             colorComboBox.Items.Clear();
+        }
+
+        private void TargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (currentColorConfiguration != null)
+                currentColorConfiguration.PreferredTarget = (int)targetComboBox.SelectedItem;
+        }
+
+        private void ColorSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (currentColorConfiguration != null)
+                currentColorConfiguration.PreferredSource = colorSourceComboBox.SelectedIndex;
         }
     }
 }
