@@ -58,10 +58,6 @@ namespace MirishitaMusicPlayer.Forms
 
         private readonly RgbManager rgbManager = new();
 
-        //private IOpenRGBClient rgbClient = new OpenRGBClient(name: "Mirishita Music Player");
-        //private Device rgbDevice;
-        //private readonly ColorAnimator colorAnimator;
-
         public PlayerForm(Song selectedSong)
         {
             InitializeComponent();
@@ -204,20 +200,7 @@ namespace MirishitaMusicPlayer.Forms
             };
             extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
             #endregion
-
-            //rgbDevice = rgbClient.GetControllerData(0);
-            //colorAnimator = new(System.Drawing.Color.Black);
-            //colorAnimator.ValueAnimate += UpdateRgb;
         }
-
-        //private void UpdateRgb(IAnimator<System.Drawing.Color> sender, System.Drawing.Color value)
-        //{
-        //    rgbDevice.Colors[0].R = value.R;
-        //    rgbDevice.Colors[0].G = value.G;
-        //    rgbDevice.Colors[0].B = value.B;
-
-        //    rgbClient.UpdateLeds(0, rgbDevice.Colors);
-        //}
 
         #region Form loading and unloading
         protected override CreateParams CreateParams
@@ -344,7 +327,7 @@ namespace MirishitaMusicPlayer.Forms
         }
         #endregion
 
-        #region Player buttons
+        #region Player extras
         private void OpenRgbSettingsButton_Click(object sender, EventArgs e)
         {
             if (rgbSettingsForm == null)
@@ -364,7 +347,9 @@ namespace MirishitaMusicPlayer.Forms
                 lightsForm.Show();
             }
         }
+        #endregion
 
+        #region Player controls
         private void PlayButton_Click(object sender, EventArgs e)
         {
             if (outputDevice.PlaybackState == PlaybackState.Playing)
@@ -422,7 +407,7 @@ namespace MirishitaMusicPlayer.Forms
         }
         #endregion
 
-        #region Animation functions
+        #region Extras animation
         private void ExtrasShowTimer_Tick(object sender, EventArgs e)
         {
             if (extrasShown)
