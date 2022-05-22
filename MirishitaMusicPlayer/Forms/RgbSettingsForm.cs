@@ -1,4 +1,6 @@
-﻿using OpenRGB.NET;
+﻿using MirishitaMusicPlayer.Rgb;
+using OpenRGB.NET;
+using OpenRGB.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,13 +15,83 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class RgbSettingsForm : Form
     {
-        private readonly IOpenRGBClient client;
+        RgbManager manager;
+        ColorConfiguration currentColorConfiguration;
 
-        public RgbSettingsForm(IOpenRGBClient rgbClient)
+        public RgbSettingsForm(RgbManager rgbManager)
         {
             InitializeComponent();
 
-            client = rgbClient;
+            manager = rgbManager;
+
+            RefreshDevices();
+        }
+
+        private void RefreshDevices()
+        {
+            deviceComboBox.Items.Clear();
+
+            if (manager.ControllerConfigurations != null)
+            {
+                foreach (var device in manager.ControllerConfigurations)
+                {
+                    deviceComboBox.Items.Add(device);
+                }
+            }
+
+            if (deviceComboBox.Items.Count > 0)
+                deviceComboBox.SelectedIndex = 0;
+        }
+
+        private void DeviceComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            ControllerConfiguration selectedDevice = comboBox.SelectedItem as ControllerConfiguration;
+
+            colorComboBox.Items.Clear();
+
+            foreach (var item in selectedDevice.ColorConfigurations)
+            {
+                colorComboBox.Items.Add(item);
+            }
+
+            if (colorComboBox.Items.Count > 0)
+                colorComboBox.SelectedIndex = 0;
+        }
+
+        private void ColorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            ColorConfiguration colorConfiguration = comboBox.SelectedItem as ColorConfiguration;
+
+            currentColorConfiguration = colorConfiguration;
+
+            targetUpDown.Value = colorConfiguration.PreferredTarget;
+        }
+
+        private void TargetUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (currentColorConfiguration != null)
+                currentColorConfiguration.PreferredTarget = (int)targetUpDown.Value;
+        }
+
+        private void ConnectButton_Click(object sender, EventArgs e)
+        {
+            manager.Connect();
+            RefreshDevices();
+        }
+
+        private void RefreshButton_Click(object sender, EventArgs e)
+        {
+            RefreshDevices();
+        }
+
+        private void DisconnectButton_Click(object sender, EventArgs e)
+        {
+            manager.Disconnect();
+
+            deviceComboBox.Items.Clear();
+            colorComboBox.Items.Clear();
         }
     }
 }
