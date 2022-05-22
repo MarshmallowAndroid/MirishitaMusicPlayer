@@ -24,7 +24,7 @@ namespace MirishitaMusicPlayer.Rgb
 
         public void Connect()
         {
-            if (RgbClient == null)
+            if (RgbClient == null || !RgbClient.Connected)
             {
                 try
                 {
@@ -32,7 +32,7 @@ namespace MirishitaMusicPlayer.Rgb
                 }
                 catch (Exception)
                 {
-                    RgbClient.Dispose();
+                    RgbClient?.Dispose();
                     RgbClient = null;
 
                     MessageBox.Show("Could not connect to OpenRGB server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -161,7 +161,16 @@ namespace MirishitaMusicPlayer.Rgb
             rgbColor.G = value.G;
             rgbColor.B = value.B;
 
-            rgbClient.UpdateLeds(rgbDeviceId, rgbDevice.Colors);
+            if (rgbClient.Connected)
+            {
+                try
+                {
+                    rgbClient.UpdateLeds(rgbDeviceId, rgbDevice.Colors);
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         public override string ToString()
