@@ -1,8 +1,7 @@
 {
   "profiles": {
     "MirishitaMusicPlayer": {
-      "commandName": "Project",
-      "commandLineArgs": "loveig"
+      "commandName": "Project"
     }
   }
 }
