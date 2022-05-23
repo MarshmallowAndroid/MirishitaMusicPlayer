@@ -110,7 +110,7 @@ namespace MirishitaMusicPlayer.Common
             string scenarioFile,
             Song song,
             AssetsManager assetsManager,
-            ScenarioOrientation orientation = ScenarioOrientation.Tate)
+            ScenarioOrientation orientation = ScenarioOrientation.Yoko)
         {
             // Load scenarios and notes first
             assetsManager.LoadFiles(new[] { scenarioFile });
@@ -154,9 +154,9 @@ namespace MirishitaMusicPlayer.Common
         private List<EventScenarioData> FindScenarios(ScenarioType scenarioType)
         {
             // Figure out where the events are: in main scenario or orientation scenario?
-            Func<EventScenarioData, bool> expressionPredicate = new(s => s.Type == scenarioType);
-            List<EventScenarioData> scenarios = OrientationScenario.Scenario.Where(expressionPredicate).ToList();
-            if (scenarios.Count < 1) scenarios = MainScenario.Scenario.Where(expressionPredicate).ToList();
+            Func<EventScenarioData, bool> predicate = new(s => s.Type == scenarioType);
+            List<EventScenarioData> scenarios = OrientationScenario.Scenario.Where(predicate).ToList();
+            if (scenarios.Count < 1) scenarios = MainScenario.Scenario.Where(predicate).ToList();
 
             return scenarios;
         }
