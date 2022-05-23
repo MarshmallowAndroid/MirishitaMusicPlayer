@@ -74,7 +74,13 @@
 
         public int[] ClCols { get; set; }
 
+        public int CamCut { get; set; }
+
         public int SeekFrame { get; set; }
+
+        public float FValue { get; set; }
+
+        public float FValue2 { get; set; }
 
         public int Idol2 { get; set; }
 
