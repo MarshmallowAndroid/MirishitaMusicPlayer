@@ -161,7 +161,9 @@ namespace MirishitaMusicPlayer.Common
                 {
                     if (currentExpressionScenario.Type == ScenarioType.Expression)
                     {
-                        if (currentExpressionScenario.Idol == Idol && currentExpressionScenario.Layer == Layer)
+                        if ((currentExpressionScenario.Idol == Idol ||
+                            currentExpressionScenario.Idol == Idol + 100)
+                            && currentExpressionScenario.Layer == Layer)
                             ExpressionChanged?.Invoke(currentExpressionScenario.Param, currentExpressionScenario.EyeClose == 1);
                     }
 
@@ -199,7 +201,7 @@ namespace MirishitaMusicPlayer.Common
                         }
                     }
 
-                    ScenarioTriggered?.Invoke((int)currentMainScenario.Type);
+                    ScenarioTriggered?.Invoke(currentMainScenario);
 
                     if (mainScenarioIndex < mainScenario.Scenario.Count - 1) mainScenarioIndex++;
                     else break;
@@ -208,7 +210,7 @@ namespace MirishitaMusicPlayer.Common
 
                 while (secondsElapsed >= currentOrientScenario.AbsTime)
                 {
-                    ScenarioTriggered?.Invoke((int)currentOrientScenario.Type);
+                    ScenarioTriggered?.Invoke(currentOrientScenario);
 
                     if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
                     else break;
@@ -239,7 +241,7 @@ namespace MirishitaMusicPlayer.Common
         public delegate void LightsChangedEventHandler(LightPayload lightPayload);
         public event LightsChangedEventHandler LightsChanged;
 
-        public delegate void ScenarioTriggeredEventHandler(int type);
+        public delegate void ScenarioTriggeredEventHandler(EventScenarioData scenarioData);
         public event ScenarioTriggeredEventHandler ScenarioTriggered;
 
         public delegate void SongStoppedEventHandler();

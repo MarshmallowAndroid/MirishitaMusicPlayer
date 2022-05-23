@@ -2,6 +2,7 @@
 using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms.CustomControls;
+using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Properties;
 using MirishitaMusicPlayer.Rgb;
 using NAudio.Wave;
@@ -312,11 +313,11 @@ namespace MirishitaMusicPlayer.Forms
             });
         }
 
-        private void UpdateScenario(int type)
+        private void UpdateScenario(EventScenarioData scenarioData)
         {
             foreach (var eventLabel in eventLabels)
             {
-                if ((int)eventLabel.Tag == type)
+                if ((int)eventLabel.Tag == (int)scenarioData.Type)
                     TryInvoke(() => eventLabel.Flash());
             }
         }
