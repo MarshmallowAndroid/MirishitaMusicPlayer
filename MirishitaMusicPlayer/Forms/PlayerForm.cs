@@ -45,7 +45,7 @@ namespace MirishitaMusicPlayer.Forms
         #region Animation variables
         private readonly System.Timers.Timer extrasShowTimer;
 
-        private readonly EasingFunctions.EasingFunction easingFunction = EasingFunctions.EaseInOutQuart;
+        private readonly AnimationCommon.EasingFunction easingFunction = EasingFunctions.EaseInOutQuart;
 
         private bool extrasShown = false;
         private bool horizontalAnimationDone = false;
