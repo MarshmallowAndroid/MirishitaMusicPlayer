@@ -9,7 +9,9 @@ namespace MirishitaMusicPlayer.Animation
 {
     public static class AnimationCommon
     {
-        public static int AnimateValue(int from, int to, float progress, EasingFunctions.EasingFunction easingFunction)
+        public delegate float EasingFunction(float progress);
+
+        public static int AnimateValue(int from, int to, float progress, EasingFunction easingFunction)
         {
             progress = Math.Clamp(progress, 0.0f, 1.0f);
 
@@ -19,7 +21,7 @@ namespace MirishitaMusicPlayer.Animation
             return from + MultiplyProgress(ease, difference);
         }
 
-        public static Color AnimateColor(Color from, Color to, float progress, EasingFunctions.EasingFunction easingFunction)
+        public static Color AnimateColor(Color from, Color to, float progress, EasingFunction easingFunction)
         {
             progress = Math.Clamp(progress, 0.0f, 1.0f);
 

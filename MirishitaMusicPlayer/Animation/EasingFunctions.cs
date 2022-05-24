@@ -8,8 +8,6 @@ namespace MirishitaMusicPlayer.Animation
 {
     public static class EasingFunctions
     {
-        public delegate float EasingFunction(float x);
-
         public static float EaseOutExpo(float x)
         {
             return (float)(x == 1f ? 1f : 1f - Math.Pow(2f, -10f * x));
