@@ -17,10 +17,13 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class SongSelectForm : Form
     {
+        private readonly AssetsManager _assetsManager;
+
         private TDAssetsClient _assetsClient;
         private ResourceVersionInfo resourceVersionInfo;
+        private AssetList assetList;
 
-        private AssetsManager _assetsManager;
+        private Song song = null;
 
         public SongSelectForm(AssetsManager assetsManager)
         {
@@ -29,11 +32,7 @@ namespace MirishitaMusicPlayer.Forms
             _assetsManager = assetsManager;
         }
 
-        public Song Song { get; private set; }
-
-        public AssetList AssetList { get; private set; }
-
-        public void ProcessSong(string songId = "")
+        public Song ProcessSong(string songId = "")
         {
             if (songId == "")
                 ShowDialog();
@@ -42,14 +41,16 @@ namespace MirishitaMusicPlayer.Forms
                 Task.Run(async () =>
                 {
                     await InitializeDatabaseAsync();
-                    await PlaySong(songId);
+                    await InitializeSong(songId);
                 }).Wait();
             }
+
+            return song;
         }
 
         private async Task InitializeDatabaseAsync()
         {
-            Song = null;
+            song = null;
 
             DirectoryInfo cacheDirectory = Directory.CreateDirectory("Cache");
             cacheDirectory.CreateSubdirectory("Jackets");
@@ -73,14 +74,14 @@ namespace MirishitaMusicPlayer.Forms
 
             FileStream databaseFile = databaseFiles[^1].OpenRead();
 
-            AssetList = new(databaseFile);
+            assetList = new(databaseFile);
         }
 
         private async void SongSelectForm_Load(object sender, EventArgs e)
         {
             volumeTrackBar.Value = (int)Math.Ceiling(Program.OutputDevice.Volume * 100.0f);
 
-            Song = null;
+            song = null;
 
             await InitializeDatabaseAsync();
 
@@ -105,7 +106,7 @@ namespace MirishitaMusicPlayer.Forms
             Array.Sort(databaseFiles, (f1, f2) => DateTime.Compare(f1.LastWriteTime, f2.LastWriteTime));
             FileStream databaseFile = databaseFiles[^1].OpenRead();
 
-            AssetList = new(databaseFile);
+            assetList = new(databaseFile);
         }
 
         private void BySongIdCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -125,7 +126,7 @@ namespace MirishitaMusicPlayer.Forms
                 Regex allJacketsRegex = new("jacket_[0-9a-z]{6}.unity3d");
 
                 uint totalBytesToDownload = 0;
-                foreach (var file in AssetList.Assets)
+                foreach (var file in assetList.Assets)
                 {
                     string fileName = file.Name;
 
@@ -159,7 +160,7 @@ namespace MirishitaMusicPlayer.Forms
             {
                 string songId = songIdTextBox.Text;
 
-                Asset songJacketAsset = AssetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songId}.unity3d");
+                Asset songJacketAsset = assetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songId}.unity3d");
 
                 if (songJacketAsset != null)
                 {
@@ -169,7 +170,7 @@ namespace MirishitaMusicPlayer.Forms
                         UpdateList();
                     }
 
-                    await PlaySong(songId);
+                    await InitializeSong(songId);
                 }
                 else
                 {
@@ -183,15 +184,15 @@ namespace MirishitaMusicPlayer.Forms
         private async void SongJacket_Click(object sender, EventArgs e)
         {
             PictureBox jacket = sender as PictureBox;
-            await PlaySong(jacket.Tag.ToString());
+            await InitializeSong(jacket.Tag.ToString());
         }
 
-        private async Task PlaySong(string songId)
+        private async Task InitializeSong(string songId)
         {
             LoadingMode(true);
 
-            var song = new Song(AssetList, songId, _assetsManager);
-            var scenarioAsset = song.ScenarioAsset;
+            var selectedSong = new Song(assetList, songId, _assetsManager);
+            var scenarioAsset = selectedSong.ScenarioAsset;
 
             bool shouldContinue;
             if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
@@ -200,7 +201,7 @@ namespace MirishitaMusicPlayer.Forms
             }
             else shouldContinue = true;
 
-            Song = song;
+            song = selectedSong;
 
             LoadingMode(false);
             if (shouldContinue) Hide();
