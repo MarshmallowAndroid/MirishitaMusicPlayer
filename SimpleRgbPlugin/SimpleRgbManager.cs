@@ -3,15 +3,19 @@ using OpenRGB.NET;
 using OpenRGB.NET.Models;
 using Color = System.Drawing.Color;
 using OpenRgbColor = OpenRGB.NET.Models.Color;
+using Timer = System.Timers.Timer;
 
 namespace SimpleRgbPlugin
 {
     public class SimpleRgbManager : IRgbManager
     {
+        private readonly Timer updateTimer;
         private OpenRGBClient rgbClient;
 
         public SimpleRgbManager()
         {
+            updateTimer = new(1000f / 60f);
+            updateTimer.Elapsed += UpdateTimer_Elapsed;
         }
 
         public IDeviceConfiguration[] DeviceConfigurations { get; private set; }
@@ -28,11 +32,12 @@ namespace SimpleRgbPlugin
                 try
                 {
                     rgbClient = new(name: "Mirishita Music Player");
+
+                    updateTimer.Start();
                 }
                 catch (Exception)
                 {
-                    rgbClient?.Dispose();
-                    rgbClient = null;
+                    Disconnect();
 
                     MessageBox.Show("Could not connect to OpenRGB server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
@@ -61,10 +66,24 @@ namespace SimpleRgbPlugin
 
         public void Disconnect()
         {
-            if (rgbClient == null) return;
+            updateTimer.Stop();
 
-            rgbClient.Dispose();
+            rgbClient?.Dispose();
             rgbClient = null;
+        }
+
+        public void Test(int deviceId)
+        {
+            Device device = rgbClient?.GetControllerData(deviceId);
+            if (device == null) return;
+
+            int ledCount = rgbClient.GetControllerData(deviceId).Leds.Length;
+
+            int currentIndex = 0;
+            foreach (var item in DeviceConfigurations[deviceId].LedConfigurations)
+            {
+                item.AnimateLed(Color.White, (float)currentIndex * 10);
+            }
         }
 
         public void UpdateRgb(
@@ -95,52 +114,67 @@ namespace SimpleRgbPlugin
                 }
             }
         }
+
+        private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            foreach (var device in DeviceConfigurations)
+            {
+                device.UpdateColors();
+            }
+        }
     }
 
     public class DeviceConfiguration : IDeviceConfiguration
     {
-        private readonly Device device;
+        private readonly IOpenRGBClient rgbClient;
 
-        public DeviceConfiguration(int controllerId, IOpenRGBClient client)
+        private readonly int rgbDeviceId;
+        private readonly Device rgbDevice;
+
+        private readonly OpenRgbColor[] rgbColors;
+
+        public DeviceConfiguration(int deviceId, IOpenRGBClient client)
         {
-            device = client.GetControllerData(controllerId);
+            rgbDeviceId = deviceId;
+            rgbClient = client;
+            rgbDevice = rgbClient.GetControllerData(deviceId);
 
-            int ledCount = device.Leds.Length;
+            rgbColors = rgbDevice.Colors;
 
+            int ledCount = rgbDevice.Leds.Length;
             LedConfigurations = new LedConfiguration[ledCount];
-
             for (int i = 0; i < ledCount; i++)
             {
-                LedConfigurations[i] = new LedConfiguration(i, controllerId, client);
+                LedConfigurations[i] = new LedConfiguration(i, rgbDevice, rgbColors);
             }
         }
 
         public ILedConfiguration[] LedConfigurations { get; }
 
+        public void UpdateColors()
+        {
+            rgbClient.UpdateLeds(rgbDeviceId, rgbColors);
+        }
+
         public override string ToString()
         {
-            return device.Name;
+            return rgbDevice.Name;
         }
     }
 
     public class LedConfiguration : ILedConfiguration
     {
-        private readonly IOpenRGBClient rgbClient;
-        private readonly int rgbDeviceId;
+        private readonly OpenRgbColor[] rgbColors;
         private readonly int rgbLedId;
-        private readonly Device rgbDevice;
         private readonly Led rgbLed;
 
         private readonly ColorAnimator animator;
 
-        public LedConfiguration(int ledId, int deviceId, IOpenRGBClient client)
+        public LedConfiguration(int ledId, Device device, OpenRgbColor[] colors)
         {
+            rgbColors = colors;
             rgbLedId = ledId;
-            rgbDeviceId = deviceId;
-
-            rgbClient = client;
-            rgbDevice = rgbClient.GetControllerData(deviceId);
-            rgbLed = rgbDevice.Leds[ledId];
+            rgbLed = device.Leds[ledId];
 
             animator = new(Color.Black);
             animator.ValueAnimate += Animator_ValueAnimate;
@@ -157,24 +191,12 @@ namespace SimpleRgbPlugin
 
         private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)
         {
-            if (rgbClient.Connected)
+            rgbColors[rgbLedId] = new OpenRgbColor
             {
-                OpenRgbColor[] colors = rgbDevice.Colors;
-                colors[rgbLedId] = new OpenRgbColor
-                {
-                    R = value.R,
-                    G = value.G,
-                    B = value.B
-                };
-
-                try
-                {
-                    rgbClient.UpdateLeds(rgbDeviceId, colors);
-                }
-                catch (Exception)
-                {
-                }
-            }
+                R = value.R,
+                G = value.G,
+                B = value.B
+            };
         }
 
         public override string ToString()

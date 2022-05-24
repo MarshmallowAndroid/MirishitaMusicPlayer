@@ -39,6 +39,7 @@
             this.targetComboBox = new System.Windows.Forms.ComboBox();
             this.colorSourceComboBox = new System.Windows.Forms.ComboBox();
             this.colorSourceLabel = new System.Windows.Forms.Label();
+            this.testLedsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // deviceComboBox
@@ -150,11 +151,22 @@
             this.colorSourceLabel.TabIndex = 4;
             this.colorSourceLabel.Text = "Color source";
             // 
+            // testLedsButton
+            // 
+            this.testLedsButton.Location = new System.Drawing.Point(370, 165);
+            this.testLedsButton.Name = "testLedsButton";
+            this.testLedsButton.Size = new System.Drawing.Size(75, 23);
+            this.testLedsButton.TabIndex = 9;
+            this.testLedsButton.Text = "Test";
+            this.testLedsButton.UseVisualStyleBackColor = true;
+            this.testLedsButton.Click += new System.EventHandler(this.TestLedsButton_Click);
+            // 
             // RgbSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(457, 200);
+            this.Controls.Add(this.testLedsButton);
             this.Controls.Add(this.colorSourceComboBox);
             this.Controls.Add(this.targetComboBox);
             this.Controls.Add(this.refreshButton);
@@ -189,5 +201,6 @@
         private System.Windows.Forms.Label colorSourceLabel;
         private System.Windows.Forms.Label ledLabel;
         private System.Windows.Forms.ComboBox ledComboBox;
+        private Button testLedsButton;
     }
 }

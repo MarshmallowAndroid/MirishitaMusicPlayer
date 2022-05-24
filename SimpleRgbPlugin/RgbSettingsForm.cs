@@ -15,7 +15,7 @@ namespace SimpleRgbPlugin
 {
     public partial class RgbSettingsForm : Form
     {
-        private readonly IRgbManager manager;
+        private readonly SimpleRgbManager manager;
         private LedConfiguration currentColorConfiguration;
 
         public RgbSettingsForm(SimpleRgbManager rgbManager, IEnumerable<int> targets)
@@ -36,14 +36,12 @@ namespace SimpleRgbPlugin
         private void RefreshDevices()
         {
             deviceComboBox.Items.Clear();
+            ledComboBox.Items.Clear();
 
-            if (!manager.Connect()) Close();
             if (manager.DeviceConfigurations != null)
             {
                 foreach (var device in manager.DeviceConfigurations)
-                {
                     deviceComboBox.Items.Add(device);
-                }
             }
 
             if (deviceComboBox.Items.Count > 0)
@@ -114,6 +112,11 @@ namespace SimpleRgbPlugin
         {
             if (currentColorConfiguration != null)
                 currentColorConfiguration.PreferredSource = colorSourceComboBox.SelectedIndex;
+        }
+
+        private void TestLedsButton_Click(object sender, EventArgs e)
+        {
+            manager.Test(deviceComboBox.SelectedIndex);
         }
     }
 }
