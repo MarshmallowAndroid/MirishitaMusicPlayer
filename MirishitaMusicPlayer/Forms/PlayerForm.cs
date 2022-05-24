@@ -223,6 +223,8 @@ namespace MirishitaMusicPlayer.Forms
 
             volumeTrackBar.Value = (int)Math.Ceiling(outputDevice.Volume * 100.0f);
 
+            TryCreateRgbManager();
+
             scenarioPlayer.Start();
             outputDevice.Play();
         }
@@ -242,7 +244,7 @@ namespace MirishitaMusicPlayer.Forms
 
             lightsForm?.Dispose();
 
-            rgbManager.Disconnect();
+            rgbManager?.Disconnect();
             rgbSettingsForm?.Dispose();
             rgbSettingsForm = null;
             rgbManager = null;
@@ -342,15 +344,11 @@ namespace MirishitaMusicPlayer.Forms
         #region Player extras
         private void OpenRgbSettingsButton_Click(object sender, EventArgs e)
         {
+            TryCreateRgbManager();
             if (rgbManager == null)
             {
-                rgbManager = Program.CreateRgbManager();
-
-                if (rgbManager == null)
-                {
-                    MessageBox.Show("No RGB plugins found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                MessageBox.Show("No RGB plugins found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
 
             if (rgbSettingsForm == null || rgbSettingsForm.IsDisposed)
@@ -511,6 +509,15 @@ namespace MirishitaMusicPlayer.Forms
                 extrasSecondPanel.Visible = !extrasShown;
         }
         #endregion
+
+        private void TryCreateRgbManager()
+        {
+            if (rgbManager == null)
+            {
+                rgbManager = Program.CreateRgbManager();
+                rgbManager?.Connect();
+            }
+        }
 
         private void TryInvoke(Action action)
         {
