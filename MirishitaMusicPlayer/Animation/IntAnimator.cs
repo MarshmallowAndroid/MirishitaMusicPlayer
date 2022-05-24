@@ -21,10 +21,9 @@ namespace MirishitaMusicPlayer.Animation
 
         public IntAnimator(int initialInt)
         {
-            animationTimer.Interval = 16;
-            animationTimer.Elapsed += AnimationTimer_Elapsed;
-
             lastValue = initialInt;
+
+            animationTimer.Elapsed += AnimationTimer_Elapsed;
         }
 
         private void AnimationTimer_Elapsed(object sender, ElapsedEventArgs e)

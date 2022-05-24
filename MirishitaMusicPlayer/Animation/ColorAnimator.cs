@@ -21,10 +21,9 @@ namespace MirishitaMusicPlayer.Animation
 
         public ColorAnimator(Color initialColor)
         {
-            animationTimer.Interval = 16;
-            animationTimer.Elapsed += AnimationTimer_Elapsed;
-
             lastColor = initialColor;
+
+            animationTimer.Elapsed += AnimationTimer_Elapsed;
         }
 
         private void AnimationTimer_Elapsed(object sender, ElapsedEventArgs e)
