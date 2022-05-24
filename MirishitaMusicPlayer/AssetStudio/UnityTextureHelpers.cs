@@ -12,11 +12,6 @@ namespace MirishitaMusicPlayer.AssetStudio
 
         public static AssetsManager Assets => assetsManager;
 
-        public static void LoadFiles(params string[] paths)
-        {
-            assetsManager.LoadFiles(paths);
-        }
-
         public static Bitmap GetBitmap(string name)
         {
             SerializedFile targetAsset = assetsManager.assetsFileList.Where(

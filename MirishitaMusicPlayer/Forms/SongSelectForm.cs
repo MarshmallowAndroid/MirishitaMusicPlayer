@@ -246,7 +246,7 @@ namespace MirishitaMusicPlayer.Forms
             Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
 
             if (jacketFiles.Length > 0)
-                UnityTextureHelpers.LoadFiles(jacketFiles);
+                UnityTextureHelpers.Assets.LoadFiles(jacketFiles);
 
             List<Control> jackets = new();
 
@@ -273,6 +273,8 @@ namespace MirishitaMusicPlayer.Forms
 
                 loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
             }
+
+            UnityTextureHelpers.Assets.Clear();
 
             Progress.Default = new Progress<int>();
 
