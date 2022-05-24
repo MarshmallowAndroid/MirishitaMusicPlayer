@@ -15,8 +15,8 @@ namespace MirishitaMusicPlayer.Forms
 {
     public partial class RgbSettingsForm : Form
     {
-        RgbManager manager;
-        ZoneConfiguration currentColorConfiguration;
+        private readonly IRgbManager manager;
+        private ZoneConfiguration currentColorConfiguration;
 
         public RgbSettingsForm(RgbManager rgbManager, List<int> targets)
         {
@@ -24,6 +24,7 @@ namespace MirishitaMusicPlayer.Forms
 
             manager = rgbManager;
 
+            targetComboBox.Items.Add("None");
             foreach (var item in targets)
             {
                 targetComboBox.Items.Add(item);
@@ -36,9 +37,10 @@ namespace MirishitaMusicPlayer.Forms
         {
             deviceComboBox.Items.Clear();
 
-            if (manager.ControllerConfigurations != null)
+            manager.Connect();
+            if (manager.DeviceConfigurations != null)
             {
-                foreach (var device in manager.ControllerConfigurations)
+                foreach (var device in manager.DeviceConfigurations)
                 {
                     deviceComboBox.Items.Add(device);
                 }
@@ -51,26 +53,30 @@ namespace MirishitaMusicPlayer.Forms
         private void DeviceComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            ControllerConfiguration selectedDevice = comboBox.SelectedItem as ControllerConfiguration;
+            DeviceConfiguration selectedDevice = comboBox.SelectedItem as DeviceConfiguration;
 
-            colorComboBox.Items.Clear();
+            zoneComboBox.Items.Clear();
 
             foreach (var item in selectedDevice.ZoneConfigurations)
             {
-                colorComboBox.Items.Add(item);
+                zoneComboBox.Items.Add(item);
             }
 
-            if (colorComboBox.Items.Count > 0)
-                colorComboBox.SelectedIndex = 0;
+            if (zoneComboBox.Items.Count > 0)
+                zoneComboBox.SelectedIndex = 0;
         }
 
-        private void ColorComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ZoneComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ZoneConfiguration colorConfiguration = colorComboBox.SelectedItem as ZoneConfiguration;
+            ZoneConfiguration colorConfiguration = zoneComboBox.SelectedItem as ZoneConfiguration;
 
             currentColorConfiguration = colorConfiguration;
 
-            targetComboBox.SelectedItem = colorConfiguration.PreferredTarget;
+            if (colorConfiguration.PreferredTarget == -1)
+                targetComboBox.SelectedIndex = 0;
+            else
+                targetComboBox.SelectedItem = colorConfiguration.PreferredTarget;
+
             colorSourceComboBox.SelectedIndex = colorConfiguration.PreferredSource;
         }
 
@@ -90,13 +96,18 @@ namespace MirishitaMusicPlayer.Forms
             manager.Disconnect();
 
             deviceComboBox.Items.Clear();
-            colorComboBox.Items.Clear();
+            zoneComboBox.Items.Clear();
         }
 
         private void TargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (currentColorConfiguration != null)
-                currentColorConfiguration.PreferredTarget = (int)targetComboBox.SelectedItem;
+            {
+                if (targetComboBox.SelectedIndex == 0)
+                    currentColorConfiguration.PreferredTarget = -1;
+                else
+                    currentColorConfiguration.PreferredTarget = (int)targetComboBox.SelectedItem;
+            }
         }
 
         private void ColorSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)

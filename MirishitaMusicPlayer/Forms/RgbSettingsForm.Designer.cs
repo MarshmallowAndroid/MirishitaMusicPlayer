@@ -30,8 +30,8 @@
         {
             this.deviceComboBox = new System.Windows.Forms.ComboBox();
             this.deviceLabel = new System.Windows.Forms.Label();
-            this.colorLabel = new System.Windows.Forms.Label();
-            this.colorComboBox = new System.Windows.Forms.ComboBox();
+            this.zoneLabel = new System.Windows.Forms.Label();
+            this.zoneComboBox = new System.Windows.Forms.ComboBox();
             this.targetLabel = new System.Windows.Forms.Label();
             this.connectButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
@@ -60,24 +60,24 @@
             this.deviceLabel.TabIndex = 1;
             this.deviceLabel.Text = "Device";
             // 
-            // colorLabel
+            // zoneLabel
             // 
-            this.colorLabel.AutoSize = true;
-            this.colorLabel.Location = new System.Drawing.Point(284, 15);
-            this.colorLabel.Name = "colorLabel";
-            this.colorLabel.Size = new System.Drawing.Size(34, 15);
-            this.colorLabel.TabIndex = 2;
-            this.colorLabel.Text = "Zone";
+            this.zoneLabel.AutoSize = true;
+            this.zoneLabel.Location = new System.Drawing.Point(284, 15);
+            this.zoneLabel.Name = "zoneLabel";
+            this.zoneLabel.Size = new System.Drawing.Size(34, 15);
+            this.zoneLabel.TabIndex = 2;
+            this.zoneLabel.Text = "Zone";
             // 
-            // colorComboBox
+            // zoneComboBox
             // 
-            this.colorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Location = new System.Drawing.Point(324, 12);
-            this.colorComboBox.Name = "colorComboBox";
-            this.colorComboBox.Size = new System.Drawing.Size(121, 23);
-            this.colorComboBox.TabIndex = 3;
-            this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.ColorComboBox_SelectedIndexChanged);
+            this.zoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.zoneComboBox.FormattingEnabled = true;
+            this.zoneComboBox.Location = new System.Drawing.Point(324, 12);
+            this.zoneComboBox.Name = "zoneComboBox";
+            this.zoneComboBox.Size = new System.Drawing.Size(121, 23);
+            this.zoneComboBox.TabIndex = 3;
+            this.zoneComboBox.SelectedIndexChanged += new System.EventHandler(this.ZoneComboBox_SelectedIndexChanged);
             // 
             // targetLabel
             // 
@@ -162,8 +162,8 @@
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.colorSourceLabel);
             this.Controls.Add(this.targetLabel);
-            this.Controls.Add(this.colorComboBox);
-            this.Controls.Add(this.colorLabel);
+            this.Controls.Add(this.zoneComboBox);
+            this.Controls.Add(this.zoneLabel);
             this.Controls.Add(this.deviceLabel);
             this.Controls.Add(this.deviceComboBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -180,8 +180,8 @@
 
         private System.Windows.Forms.ComboBox deviceComboBox;
         private System.Windows.Forms.Label deviceLabel;
-        private System.Windows.Forms.Label colorLabel;
-        private System.Windows.Forms.ComboBox colorComboBox;
+        private System.Windows.Forms.Label zoneLabel;
+        private System.Windows.Forms.ComboBox zoneComboBox;
         private System.Windows.Forms.Label targetLabel;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Button disconnectButton;
