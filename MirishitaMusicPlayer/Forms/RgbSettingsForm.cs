@@ -16,7 +16,7 @@ namespace MirishitaMusicPlayer.Forms
     public partial class RgbSettingsForm : Form
     {
         RgbManager manager;
-        ColorConfiguration currentColorConfiguration;
+        ZoneConfiguration currentColorConfiguration;
 
         public RgbSettingsForm(RgbManager rgbManager, List<int> targets)
         {
@@ -55,7 +55,7 @@ namespace MirishitaMusicPlayer.Forms
 
             colorComboBox.Items.Clear();
 
-            foreach (var item in selectedDevice.ColorConfigurations)
+            foreach (var item in selectedDevice.ZoneConfigurations)
             {
                 colorComboBox.Items.Add(item);
             }
@@ -66,7 +66,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void ColorComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ColorConfiguration colorConfiguration = colorComboBox.SelectedItem as ColorConfiguration;
+            ZoneConfiguration colorConfiguration = colorComboBox.SelectedItem as ZoneConfiguration;
 
             currentColorConfiguration = colorConfiguration;
 

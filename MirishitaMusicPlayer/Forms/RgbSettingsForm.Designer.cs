@@ -65,17 +65,17 @@
             this.colorLabel.AutoSize = true;
             this.colorLabel.Location = new System.Drawing.Point(284, 15);
             this.colorLabel.Name = "colorLabel";
-            this.colorLabel.Size = new System.Drawing.Size(36, 15);
+            this.colorLabel.Size = new System.Drawing.Size(34, 15);
             this.colorLabel.TabIndex = 2;
-            this.colorLabel.Text = "Color";
+            this.colorLabel.Text = "Zone";
             // 
             // colorComboBox
             // 
             this.colorComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Location = new System.Drawing.Point(326, 12);
+            this.colorComboBox.Location = new System.Drawing.Point(324, 12);
             this.colorComboBox.Name = "colorComboBox";
-            this.colorComboBox.Size = new System.Drawing.Size(119, 23);
+            this.colorComboBox.Size = new System.Drawing.Size(121, 23);
             this.colorComboBox.TabIndex = 3;
             this.colorComboBox.SelectedIndexChanged += new System.EventHandler(this.ColorComboBox_SelectedIndexChanged);
             // 
