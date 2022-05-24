@@ -1,55 +1,27 @@
-﻿using MirishitaMusicPlayer.Animation;
-using MirishitaMusicPlayer.Common;
+﻿using MirishitaMusicPlayer.RgbPluginBase;
 using OpenRGB.NET;
 using OpenRGB.NET.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.Windows.Forms;
 using Color = System.Drawing.Color;
-using OpenRgbColor =  OpenRGB.NET.Models.Color;
+using OpenRgbColor = OpenRGB.NET.Models.Color;
 
-namespace MirishitaMusicPlayer.Rgb
+namespace SimpleRgbPlugin
 {
-    public interface IRgbManager
-    {
-        public IDeviceConfiguration[] DeviceConfigurations { get; }
-
-        public void Connect();
-
-        public void Disconnect();
-
-        public void UpdateRgb(int target, Color color, Color color2, Color color3, float duration);
-    }
-
-    public interface IDeviceConfiguration
-    {
-        public IZoneConfiguration[] ZoneConfigurations { get; }
-    }
-
-    public interface IZoneConfiguration
-    {
-        public int PreferredTarget { get; set; }
-
-        public int PreferredSource { get; set; }
-
-        public void AnimateZone(Color color, float duration);
-    }
-
-    public class RgbManager : IRgbManager
+    public class SimpleRgbManager : IRgbManager
     {
         private OpenRGBClient rgbClient;
 
-        public RgbManager()
+        public SimpleRgbManager()
         {
         }
 
         public IDeviceConfiguration[] DeviceConfigurations { get; private set; }
 
-        public void Connect()
+        public Form GetSettingsForm(IEnumerable<int> targets)
+        {
+            return new RgbSettingsForm(this, targets);
+        }
+
+        public bool Connect()
         {
             if (rgbClient == null || !rgbClient.Connected)
             {
@@ -63,10 +35,10 @@ namespace MirishitaMusicPlayer.Rgb
                     rgbClient = null;
 
                     MessageBox.Show("Could not connect to OpenRGB server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    return false;
                 }
             }
-            else return;
+            else return true;
 
             int controllerCount = rgbClient.GetControllerCount();
             DeviceConfigurations = new DeviceConfiguration[controllerCount];
@@ -80,9 +52,11 @@ namespace MirishitaMusicPlayer.Rgb
             {
                 foreach (var zone in device.ZoneConfigurations)
                 {
-                    zone.AnimateZone(System.Drawing.Color.Black, 0f);
+                    zone.AnimateZone(Color.Black, 0f);
                 }
             }
+
+            return true;
         }
 
         public void Disconnect()
@@ -174,12 +148,12 @@ namespace MirishitaMusicPlayer.Rgb
 
         public int PreferredSource { get; set; } = 0;
 
-        public void AnimateZone(System.Drawing.Color color, float duration)
+        public void AnimateZone(Color color, float duration)
         {
             animator.Animate(color, duration);
         }
 
-        private void Animator_ValueAnimate(IAnimator<System.Drawing.Color> sender, System.Drawing.Color value)
+        private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)
         {
             OpenRgbColor[] colors = new OpenRgbColor[rgbZone.LedCount];
             for (int i = 0; i < rgbZone.LedCount; i++)

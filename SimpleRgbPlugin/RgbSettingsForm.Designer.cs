@@ -1,4 +1,4 @@
-﻿namespace MirishitaMusicPlayer.Forms
+﻿namespace SimpleRgbPlugin
 {
     partial class RgbSettingsForm
     {

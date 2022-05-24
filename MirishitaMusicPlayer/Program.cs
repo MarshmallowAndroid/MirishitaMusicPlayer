@@ -5,12 +5,14 @@ using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Forms;
 using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Net.TDAssets;
-using MirishitaMusicPlayer.Rgb;
+using MirishitaMusicPlayer.RgbPluginBase;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -19,15 +21,18 @@ namespace MirishitaMusicPlayer
 {
     internal class Program
     {
+        private static AssemblyLoadContext rgbPluginContext;
+
         public static readonly string CachePath = "Cache";
         public static readonly string JacketsPath = Path.Combine(CachePath, "Songs");
         public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
         public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
-        public static readonly RgbManager RgbManager = new();
 
         [STAThread]
         private static void Main(string[] args)
         {
+            //RgbManager = CreateRgbManager();
+
             Application.EnableVisualStyles();
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -60,6 +65,35 @@ namespace MirishitaMusicPlayer
                 PlayerForm playerForm = new(song);
                 playerForm.ShowDialog();
             }
+        }
+
+        public static IRgbManager RgbManager { get; set; }
+
+
+        public static void UnloadPlugin()
+        {
+            RgbManager = null;
+            rgbPluginContext.Unload();
+        }
+
+        public static IRgbManager CreateRgbManager()
+        {
+            string[] pluginPaths = Directory.GetFiles(Directory.GetCurrentDirectory(), "*Plugin.*");
+
+            if (pluginPaths.Length < 1) return null;
+
+            rgbPluginContext = new AssemblyLoadContext(null, true);
+
+            Assembly assembly = rgbPluginContext.LoadFromAssemblyPath(pluginPaths[0]);
+            foreach (var type in assembly.GetTypes())
+            {
+                if (typeof(IRgbManager).IsAssignableFrom(type))
+                {
+                    return (IRgbManager)Activator.CreateInstance(type);
+                }
+            }
+
+            return null;
         }
     }
 }

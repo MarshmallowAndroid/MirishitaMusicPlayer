@@ -1,4 +1,4 @@
-﻿using MirishitaMusicPlayer.Rgb;
+﻿using MirishitaMusicPlayer.RgbPluginBase;
 using OpenRGB.NET;
 using OpenRGB.NET.Models;
 using System;
@@ -11,14 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MirishitaMusicPlayer.Forms
+namespace SimpleRgbPlugin
 {
     public partial class RgbSettingsForm : Form
     {
         private readonly IRgbManager manager;
         private ZoneConfiguration currentColorConfiguration;
 
-        public RgbSettingsForm(RgbManager rgbManager, List<int> targets)
+        public RgbSettingsForm(SimpleRgbManager rgbManager, IEnumerable<int> targets)
         {
             InitializeComponent();
 
@@ -37,7 +37,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             deviceComboBox.Items.Clear();
 
-            manager.Connect();
+            if (!manager.Connect()) Close();
             if (manager.DeviceConfigurations != null)
             {
                 foreach (var device in manager.DeviceConfigurations)

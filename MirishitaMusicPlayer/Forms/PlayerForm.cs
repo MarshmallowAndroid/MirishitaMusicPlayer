@@ -1,10 +1,8 @@
 ﻿using MirishitaMusicPlayer.Animation;
 using MirishitaMusicPlayer.Audio;
 using MirishitaMusicPlayer.Common;
-using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Properties;
-using MirishitaMusicPlayer.Rgb;
 using NAudio.Wave;
 using OpenRGB.NET;
 using OpenRGB.NET.Models;
@@ -13,6 +11,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
+using MirishitaMusicPlayer.Forms.CustomControls;
+using MirishitaMusicPlayer.RgbPluginBase;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -58,7 +58,7 @@ namespace MirishitaMusicPlayer.Forms
         private int currentTop;
         #endregion
 
-        private readonly RgbManager rgbManager = Program.RgbManager;
+        private IRgbManager rgbManager = Program.RgbManager;
 
         public PlayerForm(Song selectedSong)
         {
@@ -241,7 +241,11 @@ namespace MirishitaMusicPlayer.Forms
             extrasShowTimer.Dispose();
 
             lightsForm?.Dispose();
+
             rgbSettingsForm?.Dispose();
+            rgbSettingsForm = null;
+            rgbManager = null;
+            Program.UnloadPlugin();
 
             faceVisualizer.Dispose();
         }
@@ -305,11 +309,11 @@ namespace MirishitaMusicPlayer.Forms
                     }
                 }
 
-                rgbManager.UpdateRgb(
+                rgbManager?.UpdateRgb(
                     lightPayload.Target,
-                    lightPayload.Color.ToColor(),
-                    lightPayload.Color2.ToColor(),
-                    lightPayload.Color3.ToColor(),
+                    lightPayload.Color?.ToColor() ?? Color.Black,
+                    lightPayload.Color2?.ToColor() ?? Color.Black,
+                    lightPayload.Color3?.ToColor() ?? Color.Black,
                     lightPayload.Duration);
 
                 //if (lightPayload.Target == 11)
@@ -337,7 +341,18 @@ namespace MirishitaMusicPlayer.Forms
         #region Player extras
         private void OpenRgbSettingsButton_Click(object sender, EventArgs e)
         {
-            if (rgbSettingsForm == null)
+            if (rgbManager == null)
+            {
+                rgbManager = Program.CreateRgbManager();
+
+                if (rgbManager == null)
+                {
+                    MessageBox.Show("No RGB plugins found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+            }
+
+            if (rgbSettingsForm == null || rgbSettingsForm.IsDisposed)
             {
                 List<int> targets = new();
                 for (int i = 2; i < targetComboBox.Items.Count; i++)
@@ -345,7 +360,7 @@ namespace MirishitaMusicPlayer.Forms
                     targets.Add((int)targetComboBox.Items[i]);
                 }
 
-                rgbSettingsForm = new RgbSettingsForm(rgbManager, targets);
+                rgbSettingsForm = rgbManager.GetSettingsForm(targets);
                 rgbSettingsForm.FormClosed += (s, e) => rgbSettingsForm = null;
                 rgbSettingsForm.Show();
             }
