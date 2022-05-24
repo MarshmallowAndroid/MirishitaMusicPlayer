@@ -50,9 +50,9 @@ namespace SimpleRgbPlugin
 
             foreach (var device in DeviceConfigurations)
             {
-                foreach (var zone in device.ZoneConfigurations)
+                foreach (var led in device.LedConfigurations)
                 {
-                    zone.AnimateZone(Color.Black, 0f);
+                    led.AnimateLed(Color.Black, 0f);
                 }
             }
 
@@ -79,18 +79,18 @@ namespace SimpleRgbPlugin
 
             foreach (var device in DeviceConfigurations)
             {
-                foreach (var zone in device.ZoneConfigurations)
+                foreach (var led in device.LedConfigurations)
                 {
-                    if (target == zone.PreferredTarget)
+                    if (target == led.PreferredTarget)
                     {
-                        var colorFromSource = zone.PreferredSource switch
+                        var colorFromSource = led.PreferredSource switch
                         {
                             1 => color2,
                             2 => color3,
                             _ => color
                         };
 
-                        zone.AnimateZone(colorFromSource, duration);
+                        led.AnimateLed(colorFromSource, duration);
                     }
                 }
             }
@@ -105,17 +105,17 @@ namespace SimpleRgbPlugin
         {
             device = client.GetControllerData(controllerId);
 
-            int colorCount = device.Colors.Length;
+            int ledCount = device.Leds.Length;
 
-            ZoneConfigurations = new ZoneConfiguration[colorCount];
+            LedConfigurations = new LedConfiguration[ledCount];
 
-            for (int i = 0; i < colorCount; i++)
+            for (int i = 0; i < ledCount; i++)
             {
-                ZoneConfigurations[i] = new ZoneConfiguration(i, controllerId, client);
+                LedConfigurations[i] = new LedConfiguration(i, controllerId, client);
             }
         }
 
-        public IZoneConfiguration[] ZoneConfigurations { get; }
+        public ILedConfiguration[] LedConfigurations { get; }
 
         public override string ToString()
         {
@@ -123,22 +123,24 @@ namespace SimpleRgbPlugin
         }
     }
 
-    public class ZoneConfiguration : IZoneConfiguration
+    public class LedConfiguration : ILedConfiguration
     {
         private readonly IOpenRGBClient rgbClient;
         private readonly int rgbDeviceId;
-        private readonly int rgbZoneId;
-        private readonly Zone rgbZone;
+        private readonly int rgbLedId;
+        private readonly Device rgbDevice;
+        private readonly Led rgbLed;
 
         private readonly ColorAnimator animator;
 
-        public ZoneConfiguration(int zoneId, int deviceId, IOpenRGBClient client)
+        public LedConfiguration(int ledId, int deviceId, IOpenRGBClient client)
         {
-            rgbZoneId = zoneId;
+            rgbLedId = ledId;
+            rgbDeviceId = deviceId;
 
             rgbClient = client;
-            rgbDeviceId = deviceId;
-            rgbZone = rgbClient.GetControllerData(deviceId).Zones[zoneId];
+            rgbDevice = rgbClient.GetControllerData(deviceId);
+            rgbLed = rgbDevice.Leds[ledId];
 
             animator = new(Color.Black);
             animator.ValueAnimate += Animator_ValueAnimate;
@@ -148,29 +150,26 @@ namespace SimpleRgbPlugin
 
         public int PreferredSource { get; set; } = 0;
 
-        public void AnimateZone(Color color, float duration)
+        public void AnimateLed(Color color, float duration)
         {
             animator.Animate(color, duration);
         }
 
         private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)
         {
-            OpenRgbColor[] colors = new OpenRgbColor[rgbZone.LedCount];
-            for (int i = 0; i < rgbZone.LedCount; i++)
+            if (rgbClient.Connected)
             {
-                colors[i] = new OpenRgbColor
+                OpenRgbColor[] colors = rgbDevice.Colors;
+                colors[rgbLedId] = new OpenRgbColor
                 {
                     R = value.R,
                     G = value.G,
                     B = value.B
                 };
-            }
 
-            if (rgbClient.Connected)
-            {
                 try
                 {
-                    rgbClient.UpdateZone(rgbDeviceId, rgbZoneId, colors);
+                    rgbClient.UpdateLeds(rgbDeviceId, colors);
                 }
                 catch (Exception)
                 {
@@ -180,7 +179,7 @@ namespace SimpleRgbPlugin
 
         public override string ToString()
         {
-            return rgbZone.Name.ToString();
+            return rgbLed.Name.ToString();
         }
     }
 }

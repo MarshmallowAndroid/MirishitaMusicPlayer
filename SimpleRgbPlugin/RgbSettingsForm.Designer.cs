@@ -30,8 +30,8 @@
         {
             this.deviceComboBox = new System.Windows.Forms.ComboBox();
             this.deviceLabel = new System.Windows.Forms.Label();
-            this.zoneLabel = new System.Windows.Forms.Label();
-            this.zoneComboBox = new System.Windows.Forms.ComboBox();
+            this.ledLabel = new System.Windows.Forms.Label();
+            this.ledComboBox = new System.Windows.Forms.ComboBox();
             this.targetLabel = new System.Windows.Forms.Label();
             this.connectButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
@@ -60,24 +60,24 @@
             this.deviceLabel.TabIndex = 1;
             this.deviceLabel.Text = "Device";
             // 
-            // zoneLabel
+            // ledLabel
             // 
-            this.zoneLabel.AutoSize = true;
-            this.zoneLabel.Location = new System.Drawing.Point(284, 15);
-            this.zoneLabel.Name = "zoneLabel";
-            this.zoneLabel.Size = new System.Drawing.Size(34, 15);
-            this.zoneLabel.TabIndex = 2;
-            this.zoneLabel.Text = "Zone";
+            this.ledLabel.AutoSize = true;
+            this.ledLabel.Location = new System.Drawing.Point(284, 15);
+            this.ledLabel.Name = "ledLabel";
+            this.ledLabel.Size = new System.Drawing.Size(27, 15);
+            this.ledLabel.TabIndex = 2;
+            this.ledLabel.Text = "LED";
             // 
-            // zoneComboBox
+            // ledComboBox
             // 
-            this.zoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.zoneComboBox.FormattingEnabled = true;
-            this.zoneComboBox.Location = new System.Drawing.Point(324, 12);
-            this.zoneComboBox.Name = "zoneComboBox";
-            this.zoneComboBox.Size = new System.Drawing.Size(121, 23);
-            this.zoneComboBox.TabIndex = 3;
-            this.zoneComboBox.SelectedIndexChanged += new System.EventHandler(this.ZoneComboBox_SelectedIndexChanged);
+            this.ledComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ledComboBox.FormattingEnabled = true;
+            this.ledComboBox.Location = new System.Drawing.Point(317, 12);
+            this.ledComboBox.Name = "ledComboBox";
+            this.ledComboBox.Size = new System.Drawing.Size(128, 23);
+            this.ledComboBox.TabIndex = 3;
+            this.ledComboBox.SelectedIndexChanged += new System.EventHandler(this.LedComboBox_SelectedIndexChanged);
             // 
             // targetLabel
             // 
@@ -162,8 +162,8 @@
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.colorSourceLabel);
             this.Controls.Add(this.targetLabel);
-            this.Controls.Add(this.zoneComboBox);
-            this.Controls.Add(this.zoneLabel);
+            this.Controls.Add(this.ledComboBox);
+            this.Controls.Add(this.ledLabel);
             this.Controls.Add(this.deviceLabel);
             this.Controls.Add(this.deviceComboBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -180,8 +180,6 @@
 
         private System.Windows.Forms.ComboBox deviceComboBox;
         private System.Windows.Forms.Label deviceLabel;
-        private System.Windows.Forms.Label zoneLabel;
-        private System.Windows.Forms.ComboBox zoneComboBox;
         private System.Windows.Forms.Label targetLabel;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Button disconnectButton;
@@ -189,5 +187,7 @@
         private System.Windows.Forms.ComboBox targetComboBox;
         private System.Windows.Forms.ComboBox colorSourceComboBox;
         private System.Windows.Forms.Label colorSourceLabel;
+        private System.Windows.Forms.Label ledLabel;
+        private System.Windows.Forms.ComboBox ledComboBox;
     }
 }

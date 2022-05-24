@@ -16,7 +16,7 @@ namespace SimpleRgbPlugin
     public partial class RgbSettingsForm : Form
     {
         private readonly IRgbManager manager;
-        private ZoneConfiguration currentColorConfiguration;
+        private LedConfiguration currentColorConfiguration;
 
         public RgbSettingsForm(SimpleRgbManager rgbManager, IEnumerable<int> targets)
         {
@@ -55,20 +55,20 @@ namespace SimpleRgbPlugin
             ComboBox comboBox = sender as ComboBox;
             DeviceConfiguration selectedDevice = comboBox.SelectedItem as DeviceConfiguration;
 
-            zoneComboBox.Items.Clear();
+            ledComboBox.Items.Clear();
 
-            foreach (var item in selectedDevice.ZoneConfigurations)
+            foreach (var item in selectedDevice.LedConfigurations)
             {
-                zoneComboBox.Items.Add(item);
+                ledComboBox.Items.Add(item);
             }
 
-            if (zoneComboBox.Items.Count > 0)
-                zoneComboBox.SelectedIndex = 0;
+            if (ledComboBox.Items.Count > 0)
+                ledComboBox.SelectedIndex = 0;
         }
 
-        private void ZoneComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void LedComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ZoneConfiguration colorConfiguration = zoneComboBox.SelectedItem as ZoneConfiguration;
+            LedConfiguration colorConfiguration = ledComboBox.SelectedItem as LedConfiguration;
 
             currentColorConfiguration = colorConfiguration;
 
@@ -96,7 +96,7 @@ namespace SimpleRgbPlugin
             manager.Disconnect();
 
             deviceComboBox.Items.Clear();
-            zoneComboBox.Items.Clear();
+            ledComboBox.Items.Clear();
         }
 
         private void TargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
