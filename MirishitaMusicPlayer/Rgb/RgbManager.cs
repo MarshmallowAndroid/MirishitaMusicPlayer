@@ -7,19 +7,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
+using Color = System.Drawing.Color;
+using OpenRgbColor =  OpenRGB.NET.Models.Color;
 
 namespace MirishitaMusicPlayer.Rgb
 {
     public interface IRgbManager
     {
-        public DeviceConfiguration[] DeviceConfigurations { get; }
+        public IDeviceConfiguration[] DeviceConfigurations { get; }
 
         public void Connect();
 
         public void Disconnect();
 
-        public void UpdateRgb(LightPayload lightPayload);
+        public void UpdateRgb(int target, Color color, Color color2, Color color3, float duration);
+    }
+
+    public interface IDeviceConfiguration
+    {
+        public IZoneConfiguration[] ZoneConfigurations { get; }
+    }
+
+    public interface IZoneConfiguration
+    {
+        public int PreferredTarget { get; set; }
+
+        public int PreferredSource { get; set; }
+
+        public void AnimateZone(Color color, float duration);
     }
 
     public class RgbManager : IRgbManager
@@ -30,7 +47,7 @@ namespace MirishitaMusicPlayer.Rgb
         {
         }
 
-        public DeviceConfiguration[] DeviceConfigurations { get; private set; }
+        public IDeviceConfiguration[] DeviceConfigurations { get; private set; }
 
         public void Connect()
         {
@@ -76,7 +93,12 @@ namespace MirishitaMusicPlayer.Rgb
             rgbClient = null;
         }
 
-        public void UpdateRgb(LightPayload lightPayload)
+        public void UpdateRgb(
+            int target,
+            Color color,
+            Color color2,
+            Color color3,
+            float duration)
         {
             if (rgbClient == null)
                 return;
@@ -85,23 +107,23 @@ namespace MirishitaMusicPlayer.Rgb
             {
                 foreach (var zone in device.ZoneConfigurations)
                 {
-                    if (lightPayload.Target == zone.PreferredTarget)
+                    if (target == zone.PreferredTarget)
                     {
                         var colorFromSource = zone.PreferredSource switch
                         {
-                            1 => lightPayload.Color2.ToColor(),
-                            2 => lightPayload.Color3.ToColor(),
-                            _ => lightPayload.Color.ToColor(),
+                            1 => color2,
+                            2 => color3,
+                            _ => color
                         };
 
-                        zone.AnimateZone(colorFromSource, lightPayload.Duration);
+                        zone.AnimateZone(colorFromSource, duration);
                     }
                 }
             }
         }
     }
 
-    public class DeviceConfiguration
+    public class DeviceConfiguration : IDeviceConfiguration
     {
         private readonly Device device;
 
@@ -115,11 +137,11 @@ namespace MirishitaMusicPlayer.Rgb
 
             for (int i = 0; i < colorCount; i++)
             {
-                ZoneConfigurations[i] = new(i, controllerId, client);
+                ZoneConfigurations[i] = new ZoneConfiguration(i, controllerId, client);
             }
         }
 
-        public ZoneConfiguration[] ZoneConfigurations { get; }
+        public IZoneConfiguration[] ZoneConfigurations { get; }
 
         public override string ToString()
         {
@@ -127,27 +149,26 @@ namespace MirishitaMusicPlayer.Rgb
         }
     }
 
-    public class ZoneConfiguration
+    public class ZoneConfiguration : IZoneConfiguration
     {
         private readonly IOpenRGBClient rgbClient;
         private readonly int rgbDeviceId;
+        private readonly int rgbZoneId;
         private readonly Zone rgbZone;
 
         private readonly ColorAnimator animator;
 
         public ZoneConfiguration(int zoneId, int deviceId, IOpenRGBClient client)
         {
-            ZoneId = zoneId;
+            rgbZoneId = zoneId;
 
             rgbClient = client;
             rgbDeviceId = deviceId;
             rgbZone = rgbClient.GetControllerData(deviceId).Zones[zoneId];
 
-            animator = new(System.Drawing.Color.Black);
+            animator = new(Color.Black);
             animator.ValueAnimate += Animator_ValueAnimate;
         }
-
-        public int ZoneId { get; }
 
         public int PreferredTarget { get; set; } = -1;
 
@@ -160,10 +181,10 @@ namespace MirishitaMusicPlayer.Rgb
 
         private void Animator_ValueAnimate(IAnimator<System.Drawing.Color> sender, System.Drawing.Color value)
         {
-            Color[] colors = new Color[rgbZone.LedCount];
+            OpenRgbColor[] colors = new OpenRgbColor[rgbZone.LedCount];
             for (int i = 0; i < rgbZone.LedCount; i++)
             {
-                colors[i] = new Color
+                colors[i] = new OpenRgbColor
                 {
                     R = value.R,
                     G = value.G,
@@ -175,7 +196,7 @@ namespace MirishitaMusicPlayer.Rgb
             {
                 try
                 {
-                    rgbClient.UpdateZone(rgbDeviceId, ZoneId, colors);
+                    rgbClient.UpdateZone(rgbDeviceId, rgbZoneId, colors);
                 }
                 catch (Exception)
                 {

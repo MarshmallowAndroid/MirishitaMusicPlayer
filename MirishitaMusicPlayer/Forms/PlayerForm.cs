@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Color = System.Drawing.Color;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -298,13 +299,18 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     if (targetComboBox.SelectedIndex == 1 || lightPayload.Target == (int)targetComboBox.SelectedItem)
                     {
-                        lightLabel1.FadeBackColor(lightPayload.Color?.ToColor() ?? System.Drawing.Color.Black, lightPayload.Duration);
-                        lightLabel2.FadeBackColor(lightPayload.Color2?.ToColor() ?? System.Drawing.Color.Black, lightPayload.Duration);
-                        lightLabel3.FadeBackColor(lightPayload.Color3?.ToColor() ?? System.Drawing.Color.Black, lightPayload.Duration);
+                        lightLabel1.FadeBackColor(lightPayload.Color?.ToColor() ?? Color.Black, lightPayload.Duration);
+                        lightLabel2.FadeBackColor(lightPayload.Color2?.ToColor() ?? Color.Black, lightPayload.Duration);
+                        lightLabel3.FadeBackColor(lightPayload.Color3?.ToColor() ?? Color.Black, lightPayload.Duration);
                     }
                 }
 
-                rgbManager.UpdateRgb(lightPayload);
+                rgbManager.UpdateRgb(
+                    lightPayload.Target,
+                    lightPayload.Color.ToColor(),
+                    lightPayload.Color2.ToColor(),
+                    lightPayload.Color3.ToColor(),
+                    lightPayload.Duration);
 
                 //if (lightPayload.Target == 11)
                 //{
