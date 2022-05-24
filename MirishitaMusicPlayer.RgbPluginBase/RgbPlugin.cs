@@ -19,6 +19,8 @@ namespace MirishitaMusicPlayer.RgbPluginBase
     public interface IDeviceConfiguration
     {
         public ILedConfiguration[] LedConfigurations { get; }
+
+        public void UpdateColors();
     }
 
     public interface ILedConfiguration
