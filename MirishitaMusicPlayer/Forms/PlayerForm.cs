@@ -347,7 +347,7 @@ namespace MirishitaMusicPlayer.Forms
             TryCreateRgbManager();
             if (rgbManager == null)
             {
-                MessageBox.Show("No RGB plugins found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No RGB plugins found.", "No plugins", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -360,6 +360,9 @@ namespace MirishitaMusicPlayer.Forms
                 }
 
                 rgbSettingsForm = rgbManager.GetSettingsForm(targets);
+
+                if (rgbSettingsForm == null) return;
+
                 rgbSettingsForm.FormClosed += (s, e) => rgbSettingsForm = null;
                 rgbSettingsForm.Show();
             }
