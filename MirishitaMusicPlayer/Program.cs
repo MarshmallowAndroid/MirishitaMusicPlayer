@@ -28,11 +28,11 @@ namespace MirishitaMusicPlayer
         public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
         public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
 
+        private static Stream pluginFileStream;
+
         [STAThread]
         private static void Main(string[] args)
         {
-            //RgbManager = CreateRgbManager();
-
             Application.EnableVisualStyles();
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -69,11 +69,14 @@ namespace MirishitaMusicPlayer
 
         public static IRgbManager RgbManager { get; set; }
 
-
         public static void UnloadPlugin()
         {
             RgbManager = null;
-            rgbPluginContext.Unload();
+
+            if (rgbPluginContext?.Assemblies.Count() > 0)
+                rgbPluginContext.Unload();
+
+            pluginFileStream?.Dispose();
         }
 
         public static IRgbManager CreateRgbManager()
@@ -82,9 +85,10 @@ namespace MirishitaMusicPlayer
 
             if (pluginPaths.Length < 1) return null;
 
+            pluginFileStream = File.OpenRead(pluginPaths[0]);
             rgbPluginContext = new AssemblyLoadContext(null, true);
 
-            Assembly assembly = rgbPluginContext.LoadFromAssemblyPath(pluginPaths[0]);
+            Assembly assembly = rgbPluginContext.LoadFromStream(pluginFileStream);
             foreach (var type in assembly.GetTypes())
             {
                 if (typeof(IRgbManager).IsAssignableFrom(type))
