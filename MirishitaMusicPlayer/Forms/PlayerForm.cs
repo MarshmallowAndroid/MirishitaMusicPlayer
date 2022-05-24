@@ -242,6 +242,7 @@ namespace MirishitaMusicPlayer.Forms
 
             lightsForm?.Dispose();
 
+            rgbManager.Disconnect();
             rgbSettingsForm?.Dispose();
             rgbSettingsForm = null;
             rgbManager = null;
