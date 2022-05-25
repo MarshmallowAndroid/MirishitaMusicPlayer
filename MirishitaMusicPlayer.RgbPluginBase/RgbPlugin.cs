@@ -18,17 +18,17 @@ namespace MirishitaMusicPlayer.RgbPluginBase
 
     public interface IDeviceConfiguration
     {
-        public ILedConfiguration[] LedConfigurations { get; }
+        public IColorConfiguration[] ColorConfigurations { get; }
 
         public void UpdateColors();
     }
 
-    public interface ILedConfiguration
+    public interface IColorConfiguration
     {
         public int PreferredTarget { get; set; }
 
         public int PreferredSource { get; set; }
 
-        public void AnimateLed(Color color, float duration);
+        public void AnimateColor(Color color, float duration);
     }
 }

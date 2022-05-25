@@ -55,7 +55,7 @@ namespace SimpleRgbPlugin
 
             ledComboBox.Items.Clear();
 
-            foreach (var item in selectedDevice.LedConfigurations)
+            foreach (var item in selectedDevice.ColorConfigurations)
             {
                 ledComboBox.Items.Add(item);
             }

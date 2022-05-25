@@ -55,9 +55,9 @@ namespace SimpleRgbPlugin
 
             foreach (var device in DeviceConfigurations)
             {
-                foreach (var led in device.LedConfigurations)
+                foreach (var led in device.ColorConfigurations)
                 {
-                    led.AnimateLed(Color.Black, 0f);
+                    led.AnimateColor(Color.Black, 0f);
                 }
             }
 
@@ -80,9 +80,9 @@ namespace SimpleRgbPlugin
             int ledCount = rgbClient.GetControllerData(deviceId).Leds.Length;
 
             int currentIndex = 0;
-            foreach (var item in DeviceConfigurations[deviceId].LedConfigurations)
+            foreach (var item in DeviceConfigurations[deviceId].ColorConfigurations)
             {
-                item.AnimateLed(Color.White, (float)currentIndex * 10);
+                item.AnimateColor(Color.White, (float)currentIndex * 10);
             }
         }
 
@@ -98,7 +98,7 @@ namespace SimpleRgbPlugin
 
             foreach (var device in DeviceConfigurations)
             {
-                foreach (var led in device.LedConfigurations)
+                foreach (var led in device.ColorConfigurations)
                 {
                     if (target == led.PreferredTarget)
                     {
@@ -109,7 +109,7 @@ namespace SimpleRgbPlugin
                             _ => color
                         };
 
-                        led.AnimateLed(colorFromSource, duration);
+                        led.AnimateColor(colorFromSource, duration);
                     }
                 }
             }
@@ -142,14 +142,14 @@ namespace SimpleRgbPlugin
             rgbColors = rgbDevice.Colors;
 
             int ledCount = rgbDevice.Leds.Length;
-            LedConfigurations = new LedConfiguration[ledCount];
+            ColorConfigurations = new LedConfiguration[ledCount];
             for (int i = 0; i < ledCount; i++)
             {
-                LedConfigurations[i] = new LedConfiguration(i, rgbDevice, rgbColors);
+                ColorConfigurations[i] = new LedConfiguration(i, rgbDevice, rgbColors);
             }
         }
 
-        public ILedConfiguration[] LedConfigurations { get; }
+        public IColorConfiguration[] ColorConfigurations { get; }
 
         public void UpdateColors()
         {
@@ -162,7 +162,7 @@ namespace SimpleRgbPlugin
         }
     }
 
-    public class LedConfiguration : ILedConfiguration
+    public class LedConfiguration : IColorConfiguration
     {
         private readonly OpenRgbColor[] rgbColors;
         private readonly int rgbLedId;
@@ -184,7 +184,7 @@ namespace SimpleRgbPlugin
 
         public int PreferredSource { get; set; } = 0;
 
-        public void AnimateLed(Color color, float duration)
+        public void AnimateColor(Color color, float duration)
         {
             animator.Animate(color, duration);
         }
