@@ -1,4 +1,5 @@
-﻿using MirishitaMusicPlayer.RgbPluginBase;
+﻿using MirishitaMusicPlayer.Animation;
+using MirishitaMusicPlayer.RgbPluginBase;
 using OpenRGB.NET;
 using OpenRGB.NET.Models;
 using Color = System.Drawing.Color;
