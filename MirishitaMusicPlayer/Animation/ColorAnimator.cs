@@ -10,11 +10,13 @@ namespace MirishitaMusicPlayer.Animation
 {
     public sealed class ColorAnimator : IAnimator<Color>
     {
-        private readonly Timer animationTimer = new(1000f / 16f);
+        private readonly Timer animationTimer = new(1000f / 60f);
 
         private Color fromColor;
         private Color lastColor;
         private Color toColor;
+
+        private readonly AnimationCommon.EasingFunction easingFunction;
 
         private float animationDuration = 0f;
         private float animationPercentage = 0f;
@@ -22,13 +24,19 @@ namespace MirishitaMusicPlayer.Animation
         public ColorAnimator(Color initialColor)
         {
             lastColor = initialColor;
+            easingFunction = EasingFunctions.Linear;
 
             animationTimer.Elapsed += AnimationTimer_Elapsed;
         }
 
+        public ColorAnimator(Color initialColor, AnimationCommon.EasingFunction ease) : this(initialColor)
+        {
+            easingFunction = ease;
+        }
+
         private void AnimationTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lastColor = AnimationCommon.AnimateColor(fromColor, toColor, animationPercentage, EasingFunctions.EaseInOutQuart);
+            lastColor = AnimationCommon.AnimateColor(fromColor, toColor, animationPercentage, easingFunction);
             ValueAnimate?.Invoke(this, lastColor);
 
             animationPercentage += (float)animationTimer.Interval / animationDuration;

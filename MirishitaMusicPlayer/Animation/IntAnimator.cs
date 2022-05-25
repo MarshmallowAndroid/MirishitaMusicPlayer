@@ -10,11 +10,13 @@ namespace MirishitaMusicPlayer.Animation
 {
     public sealed class IntAnimator : IAnimator<int>
     {
-        private readonly Timer animationTimer = new(1000f / 16f);
+        private readonly Timer animationTimer = new(1000f / 60f);
 
         private int fromValue;
         private int lastValue;
         private int toValue;
+
+        private AnimationCommon.EasingFunction easingFunction;
 
         private float animationDuration = 0f;
         private float animationPercentage = 0f;
@@ -26,9 +28,14 @@ namespace MirishitaMusicPlayer.Animation
             animationTimer.Elapsed += AnimationTimer_Elapsed;
         }
 
+        public IntAnimator(int initialInt, AnimationCommon.EasingFunction ease) : this(initialInt)
+        {
+            easingFunction = ease;
+        }
+
         private void AnimationTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lastValue = AnimateColor(fromValue, toValue, animationPercentage);
+            lastValue = AnimationCommon.AnimateValue(fromValue, toValue, animationPercentage, easingFunction);
             ValueAnimate?.Invoke(this, lastValue);
 
             animationPercentage += (float)animationTimer.Interval / animationDuration;
@@ -58,28 +65,6 @@ namespace MirishitaMusicPlayer.Animation
             animationDuration = duration;
 
             animationTimer.Start();
-        }
-
-        private static int AnimateColor(int from, int to, float progress)
-        {
-            progress = Math.Clamp(progress, 0.0f, 1.0f);
-            float ease = EasingFunctions.EaseInOutCubic(progress);
-            int difference = to - from;
-            return from + MultiplyProgress(ease, difference);
-        }
-
-        private static int MultiplyProgress(float progress, int value)
-        {
-            if (value < 0)
-            {
-                value = (int)Math.Floor(progress * value);
-            }
-            else
-            {
-                value = (int)Math.Ceiling(progress * value);
-            }
-
-            return value;
         }
 
         public void Dispose()
