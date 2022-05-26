@@ -78,8 +78,6 @@ namespace SimpleRgbPlugin
             Device device = rgbClient?.GetControllerData(deviceId);
             if (device == null) return;
 
-            int ledCount = rgbClient.GetControllerData(deviceId).Leds.Length;
-
             int currentIndex = 0;
             foreach (var item in DeviceConfigurations[deviceId].ColorConfigurations)
             {
