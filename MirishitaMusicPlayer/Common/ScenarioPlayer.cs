@@ -15,7 +15,8 @@ namespace MirishitaMusicPlayer.Common
         private readonly Song song;
 
         private readonly SongMixer songMixer;
-        private readonly Thread scenarioThread;
+
+        private Thread scenarioThread;
 
         private readonly ScenarioScrObject mainScenario;
         private readonly ScenarioScrObject orientScenario;
@@ -37,8 +38,6 @@ namespace MirishitaMusicPlayer.Common
             muteScenarios = song.Scenario.MuteScenarios;
             expressionScenarios = song.Scenario.ExpressionScenarios;
             lightScenarios = song.Scenario.LightScenarios;
-
-            scenarioThread = new Thread(DoScenarioPlayback);
         }
 
         public int Idol { get; set; } = 0;
@@ -47,6 +46,9 @@ namespace MirishitaMusicPlayer.Common
 
         public void Start()
         {
+            if (scenarioThread != null) return;
+
+            scenarioThread = new Thread(DoScenarioPlayback);
             scenarioThread.Start();
         }
 
@@ -220,7 +222,7 @@ namespace MirishitaMusicPlayer.Common
                 Thread.Sleep(1);
             }
 
-            songMixer.Dispose();
+            scenarioThread = null;
 
             SongStopped?.Invoke();
         }

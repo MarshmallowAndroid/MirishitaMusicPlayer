@@ -109,6 +109,7 @@ namespace MirishitaMusicPlayer.Audio
             }
             set
             {
+                HasEnded = false;
                 backgroundWaveStream.Position = value;
 
                 if (backgroundExWaveStream != null)

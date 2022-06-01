@@ -88,7 +88,6 @@ namespace MirishitaMusicPlayer.Forms
             scenarioPlayer.LyricsChanged += UpdateLyrics;
             scenarioPlayer.ScenarioTriggered += UpdateScenario;
             scenarioPlayer.LightsChanged += UpdateLights;
-            scenarioPlayer.SongStopped += Stop;
 
             #region Idol mute visualizer setup
             for (int i = 0; i < stageMemberCount; i++)
@@ -236,7 +235,6 @@ namespace MirishitaMusicPlayer.Forms
 
             songMixer.Dispose();
 
-            scenarioPlayer.SongStopped -= Stop;
             scenarioPlayer.Stop();
 
             extrasShowTimer.Stop();
@@ -334,11 +332,6 @@ namespace MirishitaMusicPlayer.Forms
                     TryInvoke(() => eventLabel.Flash());
             }
         }
-
-        public void Stop()
-        {
-            TryInvoke(() => Close());
-        }
         #endregion
 
         #region Player extras
@@ -411,9 +404,10 @@ namespace MirishitaMusicPlayer.Forms
         {
             songMixer.Position = 0;
             scenarioPlayer.UpdatePosition();
+            scenarioPlayer.Start();
         }
 
-        private void StopButton_Click(object sender, EventArgs e) => scenarioPlayer.Stop();
+        private void StopButton_Click(object sender, EventArgs e) => Close();
 
         private void VolumeTrackBar_Scroll(object sender, EventArgs e)
         {

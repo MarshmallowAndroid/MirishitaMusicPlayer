@@ -78,15 +78,16 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.jacketsPanel.AutoScroll = true;
-            this.jacketsPanel.Location = new System.Drawing.Point(12, 74);
+            this.jacketsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.jacketsPanel.Location = new System.Drawing.Point(12, 63);
             this.jacketsPanel.Name = "jacketsPanel";
-            this.jacketsPanel.Size = new System.Drawing.Size(960, 555);
+            this.jacketsPanel.Size = new System.Drawing.Size(960, 566);
             this.jacketsPanel.TabIndex = 8;
             // 
             // availableSongsLabel
             // 
             this.availableSongsLabel.AutoSize = true;
-            this.availableSongsLabel.Location = new System.Drawing.Point(12, 56);
+            this.availableSongsLabel.Location = new System.Drawing.Point(12, 42);
             this.availableSongsLabel.Name = "availableSongsLabel";
             this.availableSongsLabel.Size = new System.Drawing.Size(89, 15);
             this.availableSongsLabel.TabIndex = 7;
