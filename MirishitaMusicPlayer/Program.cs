@@ -36,12 +36,10 @@ namespace MirishitaMusicPlayer
             Application.EnableVisualStyles();
             Console.OutputEncoding = Encoding.UTF8;
 
-            bool quit = false;
-
             AssetsManager assetsManager = AssetStudioGlobal.AssetsManager;
             SongSelectForm songSelectForm = new(assetsManager);
 
-            while (!quit)
+            while (true)
             {
                 Song song = songSelectForm.ProcessSong(args.Length > 0 ? args[0] : "");
                 if (args.Length > 0) args[0] = "";
