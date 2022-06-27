@@ -8,8 +8,4 @@
     <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="OpenRGB.NET" Version="1.7.0" />
-  </ItemGroup>
-
 </Project>
