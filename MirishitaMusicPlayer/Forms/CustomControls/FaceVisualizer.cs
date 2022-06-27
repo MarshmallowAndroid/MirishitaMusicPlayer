@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace MirishitaMusicPlayer.Forms
         {
             InitializeComponent();
 
-            FaceSource = new EmbeddedResourceFaceSource();
+            if (File.Exists("face.zip"))
+                FaceSource = new ZipFileFaceSource("face.zip");
 
             facePictureBox.DoubleClick += FacePictureBox_DoubleClick;
         }
@@ -52,12 +54,12 @@ namespace MirishitaMusicPlayer.Forms
 
         public void UpdateFace(int id, bool eyeClose)
         {
-            facePictureBox.BackgroundImage = FaceSource.Expression(id, eyeClose);
+            facePictureBox.BackgroundImage = FaceSource?.Expression(id, eyeClose);
         }
 
         public void UpdateMouth(int id)
         {
-            Image image = FaceSource.Mouth(id);
+            Image image = FaceSource?.Mouth(id);
 
             if (image == null)
                 mouthPictureBox.Visible = false;

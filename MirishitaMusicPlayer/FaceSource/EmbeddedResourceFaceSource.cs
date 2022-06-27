@@ -14,6 +14,7 @@ namespace MirishitaMusicPlayer.FaceSource
         {
 
         }
+
         public Image Expression(int id, bool eyeClose)
         {
             string resourceName = $"{(eyeClose ? "close" : "open")}_{id}";

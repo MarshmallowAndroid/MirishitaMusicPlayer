@@ -32,7 +32,6 @@ namespace MirishitaMusicPlayer.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            MirishitaMusicPlayer.FaceSource.EmbeddedResourceFaceSource embeddedResourceFaceSource1 = new MirishitaMusicPlayer.FaceSource.EmbeddedResourceFaceSource();
             this.seekBar = new System.Windows.Forms.TrackBar();
             this.updateTimer = new System.Windows.Forms.Timer(this.components);
             this.debugEyesIdLabel = new System.Windows.Forms.Label();
@@ -325,7 +324,6 @@ namespace MirishitaMusicPlayer.Forms
             // 
             // faceVisualizer
             // 
-            this.faceVisualizer.FaceSource = embeddedResourceFaceSource1;
             this.faceVisualizer.Location = new System.Drawing.Point(3, 3);
             this.faceVisualizer.Name = "faceVisualizer";
             this.faceVisualizer.Size = new System.Drawing.Size(400, 400);
