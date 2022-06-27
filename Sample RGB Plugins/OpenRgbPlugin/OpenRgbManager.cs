@@ -6,14 +6,14 @@ using Color = System.Drawing.Color;
 using OpenRgbColor = OpenRGB.NET.Models.Color;
 using Timer = System.Timers.Timer;
 
-namespace SimpleRgbPlugin
+namespace OpenRgbPlugin
 {
-    public class SimpleRgbManager : IRgbManager
+    public class OpenRgbManager : IRgbManager
     {
         private readonly Timer updateTimer;
         private OpenRGBClient rgbClient;
 
-        public SimpleRgbManager()
+        public OpenRgbManager()
         {
             updateTimer = new(1000f / 60f);
             updateTimer.Elapsed += UpdateTimer_Elapsed;

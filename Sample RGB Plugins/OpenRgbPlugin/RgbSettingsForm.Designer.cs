@@ -1,4 +1,4 @@
-﻿namespace SimpleRgbPlugin
+﻿namespace OpenRgbPlugin
 {
     partial class RgbSettingsForm
     {

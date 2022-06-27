@@ -11,14 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SimpleRgbPlugin
+namespace OpenRgbPlugin
 {
     public partial class RgbSettingsForm : Form
     {
-        private readonly SimpleRgbManager manager;
+        private readonly OpenRgbManager manager;
         private LedConfiguration currentColorConfiguration;
 
-        public RgbSettingsForm(SimpleRgbManager rgbManager, IEnumerable<int> targets)
+        public RgbSettingsForm(OpenRgbManager rgbManager, IEnumerable<int> targets)
         {
             InitializeComponent();
 
