@@ -15,7 +15,6 @@
 		<PackageReference Include="NAudio.Wasapi" Version="2.1.0" />
 		<PackageReference Include="NAudio.WinMM" Version="2.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="OpenRGB.NET" Version="1.7.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -4,8 +4,6 @@ using MirishitaMusicPlayer.Common;
 using MirishitaMusicPlayer.Imas;
 using MirishitaMusicPlayer.Properties;
 using NAudio.Wave;
-using OpenRGB.NET;
-using OpenRGB.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
