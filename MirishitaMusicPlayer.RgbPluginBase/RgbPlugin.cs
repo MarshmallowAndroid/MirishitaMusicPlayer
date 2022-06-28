@@ -5,9 +5,9 @@ namespace MirishitaMusicPlayer.RgbPluginBase
 {
     public interface IRgbManager
     {
-        public IDeviceConfiguration[] DeviceConfigurations { get; }
+        public IDeviceConfiguration[]? DeviceConfigurations { get; }
 
-        public Form GetSettingsForm(IEnumerable<int> targets);
+        public Form? GetSettingsForm(IEnumerable<int> targets);
 
         public bool Connect();
 

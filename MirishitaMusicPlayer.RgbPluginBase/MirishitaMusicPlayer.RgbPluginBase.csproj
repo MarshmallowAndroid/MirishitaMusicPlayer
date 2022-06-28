@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
