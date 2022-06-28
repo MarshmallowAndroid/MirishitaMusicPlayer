@@ -16,7 +16,7 @@ namespace OpenRgbPlugin
     public partial class RgbSettingsForm : Form
     {
         private readonly OpenRgbManager manager;
-        private LedConfiguration currentColorConfiguration;
+        private LedConfiguration? currentColorConfiguration;
 
         public RgbSettingsForm(OpenRgbManager rgbManager, IEnumerable<int> targets)
         {
@@ -50,8 +50,8 @@ namespace OpenRgbPlugin
 
         private void DeviceComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox comboBox = sender as ComboBox;
-            DeviceConfiguration selectedDevice = comboBox.SelectedItem as DeviceConfiguration;
+            ComboBox? comboBox = sender as ComboBox;
+            if (comboBox?.SelectedItem is not DeviceConfiguration selectedDevice) return;
 
             ledComboBox.Items.Clear();
 
@@ -66,7 +66,8 @@ namespace OpenRgbPlugin
 
         private void LedComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LedConfiguration colorConfiguration = ledComboBox.SelectedItem as LedConfiguration;
+            LedConfiguration? colorConfiguration = ledComboBox.SelectedItem as LedConfiguration;
+            if (colorConfiguration == null) return;
 
             currentColorConfiguration = colorConfiguration;
 

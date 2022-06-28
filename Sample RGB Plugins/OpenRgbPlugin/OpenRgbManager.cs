@@ -11,7 +11,7 @@ namespace OpenRgbPlugin
     public class OpenRgbManager : IRgbManager
     {
         private readonly Timer updateTimer;
-        private OpenRGBClient rgbClient;
+        private OpenRGBClient? rgbClient;
 
         public OpenRgbManager()
         {
@@ -19,7 +19,7 @@ namespace OpenRgbPlugin
             updateTimer.Elapsed += UpdateTimer_Elapsed;
         }
 
-        public IDeviceConfiguration[] DeviceConfigurations { get; private set; }
+        public IDeviceConfiguration[]? DeviceConfigurations { get; private set; }
 
         public Form GetSettingsForm(IEnumerable<int> targets)
         {
@@ -75,8 +75,9 @@ namespace OpenRgbPlugin
 
         public void Test(int deviceId)
         {
-            Device device = rgbClient?.GetControllerData(deviceId);
-            if (device == null) return;
+            Device? device = rgbClient?.GetControllerData(deviceId);
+
+            if (device == null || DeviceConfigurations == null) return;
 
             int currentIndex = 0;
             foreach (var item in DeviceConfigurations[deviceId].ColorConfigurations)
@@ -92,7 +93,7 @@ namespace OpenRgbPlugin
             Color color3,
             float duration)
         {
-            if (rgbClient == null)
+            if (rgbClient == null || DeviceConfigurations == null)
                 return;
 
             foreach (var device in DeviceConfigurations)
@@ -114,8 +115,10 @@ namespace OpenRgbPlugin
             }
         }
 
-        private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void UpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            if (DeviceConfigurations == null) return;
+
             foreach (var device in DeviceConfigurations)
             {
                 device.UpdateColors();
