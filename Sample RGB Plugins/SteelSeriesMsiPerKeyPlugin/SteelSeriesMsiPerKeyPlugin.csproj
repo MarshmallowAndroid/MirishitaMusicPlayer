@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\MirishitaMusicPlayer.RgbPluginBase\MirishitaMusicPlayer.RgbPluginBase.csproj" />
+    <ProjectReference Include="..\..\MirishitaMusicPlayer\MirishitaMusicPlayer.csproj" />
   </ItemGroup>
 
 </Project>
