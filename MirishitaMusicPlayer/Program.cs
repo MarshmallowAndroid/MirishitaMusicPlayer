@@ -79,7 +79,7 @@ namespace MirishitaMusicPlayer
 
         public static IRgbManager CreateRgbManager()
         {
-            string[] pluginPaths = Directory.GetFiles(Directory.GetCurrentDirectory(), "*Plugin.*");
+            string[] pluginPaths = Directory.GetFiles(Directory.GetCurrentDirectory(), "*Plugin.dll");
 
             if (pluginPaths.Length < 1) return null;
 
