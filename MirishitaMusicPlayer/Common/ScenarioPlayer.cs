@@ -49,6 +49,7 @@ namespace MirishitaMusicPlayer.Common
             if (scenarioThread != null) return;
 
             scenarioThread = new Thread(DoScenarioPlayback);
+            scenarioThread.IsBackground = true;
             scenarioThread.Start();
         }
 
