@@ -2,8 +2,6 @@
 using MirishitaMusicPlayer.RgbPluginBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace SteelSeriesMsiPerKeyPlugin
 {
@@ -11,6 +9,8 @@ namespace SteelSeriesMsiPerKeyPlugin
     {
         private HttpClient httpClient;
         private System.Timers.Timer updateTimer;
+        private byte[] previewBitmapData = new byte[22 * 4 * 6];
+        private RgbSettingsForm? form;
 
         public SteelSeriesMsiPerKeyRgbManager()
         {
@@ -33,21 +33,27 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public bool Connect()
         {
-            HttpResponseMessage response;
+            HttpResponseMessage? response = null;
 
-            var metadataString = JsonConvert.SerializeObject(new GameMetadata());
-            var task = httpClient.PostJson("game_metadata", metadataString);
-            response = task.GetAwaiter().GetResult();
-            var eventJson = JsonConvert.SerializeObject(new GameEvent());
-            response = httpClient.PostJson("bind_game_event", eventJson).GetAwaiter().GetResult();
+            try
+            {
+                var metadataString = JsonConvert.SerializeObject(new GameMetadata());
+                var task = httpClient.PostJson("game_metadata", metadataString);
+                response = task.GetAwaiter().GetResult();
+                var eventJson = JsonConvert.SerializeObject(new GameEvent());
+                response = httpClient.PostJson("bind_game_event", eventJson).GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+            }
 
-            bool isSuccess = response.IsSuccessStatusCode;
+            bool isSuccess = response?.IsSuccessStatusCode ?? false;
 
             if (isSuccess)
             {
                 DeviceConfigurations = new DeviceConfiguration[]
                 {
-                    new DeviceConfiguration(httpClient)
+                    new DeviceConfiguration(httpClient, previewBitmapData)
                 };
 
                 DeviceConfigurations[0].ColorConfigurations[0].PreferredTarget = 8;
@@ -68,7 +74,11 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public Form? GetSettingsForm(IEnumerable<int> targets)
         {
-            return null;
+            if (DeviceConfigurations is null) return null;
+
+            RgbSettingsForm settingsForm = new(targets, previewBitmapData, (DeviceConfiguration)DeviceConfigurations[0]);
+            form = settingsForm;
+            return settingsForm;
         }
 
         public void UpdateRgb(int target, Color color, Color color2, Color color3, float duration)
@@ -97,22 +107,27 @@ namespace SteelSeriesMsiPerKeyPlugin
         private void UpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             DeviceConfigurations?[0].UpdateColors();
+
+            if (!form?.IsDisposed ?? false)
+                form?.UpdatePreview();
         }
     }
 
-    class ZoneConfiguration : IColorConfiguration
+    public class ZoneConfiguration : IColorConfiguration
     {
         private readonly int zoneIndex;
         private readonly ColorAnimator animator;
         private readonly byte[,] bitmapData;
+        private readonly byte[] previewData;
 
-        public ZoneConfiguration(int zone, FrameBitmap dataBitmap)
+        public ZoneConfiguration(int zone, FrameBitmap dataBitmap, byte[] previewBitmapData)
         {
             zoneIndex = zone;
             bitmapData = dataBitmap.Bitmap;
 
             animator = new(Color.Black);
             animator.ValueAnimate += Animator_ValueAnimate;
+            previewData = previewBitmapData;
         }
 
         public int PreferredTarget { get; set; } = -1;
@@ -155,30 +170,37 @@ namespace SteelSeriesMsiPerKeyPlugin
             {
                 for (int column = start; column <= end; column++)
                 {
-                    bitmapData[column + row * 22, 0] = value.R;
-                    bitmapData[column + row * 22, 1] = value.G;
-                    bitmapData[column + row * 22, 2] = value.B;
+                    int bitmapIndex = column + row * 22;
+                    bitmapData[bitmapIndex, 0] = value.R;
+                    bitmapData[bitmapIndex, 1] = value.G;
+                    bitmapData[bitmapIndex, 2] = value.B;
+
+                    int previewIndex = (column * 4) + row * (22 * 4);
+                    previewData[previewIndex + 0] = value.B;
+                    previewData[previewIndex + 1] = value.G;
+                    previewData[previewIndex + 2] = value.R;
+                    previewData[previewIndex + 3] = 255;
                 }
             }
         }
     }
 
-    class DeviceConfiguration : IDeviceConfiguration
+    public class DeviceConfiguration : IDeviceConfiguration
     {
         private HttpClient httpClient;
         private GameEventPayload payload;
 
-        public DeviceConfiguration(HttpClient client)
+        public DeviceConfiguration(HttpClient client, byte[] previewBitmapData)
         {
             httpClient = client;
             payload = new();
 
             ColorConfigurations = new ZoneConfiguration[]
             {
-                new ZoneConfiguration(0, payload.Data.Frame),
-                new ZoneConfiguration(1, payload.Data.Frame),
-                new ZoneConfiguration(2, payload.Data.Frame),
-                new ZoneConfiguration(3, payload.Data.Frame),
+                new ZoneConfiguration(0, payload.Data.Frame, previewBitmapData),
+                new ZoneConfiguration(1, payload.Data.Frame, previewBitmapData),
+                new ZoneConfiguration(2, payload.Data.Frame, previewBitmapData),
+                new ZoneConfiguration(3, payload.Data.Frame, previewBitmapData),
             };
         }
 
@@ -191,23 +213,22 @@ namespace SteelSeriesMsiPerKeyPlugin
                 var eventDataJson = JsonConvert.SerializeObject(payload);
                 await httpClient.PostJson("game_event", eventDataJson);
             });
-
         }
     }
 
-    class FrameBitmap
+    public class FrameBitmap
     {
         [JsonProperty("bitmap")]
         public byte[,] Bitmap { get; } = new byte[132, 3];
     }
 
-    class GameEventFrame
+    public class GameEventFrame
     {
         [JsonProperty("frame")]
         public FrameBitmap Frame { get; set; } = new();
     }
 
-    class GameEventPayload
+    public class GameEventPayload
     {
         [JsonProperty("game")]
         public static string Game = "MIRISHITA_MUSIC_PLAYER";
@@ -219,7 +240,7 @@ namespace SteelSeriesMsiPerKeyPlugin
         public GameEventFrame Data { get; set; } = new();
     }
 
-    class GameEventHandler
+    public class GameEventHandler
     {
         [JsonProperty("device-type")]
         public static string DeviceType = "rgb-per-key-zones";
@@ -228,7 +249,7 @@ namespace SteelSeriesMsiPerKeyPlugin
         public static string Mode = "bitmap";
     }
 
-    class GameEvent
+    public class GameEvent
     {
 
         [JsonProperty("game")]
@@ -244,13 +265,13 @@ namespace SteelSeriesMsiPerKeyPlugin
         public static GameEventHandler[] Handlers { get; } = new[] { new GameEventHandler() };
     }
 
-    class GameMetadata
+    public class GameMetadata
     {
         [JsonProperty("game")]
         public static string Game = "MIRISHITA_MUSIC_PLAYER";
 
         [JsonProperty("game_display_name")]
-        public static string GameDisplayName = "Mirishita Music Player";
+        public static string GameDisplayName = "ミリシタ Music Player";
 
         [JsonProperty("developer")]
         public static string Developer = "Jacob Tarun";
