@@ -21,14 +21,14 @@ namespace MirishitaMusicPlayer
 {
     internal class Program
     {
-        private static AssemblyLoadContext rgbPluginContext;
+        private static PluginLoadContext rgbPluginContext;
 
         public static readonly string CachePath = "Cache";
         public static readonly string JacketsPath = Path.Combine(CachePath, "Songs");
         public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
         public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
 
-        private static Stream pluginFileStream;
+        //private static Stream pluginFileStream;
 
         [STAThread]
         private static void Main(string[] args)
@@ -74,7 +74,8 @@ namespace MirishitaMusicPlayer
             if (rgbPluginContext?.Assemblies.Count() > 0)
                 rgbPluginContext.Unload();
 
-            pluginFileStream?.Dispose();
+            rgbPluginContext.DisposeAllAssemblies();
+            //pluginFileStream?.Dispose();
         }
 
         public static IRgbManager CreateRgbManager()
@@ -83,10 +84,9 @@ namespace MirishitaMusicPlayer
 
             if (pluginPaths.Length < 1) return null;
 
-            pluginFileStream = File.OpenRead(pluginPaths[0]);
-            rgbPluginContext = new AssemblyLoadContext(null, true);
+            rgbPluginContext = new PluginLoadContext(pluginPaths[0]);
 
-            Assembly assembly = rgbPluginContext.LoadFromStream(pluginFileStream);
+            Assembly assembly = rgbPluginContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPaths[0])));
             foreach (var type in assembly.GetTypes())
             {
                 if (typeof(IRgbManager).IsAssignableFrom(type))
