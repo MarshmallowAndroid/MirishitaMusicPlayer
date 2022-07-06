@@ -6,7 +6,9 @@
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <UseWindowsForms>True</UseWindowsForms>
-	<EnableDynamicLoading>true</EnableDynamicLoading>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <BaseOutputPath>C:\Users\Jacob\source\repos\MirishitaMusicPlayer\MirishitaMusicPlayer\bin</BaseOutputPath>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
   <ItemGroup>

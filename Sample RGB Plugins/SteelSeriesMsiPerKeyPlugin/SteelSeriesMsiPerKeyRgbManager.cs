@@ -1,4 +1,4 @@
-﻿using MirishitaMusicPlayer.Animation;
+﻿using SteelSeriesMsiPerKeyPlugin.Animation;
 using MirishitaMusicPlayer.RgbPluginBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -7,10 +7,12 @@ namespace SteelSeriesMsiPerKeyPlugin
 {
     public class SteelSeriesMsiPerKeyRgbManager : IRgbManager
     {
-        private HttpClient httpClient;
-        private System.Timers.Timer updateTimer;
-        private byte[] previewBitmapData = new byte[22 * 4 * 6];
+        private readonly HttpClient httpClient;
+        private readonly System.Timers.Timer updateTimer;
+        private readonly byte[] previewBitmapData = new byte[22 * 4 * 6];
         private RgbSettingsForm? form;
+
+        private readonly object formLockObject = new();
 
         public SteelSeriesMsiPerKeyRgbManager()
         {
@@ -104,12 +106,17 @@ namespace SteelSeriesMsiPerKeyPlugin
             }
         }
 
-        private void UpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        private async void UpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             DeviceConfigurations?[0].UpdateColors();
 
-            if (!form?.IsDisposed ?? false)
-                form?.UpdatePreview();
+            if (form is null) return;
+
+            lock (formLockObject)
+            {
+                if (!form.IsDisposed)
+                    form.UpdatePreview();
+            }
         }
     }
 
@@ -187,8 +194,8 @@ namespace SteelSeriesMsiPerKeyPlugin
 
     public class DeviceConfiguration : IDeviceConfiguration
     {
-        private HttpClient httpClient;
-        private GameEventPayload payload;
+        private readonly HttpClient httpClient;
+        private readonly GameEventPayload payload;
 
         public DeviceConfiguration(HttpClient client, byte[] previewBitmapData)
         {
@@ -206,9 +213,9 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public IColorConfiguration[] ColorConfigurations { get; private set; }
 
-        public void UpdateColors()
+        public async void UpdateColors()
         {
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
                 var eventDataJson = JsonConvert.SerializeObject(payload);
                 await httpClient.PostJson("game_event", eventDataJson);
@@ -231,10 +238,10 @@ namespace SteelSeriesMsiPerKeyPlugin
     public class GameEventPayload
     {
         [JsonProperty("game")]
-        public static string Game = "MIRISHITA_MUSIC_PLAYER";
+        public const string Game = "MIRISHITA_MUSIC_PLAYER";
 
         [JsonProperty("event")]
-        public static string Event = "COLOR";
+        public const string Event = "COLOR";
 
         [JsonProperty("data")]
         public GameEventFrame Data { get; set; } = new();
@@ -243,23 +250,23 @@ namespace SteelSeriesMsiPerKeyPlugin
     public class GameEventHandler
     {
         [JsonProperty("device-type")]
-        public static string DeviceType = "rgb-per-key-zones";
+        public const string DeviceType = "rgb-per-key-zones";
 
         [JsonProperty("mode")]
-        public static string Mode = "bitmap";
+        public const string Mode = "bitmap";
     }
 
     public class GameEvent
     {
 
         [JsonProperty("game")]
-        public static string Game = "MIRISHITA_MUSIC_PLAYER";
+        public const string Game = "MIRISHITA_MUSIC_PLAYER";
 
         [JsonProperty("event")]
-        public static string Event = "COLOR";
+        public const string Event = "COLOR";
 
         [JsonProperty("value_optional")]
-        public static bool ValueOptional = true;
+        public const bool ValueOptional = true;
 
         [JsonProperty("handlers")]
         public static GameEventHandler[] Handlers { get; } = new[] { new GameEventHandler() };
@@ -268,13 +275,13 @@ namespace SteelSeriesMsiPerKeyPlugin
     public class GameMetadata
     {
         [JsonProperty("game")]
-        public static string Game = "MIRISHITA_MUSIC_PLAYER";
+        public const string Game = "MIRISHITA_MUSIC_PLAYER";
 
         [JsonProperty("game_display_name")]
-        public static string GameDisplayName = "ミリシタ Music Player";
+        public const string GameDisplayName = "ミリシタ Music Player";
 
         [JsonProperty("developer")]
-        public static string Developer = "Jacob Tarun";
+        public const string Developer = "Jacob Tarun";
     }
 
     static class HttpClientExtensions

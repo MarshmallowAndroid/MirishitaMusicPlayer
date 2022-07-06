@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -7,11 +7,18 @@
     <BaseOutputPath>..\..\MirishitaMusicPlayer\bin\</BaseOutputPath>
     <OutputType>Library</OutputType>
     <UseWindowsForms>True</UseWindowsForms>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MirishitaMusicPlayer.RgbPluginBase\MirishitaMusicPlayer.RgbPluginBase.csproj" />
-    <ProjectReference Include="..\..\MirishitaMusicPlayer\MirishitaMusicPlayer.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MirishitaMusicPlayer.RgbPluginBase\MirishitaMusicPlayer.RgbPluginBase.csproj">
+      <Private>false</Private>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

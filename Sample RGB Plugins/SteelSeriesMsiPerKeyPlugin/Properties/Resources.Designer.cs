@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SteelSeriesMsiPerKeyPlugin.Properties {
+namespace MirishitaMusicPlayer.Properties {
     using System;
     
     

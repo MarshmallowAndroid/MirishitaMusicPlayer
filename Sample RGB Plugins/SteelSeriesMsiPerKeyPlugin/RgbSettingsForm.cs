@@ -46,43 +46,14 @@ namespace SteelSeriesMsiPerKeyPlugin
                 comboBox.Items.Add(target);
             }
 
-            ZoneConfiguration zoneConfiguration;
-            if (comboBox.Name.StartsWith("zone0"))
-                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[0];
-            else if (comboBox.Name.StartsWith("zone1"))
-                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[1];
-            else if (comboBox.Name.StartsWith("zone2"))
-                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[2];
-            else
-                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[3];
-
-            comboBox.SelectedItem = zoneConfiguration.PreferredTarget;
-        }
-
-        public void UpdatePreview()
-        {
-            if (preview.IsDisposed) return;
-
-            Invoke(() =>
-            {
-                preview.Image = previewBitmap;
-                preview.Refresh();
-            });
+            comboBox.SelectedItem = GetZoneConfiguration(comboBox).PreferredTarget;
         }
 
         private void ZoneTarget_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sender is ComboBox zoneTarget)
             {
-                ZoneConfiguration zoneConfiguration;
-                if (zoneTarget.Name.StartsWith("zone0"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[0];
-                else if (zoneTarget.Name.StartsWith("zone1"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[1];
-                else if (zoneTarget.Name.StartsWith("zone2"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[2];
-                else
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[3];
+                ZoneConfiguration zoneConfiguration = GetZoneConfiguration(zoneTarget);
 
                 if (zoneTarget.SelectedIndex == 0)
                     zoneConfiguration.PreferredTarget = -1;
@@ -95,17 +66,46 @@ namespace SteelSeriesMsiPerKeyPlugin
         {
             if (sender is ComboBox zoneSource)
             {
-                ZoneConfiguration zoneConfiguration;
-                if (zoneSource.Name.StartsWith("zone0"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[0];
-                else if (zoneSource.Name.StartsWith("zone1"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[1];
-                else if (zoneSource.Name.StartsWith("zone2"))
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[2];
-                else
-                    zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[3];
+                GetZoneConfiguration(zoneSource).PreferredSource = zoneSource.SelectedIndex;
+            }
+        }
 
-                zoneConfiguration.PreferredSource = zoneSource.SelectedIndex;
+        private void ZoneTarget_TextUpdate(object sender, EventArgs e)
+        {
+            if (sender is ComboBox zoneTarget)
+            {
+                if (!int.TryParse(zoneTarget.Text, out int target)) return;
+                GetZoneConfiguration(zoneTarget).PreferredTarget = target;
+            }
+        }
+
+        private ZoneConfiguration GetZoneConfiguration(Control control)
+        {
+            ZoneConfiguration zoneConfiguration;
+            if (control.Name.StartsWith("zone0"))
+                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[0];
+            else if (control.Name.StartsWith("zone1"))
+                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[1];
+            else if (control.Name.StartsWith("zone2"))
+                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[2];
+            else
+                zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[3];
+
+            return zoneConfiguration;
+        }
+
+        public void UpdatePreview()
+        {
+            try
+            {
+                Invoke(() =>
+                {
+                    preview.Image = previewBitmap;
+                    preview.Refresh();
+                });
+            }
+            catch (Exception)
+            {
             }
         }
     }

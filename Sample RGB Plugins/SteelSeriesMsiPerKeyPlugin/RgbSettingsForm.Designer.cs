@@ -60,7 +60,7 @@
             this.label1.Location = new System.Drawing.Point(39, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 15);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Preview";
             // 
             // zone0Target
@@ -71,6 +71,7 @@
             this.zone0Target.Size = new System.Drawing.Size(121, 23);
             this.zone0Target.TabIndex = 2;
             this.zone0Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
+            this.zone0Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
             // 
             // zone1Target
             // 
@@ -78,8 +79,9 @@
             this.zone1Target.Location = new System.Drawing.Point(252, 223);
             this.zone1Target.Name = "zone1Target";
             this.zone1Target.Size = new System.Drawing.Size(121, 23);
-            this.zone1Target.TabIndex = 2;
+            this.zone1Target.TabIndex = 3;
             this.zone1Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
+            this.zone1Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
             // 
             // zone2Target
             // 
@@ -87,8 +89,9 @@
             this.zone2Target.Location = new System.Drawing.Point(411, 223);
             this.zone2Target.Name = "zone2Target";
             this.zone2Target.Size = new System.Drawing.Size(121, 23);
-            this.zone2Target.TabIndex = 2;
+            this.zone2Target.TabIndex = 4;
             this.zone2Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
+            this.zone2Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
             // 
             // zone3Target
             // 
@@ -96,8 +99,9 @@
             this.zone3Target.Location = new System.Drawing.Point(601, 223);
             this.zone3Target.Name = "zone3Target";
             this.zone3Target.Size = new System.Drawing.Size(121, 23);
-            this.zone3Target.TabIndex = 2;
+            this.zone3Target.TabIndex = 5;
             this.zone3Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
+            this.zone3Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
             // 
             // zone0Source
             // 
@@ -110,7 +114,7 @@
             this.zone0Source.Location = new System.Drawing.Point(93, 252);
             this.zone0Source.Name = "zone0Source";
             this.zone0Source.Size = new System.Drawing.Size(121, 23);
-            this.zone0Source.TabIndex = 2;
+            this.zone0Source.TabIndex = 7;
             this.zone0Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
             // 
             // label2
@@ -119,7 +123,7 @@
             this.label2.Location = new System.Drawing.Point(16, 226);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 15);
-            this.label2.TabIndex = 3;
+            this.label2.TabIndex = 1;
             this.label2.Text = "Color Target";
             // 
             // label3
@@ -128,7 +132,7 @@
             this.label3.Location = new System.Drawing.Point(12, 255);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 15);
-            this.label3.TabIndex = 3;
+            this.label3.TabIndex = 6;
             this.label3.Text = "Color Source";
             // 
             // zone1Source
@@ -142,7 +146,7 @@
             this.zone1Source.Location = new System.Drawing.Point(252, 252);
             this.zone1Source.Name = "zone1Source";
             this.zone1Source.Size = new System.Drawing.Size(121, 23);
-            this.zone1Source.TabIndex = 2;
+            this.zone1Source.TabIndex = 8;
             // 
             // zone2Source
             // 
@@ -155,7 +159,7 @@
             this.zone2Source.Location = new System.Drawing.Point(411, 252);
             this.zone2Source.Name = "zone2Source";
             this.zone2Source.Size = new System.Drawing.Size(121, 23);
-            this.zone2Source.TabIndex = 2;
+            this.zone2Source.TabIndex = 9;
             // 
             // zone3Source
             // 
@@ -168,7 +172,7 @@
             this.zone3Source.Location = new System.Drawing.Point(601, 252);
             this.zone3Source.Name = "zone3Source";
             this.zone3Source.Size = new System.Drawing.Size(121, 23);
-            this.zone3Source.TabIndex = 2;
+            this.zone3Source.TabIndex = 10;
             // 
             // RgbSettingsForm
             // 
