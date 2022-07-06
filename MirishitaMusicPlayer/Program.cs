@@ -28,8 +28,6 @@ namespace MirishitaMusicPlayer
         public static readonly string SongsPath = Path.Combine(CachePath, "Songs");
         public static readonly WaveOutEvent OutputDevice = new() { DesiredLatency = 100 };
 
-        //private static Stream pluginFileStream;
-
         [STAThread]
         private static void Main(string[] args)
         {
@@ -75,7 +73,6 @@ namespace MirishitaMusicPlayer
                 rgbPluginContext.Unload();
 
             rgbPluginContext.DisposeAllAssemblies();
-            //pluginFileStream?.Dispose();
         }
 
         public static IRgbManager CreateRgbManager()
