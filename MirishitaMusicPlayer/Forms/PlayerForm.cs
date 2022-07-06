@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Color = System.Drawing.Color;
 using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.RgbPluginBase;
+using System.Threading.Tasks;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -80,12 +81,12 @@ namespace MirishitaMusicPlayer.Forms
             Text = selectedSong.SongId;
 
             scenarioPlayer = new(selectedSong);
-            scenarioPlayer.MuteChanged += UpdateMute;
-            scenarioPlayer.ExpressionChanged += UpdateExpression;
-            scenarioPlayer.LipSyncChanged += UpdateLipSync;
-            scenarioPlayer.LyricsChanged += UpdateLyrics;
-            scenarioPlayer.ScenarioTriggered += UpdateScenario;
-            scenarioPlayer.LightsChanged += UpdateLights;
+            scenarioPlayer.MuteChanged += UpdateMuteAsync;
+            scenarioPlayer.ExpressionChanged += UpdateExpressionAsync;
+            scenarioPlayer.LipSyncChanged += UpdateLipSyncAsync;
+            scenarioPlayer.LyricsChanged += UpdateLyricsAsync;
+            scenarioPlayer.ScenarioTriggered += UpdateScenarioAsync;
+            scenarioPlayer.LightsChanged += UpdateLightsAsync;
 
             #region Idol mute visualizer setup
             for (int i = 0; i < stageMemberCount; i++)
@@ -251,28 +252,28 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         #region Scenario player events
-        private void UpdateMute(byte[] mutes)
+        private async void UpdateMuteAsync(byte[] mutes)
         {
-            if (idolLabels.Count == 1)
-                mutes[0] = 1;
-
-            for (int i = 0; i < idolLabels.Count; i++)
+            await TryInvoke(() =>
             {
-                Label labels = idolLabels[i];
+                if (idolLabels.Count == 1)
+                    mutes[0] = 1;
 
-                TryInvoke(() =>
+                for (int i = 0; i < idolLabels.Count; i++)
                 {
+                    Label labels = idolLabels[i];
+
                     if (mutes[i] == 1)
                         labels.Visible = true;
                     else
                         labels.Visible = false;
-                });
-            }
+                }
+            });
         }
 
-        private void UpdateExpression(int expressionId, bool eyeClose)
+        private async void UpdateExpressionAsync(int expressionId, bool eyeClose)
         {
-            TryInvoke(() =>
+            await TryInvoke(() =>
             {
                 debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
                 debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
@@ -280,23 +281,23 @@ namespace MirishitaMusicPlayer.Forms
             });
         }
 
-        private void UpdateLipSync(int lipSyncId)
+        private async void UpdateLipSyncAsync(int lipSyncId)
         {
-            TryInvoke(() =>
+            await TryInvoke(() =>
             {
                 debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString();
                 faceVisualizer.UpdateMouth(lipSyncId);
             });
         }
 
-        private void UpdateLyrics(string lyrics)
+        private async void UpdateLyricsAsync(string lyrics)
         {
-            TryInvoke(() => lyricsTextBox.Text = lyrics);
+            await TryInvoke(() => lyricsTextBox.Text = lyrics);
         }
 
-        private void UpdateLights(LightPayload lightPayload)
+        private async void UpdateLightsAsync(LightPayload lightPayload)
         {
-            TryInvoke(() =>
+            await TryInvoke(() =>
             {
                 if (targetComboBox.SelectedIndex > 0)
                 {
@@ -322,12 +323,12 @@ namespace MirishitaMusicPlayer.Forms
             });
         }
 
-        private void UpdateScenario(EventScenarioData scenarioData)
+        private async void UpdateScenarioAsync(EventScenarioData scenarioData)
         {
             foreach (var eventLabel in eventLabels)
             {
                 if ((int)eventLabel.Tag == (int)scenarioData.Type)
-                    TryInvoke(() => eventLabel.Flash());
+                    await TryInvoke(() => eventLabel.Flash());
             }
         }
         #endregion
@@ -514,15 +515,17 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        private void TryInvoke(Action action)
+        private Task TryInvoke(Action action)
         {
             try
             {
-                Invoke(action);
+                BeginInvoke(action);
             }
             catch (Exception)
             {
             }
+
+            return Task.CompletedTask;
         }
     }
 }
