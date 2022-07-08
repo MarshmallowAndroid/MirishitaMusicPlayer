@@ -110,7 +110,7 @@ namespace MirishitaMusicPlayer.Common
             string scenarioFile,
             Song song,
             AssetsManager assetsManager,
-            ScenarioOrientation orientation = ScenarioOrientation.Yoko)
+            ScenarioOrientation orientation = ScenarioOrientation.Tate)
         {
             // Load scenarios and notes first
             assetsManager.LoadFiles(new[] { scenarioFile });
