@@ -228,7 +228,6 @@ namespace MirishitaMusicPlayer.Common
             SongStopped?.Invoke();
         }
 
-
         public delegate void MuteChangedEventHandler(byte[] mutes);
         public event MuteChangedEventHandler MuteChanged;
 
