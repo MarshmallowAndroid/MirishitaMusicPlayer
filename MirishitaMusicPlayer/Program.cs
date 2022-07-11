@@ -72,7 +72,7 @@ namespace MirishitaMusicPlayer
             if (rgbPluginContext?.Assemblies.Count() > 0)
                 rgbPluginContext.Unload();
 
-            rgbPluginContext.DisposeAllAssemblies();
+            rgbPluginContext?.DisposeAllAssemblies();
         }
 
         public static IRgbManager CreateRgbManager()
