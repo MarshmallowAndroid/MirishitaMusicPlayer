@@ -81,7 +81,7 @@ namespace OpenRgbPlugin
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            manager.Connect();
+            manager.InitializeAsync();
             RefreshDevices();
         }
 
@@ -92,7 +92,7 @@ namespace OpenRgbPlugin
 
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
-            manager.Disconnect();
+            manager.CloseAsync();
 
             deviceComboBox.Items.Clear();
             ledComboBox.Items.Clear();

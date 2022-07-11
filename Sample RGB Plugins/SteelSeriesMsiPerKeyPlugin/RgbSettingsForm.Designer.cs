@@ -147,6 +147,7 @@
             this.zone1Source.Name = "zone1Source";
             this.zone1Source.Size = new System.Drawing.Size(121, 23);
             this.zone1Source.TabIndex = 8;
+            this.zone1Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
             // 
             // zone2Source
             // 
@@ -160,6 +161,7 @@
             this.zone2Source.Name = "zone2Source";
             this.zone2Source.Size = new System.Drawing.Size(121, 23);
             this.zone2Source.TabIndex = 9;
+            this.zone2Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
             // 
             // zone3Source
             // 
@@ -173,6 +175,7 @@
             this.zone3Source.Name = "zone3Source";
             this.zone3Source.Size = new System.Drawing.Size(121, 23);
             this.zone3Source.TabIndex = 10;
+            this.zone3Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
             // 
             // RgbSettingsForm
             // 

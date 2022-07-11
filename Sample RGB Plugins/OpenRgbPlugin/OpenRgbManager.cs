@@ -26,7 +26,7 @@ namespace OpenRgbPlugin
             return new RgbSettingsForm(this, targets);
         }
 
-        public bool Connect()
+        public async Task<bool> InitializeAsync()
         {
             if (rgbClient == null || !rgbClient.Connected)
             {
@@ -38,7 +38,7 @@ namespace OpenRgbPlugin
                 }
                 catch (Exception)
                 {
-                    Disconnect();
+                    CloseAsync();
 
                     MessageBox.Show("Could not connect to OpenRGB server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
@@ -58,19 +58,21 @@ namespace OpenRgbPlugin
             {
                 foreach (var led in device.ColorConfigurations)
                 {
-                    led.AnimateColor(Color.Black, 0f);
+                    await led.AnimateColorAsync(Color.Black, 0f);
                 }
             }
 
             return true;
         }
 
-        public void Disconnect()
+        public Task CloseAsync()
         {
             updateTimer.Stop();
 
             rgbClient?.Dispose();
             rgbClient = null;
+
+            return Task.CompletedTask;
         }
 
         public void Test(int deviceId)
@@ -82,11 +84,11 @@ namespace OpenRgbPlugin
             int currentIndex = 0;
             foreach (var item in DeviceConfigurations[deviceId].ColorConfigurations)
             {
-                item.AnimateColor(Color.White, (float)currentIndex * 10);
+                item.AnimateColorAsync(Color.White, (float)currentIndex * 10);
             }
         }
 
-        public void UpdateRgb(
+        public async Task UpdateRgbAsync(
             int target,
             Color color,
             Color color2,
@@ -109,7 +111,7 @@ namespace OpenRgbPlugin
                             _ => color
                         };
 
-                        led.AnimateColor(colorFromSource, duration);
+                        await led.AnimateColorAsync(colorFromSource, duration);
                     }
                 }
             }
@@ -121,7 +123,7 @@ namespace OpenRgbPlugin
 
             foreach (var device in DeviceConfigurations)
             {
-                device.UpdateColors();
+                device.UpdateColorsAsync();
             }
         }
     }
@@ -153,9 +155,11 @@ namespace OpenRgbPlugin
 
         public IColorConfiguration[] ColorConfigurations { get; }
 
-        public void UpdateColors()
+        public Task UpdateColorsAsync()
         {
             rgbClient.UpdateLeds(rgbDeviceId, rgbColors);
+
+            return Task.CompletedTask;
         }
 
         public override string ToString()
@@ -186,9 +190,11 @@ namespace OpenRgbPlugin
 
         public int PreferredSource { get; set; } = 0;
 
-        public void AnimateColor(Color color, float duration)
+        public Task AnimateColorAsync(Color color, float duration)
         {
             animator.Animate(color, duration);
+
+            return Task.CompletedTask;
         }
 
         private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)

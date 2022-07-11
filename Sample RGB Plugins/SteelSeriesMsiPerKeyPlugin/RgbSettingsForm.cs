@@ -94,19 +94,22 @@ namespace SteelSeriesMsiPerKeyPlugin
             return zoneConfiguration;
         }
 
-        public void UpdatePreview()
+        public async void UpdatePreview()
         {
-            try
+            await Task.Run(() =>
             {
-                Invoke(() =>
+                try
                 {
-                    preview.Image = previewBitmap;
-                    preview.Refresh();
-                });
-            }
-            catch (Exception)
-            {
-            }
+                    BeginInvoke(() =>
+                    {
+                        preview.Image = previewBitmap;
+                        preview.Refresh();
+                    });
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
     }
 }

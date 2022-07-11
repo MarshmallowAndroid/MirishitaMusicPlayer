@@ -33,17 +33,16 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public IDeviceConfiguration[]? DeviceConfigurations { get; private set; }
 
-        public bool Connect()
+        public async Task<bool> InitializeAsync()
         {
             HttpResponseMessage? response = null;
 
             try
             {
                 var metadataString = JsonConvert.SerializeObject(new GameMetadata());
-                var task = httpClient.PostJson("game_metadata", metadataString);
-                response = task.GetAwaiter().GetResult();
+                response = await httpClient.PostJson("game_metadata", metadataString);
                 var eventJson = JsonConvert.SerializeObject(new GameEvent());
-                response = httpClient.PostJson("bind_game_event", eventJson).GetAwaiter().GetResult();
+                response = await httpClient.PostJson("bind_game_event", eventJson);
             }
             catch (Exception)
             {
@@ -69,9 +68,11 @@ namespace SteelSeriesMsiPerKeyPlugin
             return isSuccess;
         }
 
-        public void Disconnect()
+        public Task CloseAsync()
         {
             updateTimer.Stop();
+
+            return Task.CompletedTask;
         }
 
         public Form? GetSettingsForm(IEnumerable<int> targets)
@@ -83,7 +84,7 @@ namespace SteelSeriesMsiPerKeyPlugin
             return settingsForm;
         }
 
-        public void UpdateRgb(int target, Color color, Color color2, Color color3, float duration)
+        public async Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration)
         {
             if (DeviceConfigurations == null) return;
 
@@ -100,7 +101,7 @@ namespace SteelSeriesMsiPerKeyPlugin
                             _ => color
                         };
 
-                        zone.AnimateColor(colorFromSource, duration);
+                        await zone.AnimateColorAsync(colorFromSource, duration);
                     }
                 }
             }
@@ -108,10 +109,10 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         private async void UpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            DeviceConfigurations?[0].UpdateColors();
+            if (DeviceConfigurations?[0] is null) return;
+            await DeviceConfigurations[0].UpdateColorsAsync();
 
             if (form is null) return;
-
             lock (formLockObject)
             {
                 if (!form.IsDisposed)
@@ -141,9 +142,11 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public int PreferredSource { get; set; } = 0;
 
-        public void AnimateColor(Color color, float duration)
+        public Task AnimateColorAsync(Color color, float duration)
         {
             animator.Animate(color, duration);
+
+            return Task.CompletedTask;
         }
 
         private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)
@@ -213,7 +216,7 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         public IColorConfiguration[] ColorConfigurations { get; private set; }
 
-        public async void UpdateColors()
+        public async Task UpdateColorsAsync()
         {
             await Task.Run(async () =>
             {

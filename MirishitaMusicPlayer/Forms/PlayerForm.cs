@@ -227,7 +227,7 @@ namespace MirishitaMusicPlayer.Forms
             outputDevice.Play();
         }
 
-        private void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
+        private async void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             outputDevice.Stop();
             outputDevice.Dispose();
@@ -241,7 +241,7 @@ namespace MirishitaMusicPlayer.Forms
 
             lightsForm?.Dispose();
 
-            rgbManager?.Disconnect();
+            await (rgbManager?.CloseAsync() ?? Task.CompletedTask);
             rgbSettingsForm?.Dispose();
             rgbSettingsForm = null;
             rgbManager = null;
@@ -297,7 +297,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void UpdateLightsAsync(LightPayload lightPayload)
         {
-            await TryInvoke(() =>
+            await TryInvoke(async () =>
             {
                 if (targetComboBox.SelectedIndex > 0)
                 {
@@ -309,17 +309,12 @@ namespace MirishitaMusicPlayer.Forms
                     }
                 }
 
-                rgbManager?.UpdateRgb(
+                await (rgbManager?.UpdateRgbAsync(
                     lightPayload.Target,
                     lightPayload.Color?.ToColor() ?? Color.Black,
                     lightPayload.Color2?.ToColor() ?? Color.Black,
                     lightPayload.Color3?.ToColor() ?? Color.Black,
-                    lightPayload.Duration);
-
-                //if (lightPayload.Target == 11)
-                //{
-                //    colorAnimator.Animate(lightPayload.Color.ToColor(), lightPayload.Duration);
-                //}
+                    lightPayload.Duration) ?? Task.CompletedTask);
             });
         }
 
@@ -511,7 +506,12 @@ namespace MirishitaMusicPlayer.Forms
             if (rgbManager == null)
             {
                 rgbManager = Program.CreateRgbManager();
-                rgbManager?.Connect();
+
+                Task.Run(async () =>
+                {
+                    if (!await rgbManager?.InitializeAsync())
+                        MessageBox.Show("Failed to initialize RGB manager.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                });
             }
         }
 

@@ -9,18 +9,18 @@ namespace MirishitaMusicPlayer.RgbPluginBase
 
         public Form? GetSettingsForm(IEnumerable<int> targets);
 
-        public bool Connect();
+        public Task<bool> InitializeAsync();
 
-        public void Disconnect();
+        public Task CloseAsync();
 
-        public void UpdateRgb(int target, Color color, Color color2, Color color3, float duration);
+        public Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration);
     }
 
     public interface IDeviceConfiguration
     {
         public IColorConfiguration[] ColorConfigurations { get; }
 
-        public void UpdateColors();
+        public Task UpdateColorsAsync();
     }
 
     public interface IColorConfiguration
@@ -29,6 +29,6 @@ namespace MirishitaMusicPlayer.RgbPluginBase
 
         public int PreferredSource { get; set; }
 
-        public void AnimateColor(Color color, float duration);
+        public Task AnimateColorAsync(Color color, float duration);
     }
 }
