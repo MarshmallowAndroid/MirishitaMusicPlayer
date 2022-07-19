@@ -44,7 +44,7 @@ namespace MirishitaMusicPlayer
 
                 if (song == null) return;
 
-                Console.Title = song.SongId;
+                Console.Title = song.SongID;
 
                 IdolOrderForm idolOrderForm = new(song);
 

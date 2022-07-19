@@ -17,7 +17,7 @@ namespace MirishitaMusicPlayer.Common
 
         public Song(AssetList assets, string songId, AssetsManager assetsManager)
         {
-            SongId = songId;
+            SongID = songId;
 
             // Required files
             string scenarioString = $"scrobj_{songId}.unity3d";
@@ -68,7 +68,7 @@ namespace MirishitaMusicPlayer.Common
             _assetsManager = assetsManager;
         }
 
-        public string SongId { get; }
+        public string SongID { get; }
 
         public Asset ScenarioAsset { get; }
 

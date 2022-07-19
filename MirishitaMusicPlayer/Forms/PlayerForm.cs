@@ -78,7 +78,7 @@ namespace MirishitaMusicPlayer.Forms
             songMixer = selectedSong.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
 
-            Text = selectedSong.SongId;
+            Text = selectedSong.SongID;
 
             scenarioPlayer = new(selectedSong);
             scenarioPlayer.MuteChanged += UpdateMuteAsync;
@@ -506,6 +506,7 @@ namespace MirishitaMusicPlayer.Forms
             if (rgbManager == null)
             {
                 rgbManager = Program.CreateRgbManager();
+                rgbManager = Program.CreateRgbManager(song.SongID, targets);
 
                 Task.Run(async () =>
                 {
