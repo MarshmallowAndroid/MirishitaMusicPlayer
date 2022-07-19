@@ -51,12 +51,8 @@ namespace MirishitaMusicPlayer
                 bool songProcessedSuccessfully = idolOrderForm.ProcessSong();
                 idolOrderForm.Dispose();
 
-                if (songProcessedSuccessfully)
-                    OutputDevice.Play();
-                else
+                if (!songProcessedSuccessfully)
                     continue;
-
-                idolOrderForm.Dispose();
 
                 PlayerForm playerForm = new(song);
                 playerForm.ShowDialog();
