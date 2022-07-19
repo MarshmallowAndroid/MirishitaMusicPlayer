@@ -8,7 +8,7 @@ namespace MirishitaMusicPlayer.Animation
 {
     public interface IAnimator<T> : IDisposable
     {
-        public void Animate(T to, float duration);
+        public Task Animate(T to, float duration);
 
         public delegate void ValueAnimateEventHandler(IAnimator<T> sender, T value);
         public event ValueAnimateEventHandler ValueAnimate;

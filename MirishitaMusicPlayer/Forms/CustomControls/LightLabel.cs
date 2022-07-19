@@ -11,7 +11,7 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
 {
     public class LightLabel : Label
     {
-        ColorAnimator colorAnimator;
+        private readonly ColorAnimator colorAnimator;
 
         public LightLabel() : base()
         {
@@ -19,14 +19,16 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
             colorAnimator.ValueAnimate += ColorAnimator_ValueAnimate;
         }
 
-        private void ColorAnimator_ValueAnimate(IAnimator<Color> sender, Color color)
+        private async void ColorAnimator_ValueAnimate(IAnimator<Color> sender, Color color)
         {
-            TryInvoke(() => BackColor = color);
+            await TryInvoke(() => BackColor = color);
         }
 
-        public void FadeBackColor(Color to, float duration)
+        public Task FadeBackColor(Color to, float duration)
         {
             colorAnimator.Animate(to, duration);
+
+            return Task.CompletedTask;
         }
 
         protected override void Dispose(bool disposing)
@@ -40,15 +42,17 @@ namespace MirishitaMusicPlayer.Forms.CustomControls
             }
         }
 
-        private void TryInvoke(Action action)
+        private Task TryInvoke(Action action)
         {
             try
             {
-                Invoke(action);
+                BeginInvoke(action);
             }
             catch (Exception)
             {
             }
+
+            return Task.CompletedTask;
         }
     }
 }

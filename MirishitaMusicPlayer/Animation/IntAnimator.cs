@@ -47,7 +47,7 @@ namespace MirishitaMusicPlayer.Animation
             }
         }
 
-        public void Animate(int to, float duration)
+        public Task Animate(int to, float duration)
         {
             animationTimer.Stop();
 
@@ -55,7 +55,7 @@ namespace MirishitaMusicPlayer.Animation
             {
                 lastValue = to;
                 ValueAnimate?.Invoke(this, to);
-                return;
+                return Task.CompletedTask;
             }
 
             animationPercentage = 0.0f;
@@ -65,6 +65,8 @@ namespace MirishitaMusicPlayer.Animation
             animationDuration = duration;
 
             animationTimer.Start();
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

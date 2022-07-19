@@ -60,15 +60,15 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        public void UpdateColors(
+        public async Task UpdateColors(
             ColorRGBA color1,
             ColorRGBA color2,
             ColorRGBA color3,
             float duration)
         {
-            lightLabel1.FadeBackColor(color1?.ToColor() ?? System.Drawing.Color.Black, duration);
-            lightLabel2.FadeBackColor(color2?.ToColor() ?? System.Drawing.Color.Black, duration);
-            lightLabel3.FadeBackColor(color3?.ToColor() ?? System.Drawing.Color.Black, duration);
+            await lightLabel1.FadeBackColor(color1?.ToColor() ?? System.Drawing.Color.Black, duration);
+            await lightLabel2.FadeBackColor(color2?.ToColor() ?? System.Drawing.Color.Black, duration);
+            await lightLabel3.FadeBackColor(color3?.ToColor() ?? System.Drawing.Color.Black, duration);
         }
     }
 }

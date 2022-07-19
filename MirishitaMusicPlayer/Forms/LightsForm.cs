@@ -50,11 +50,11 @@ namespace MirishitaMusicPlayer.Forms
             Height = 40 + targetsPanel.Top + 512 + 10 + 1;
         }
 
-        private void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
+        private async void ScenarioPlayer_LightsChanged(LightPayload lightPayload)
         {
-            TryInvoke(() =>
+            await TryInvoke(async () =>
             {
-                lightTargets[lightPayload.Target].UpdateColors(
+                await lightTargets[lightPayload.Target].UpdateColors(
                     lightPayload.Color,
                     lightPayload.Color2,
                     lightPayload.Color3,
@@ -82,15 +82,17 @@ namespace MirishitaMusicPlayer.Forms
             Height = checkBox.Checked ? Height -= hideDifference : Height += hideDifference;
         }
 
-        private void TryInvoke(Action action)
+        private Task TryInvoke(Action action)
         {
             try
             {
-                Invoke(action);
+                BeginInvoke(action);
             }
             catch (Exception)
             {
             }
+
+            return Task.CompletedTask;
         }
     }
 }

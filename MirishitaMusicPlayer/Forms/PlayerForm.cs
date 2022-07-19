@@ -12,6 +12,7 @@ using Color = System.Drawing.Color;
 using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.RgbPluginBase;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -214,7 +215,7 @@ namespace MirishitaMusicPlayer.Forms
             }
         }
 
-        private void PlayerForm_Load(object sender, EventArgs e)
+        private async void PlayerForm_Load(object sender, EventArgs e)
         {
             if (songMixer.VoiceCount > 0)
                 toggleVoicesButton.Enabled = true;
@@ -224,7 +225,12 @@ namespace MirishitaMusicPlayer.Forms
             TryCreateRgbManager();
 
             scenarioPlayer.Start();
-            outputDevice.Play();
+
+            await Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                outputDevice.Play();
+            });
         }
 
         private async void PlayerForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -299,22 +305,22 @@ namespace MirishitaMusicPlayer.Forms
         {
             await TryInvoke(async () =>
             {
-                if (targetComboBox.SelectedIndex > 0)
-                {
-                    if (targetComboBox.SelectedIndex == 1 || lightPayload.Target == (int)targetComboBox.SelectedItem)
-                    {
-                        lightLabel1.FadeBackColor(lightPayload.Color?.ToColor() ?? Color.Black, lightPayload.Duration);
-                        lightLabel2.FadeBackColor(lightPayload.Color2?.ToColor() ?? Color.Black, lightPayload.Duration);
-                        lightLabel3.FadeBackColor(lightPayload.Color3?.ToColor() ?? Color.Black, lightPayload.Duration);
-                    }
-                }
-
                 await (rgbManager?.UpdateRgbAsync(
                     lightPayload.Target,
                     lightPayload.Color?.ToColor() ?? Color.Black,
                     lightPayload.Color2?.ToColor() ?? Color.Black,
                     lightPayload.Color3?.ToColor() ?? Color.Black,
                     lightPayload.Duration) ?? Task.CompletedTask);
+
+                if (targetComboBox.SelectedIndex > 0)
+                {
+                    if (targetComboBox.SelectedIndex == 1 || lightPayload.Target == (int)targetComboBox.SelectedItem)
+                    {
+                        await lightLabel1.FadeBackColor(lightPayload.Color?.ToColor() ?? Color.Black, lightPayload.Duration);
+                        await lightLabel2.FadeBackColor(lightPayload.Color2?.ToColor() ?? Color.Black, lightPayload.Duration);
+                        await lightLabel3.FadeBackColor(lightPayload.Color3?.ToColor() ?? Color.Black, lightPayload.Duration);
+                    }
+                }
             });
         }
 
