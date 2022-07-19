@@ -3,17 +3,27 @@ using System.Windows.Forms;
 
 namespace MirishitaMusicPlayer.RgbPluginBase
 {
-    public interface IRgbManager
+    public abstract class RgbManager
     {
-        public IDeviceConfiguration[]? DeviceConfigurations { get; }
+        protected RgbManager(string songID, IEnumerable<int> targets)
+        {
+            SongID = songID;
+            Targets = targets;
+        }
 
-        public Form? GetSettingsForm(IEnumerable<int> targets);
+        public string SongID { get; }
 
-        public Task<bool> InitializeAsync();
+        public IEnumerable<int> Targets { get; }
 
-        public Task CloseAsync();
+        public IDeviceConfiguration[]? DeviceConfigurations { get; protected set; }
 
-        public Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration);
+        public abstract Form? GetSettingsForm();
+
+        public abstract Task<bool> InitializeAsync();
+        
+        public abstract Task CloseAsync();
+
+        public abstract Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration);
     }
 
     public interface IDeviceConfiguration

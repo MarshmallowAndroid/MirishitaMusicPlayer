@@ -5,16 +5,16 @@ using Newtonsoft.Json.Linq;
 
 namespace SteelSeriesMsiPerKeyPlugin
 {
-    public class SteelSeriesMsiPerKeyRgbManager : IRgbManager
+    public class SteelSeriesMsiPerKeyRgbManager : RgbManager
     {
         private readonly HttpClient httpClient;
-        private readonly System.Timers.Timer updateTimer;
+        private readonly System.Timers.Timer updateTimer = new(1000f / 60f);
         private readonly byte[] previewBitmapData = new byte[22 * 4 * 6];
         private RgbSettingsForm? form;
 
         private readonly object formLockObject = new();
 
-        public SteelSeriesMsiPerKeyRgbManager()
+        public SteelSeriesMsiPerKeyRgbManager(string songID, IEnumerable<int> targets) : base(songID, targets)
         {
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var coreProps = Path.Combine(programData, "SteelSeries\\SteelSeries Engine 3\\coreProps.json");
@@ -27,13 +27,10 @@ namespace SteelSeriesMsiPerKeyPlugin
                 BaseAddress = new Uri("http://" + address)
             };
 
-            updateTimer = new(1000f / 60f);
             updateTimer.Elapsed += UpdateTimer_Elapsed;
         }
 
-        public IDeviceConfiguration[]? DeviceConfigurations { get; private set; }
-
-        public async Task<bool> InitializeAsync()
+        public override async Task<bool> InitializeAsync()
         {
             HttpResponseMessage? response = null;
 
@@ -57,10 +54,20 @@ namespace SteelSeriesMsiPerKeyPlugin
                     new DeviceConfiguration(httpClient, previewBitmapData)
                 };
 
-                DeviceConfigurations[0].ColorConfigurations[0].PreferredTarget = 8;
-                DeviceConfigurations[0].ColorConfigurations[1].PreferredTarget = 9;
-                DeviceConfigurations[0].ColorConfigurations[2].PreferredTarget = 10;
-                DeviceConfigurations[0].ColorConfigurations[3].PreferredTarget = 11;
+                if (HasTargets(Targets, new[] { 8, 9, 10, 11 }))
+                {
+                    DeviceConfigurations[0].ColorConfigurations[0].PreferredTarget = 8;
+                    DeviceConfigurations[0].ColorConfigurations[1].PreferredTarget = 9;
+                    DeviceConfigurations[0].ColorConfigurations[2].PreferredTarget = 10;
+                    DeviceConfigurations[0].ColorConfigurations[3].PreferredTarget = 11;
+                }
+                else if (HasTargets(Targets, new[] { 8, 9, 10 }))
+                {
+                    DeviceConfigurations[0].ColorConfigurations[0].PreferredTarget = 8;
+                    DeviceConfigurations[0].ColorConfigurations[1].PreferredTarget = 9;
+                    DeviceConfigurations[0].ColorConfigurations[2].PreferredTarget = 9;
+                    DeviceConfigurations[0].ColorConfigurations[3].PreferredTarget = 10;
+                }
 
                 updateTimer.Start();
             }
@@ -68,23 +75,24 @@ namespace SteelSeriesMsiPerKeyPlugin
             return isSuccess;
         }
 
-        public Task CloseAsync()
+        public override Task CloseAsync()
         {
             updateTimer.Stop();
+            updateTimer.Dispose();
 
             return Task.CompletedTask;
         }
 
-        public Form? GetSettingsForm(IEnumerable<int> targets)
+        public override Form? GetSettingsForm()
         {
             if (DeviceConfigurations is null) return null;
 
-            RgbSettingsForm settingsForm = new(targets, previewBitmapData, (DeviceConfiguration)DeviceConfigurations[0]);
+            RgbSettingsForm settingsForm = new(Targets, previewBitmapData, (DeviceConfiguration)DeviceConfigurations[0]);
             form = settingsForm;
             return settingsForm;
         }
 
-        public async Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration)
+        public override async Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration)
         {
             if (DeviceConfigurations == null) return;
 
@@ -118,6 +126,16 @@ namespace SteelSeriesMsiPerKeyPlugin
                 if (!form.IsDisposed)
                     form.UpdatePreview();
             }
+        }
+
+        private bool HasTargets(IEnumerable<int> inputTargets, int[] targets)
+        {
+            foreach (var item in targets)
+            {
+                if (!inputTargets.Contains(item)) return false;
+            }
+
+            return true;
         }
     }
 

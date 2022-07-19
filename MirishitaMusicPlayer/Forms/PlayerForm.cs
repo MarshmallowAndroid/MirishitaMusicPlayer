@@ -57,7 +57,7 @@ namespace MirishitaMusicPlayer.Forms
         private int currentTop;
         #endregion
 
-        private IRgbManager rgbManager = Program.RgbManager;
+        private RgbManager rgbManager = Program.RgbManager;
 
         public PlayerForm(Song selectedSong)
         {
@@ -340,13 +340,7 @@ namespace MirishitaMusicPlayer.Forms
 
             if (rgbSettingsForm == null || rgbSettingsForm.IsDisposed)
             {
-                List<int> targets = new();
-                for (int i = 2; i < targetComboBox.Items.Count; i++)
-                {
-                    targets.Add((int)targetComboBox.Items[i]);
-                }
-
-                rgbSettingsForm = rgbManager.GetSettingsForm(targets);
+                rgbSettingsForm = rgbManager.GetSettingsForm();
 
                 if (rgbSettingsForm == null) return;
 
@@ -505,7 +499,12 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (rgbManager == null)
             {
-                rgbManager = Program.CreateRgbManager();
+                List<int> targets = new();
+                for (int i = 2; i < targetComboBox.Items.Count; i++)
+                {
+                    targets.Add((int)targetComboBox.Items[i]);
+                }
+
                 rgbManager = Program.CreateRgbManager(song.SongID, targets);
 
                 Task.Run(async () =>

@@ -63,7 +63,7 @@ namespace MirishitaMusicPlayer
             }
         }
 
-        public static IRgbManager RgbManager { get; set; }
+        public static RgbManager RgbManager { get; set; }
 
         public static void UnloadPlugin()
         {
@@ -75,7 +75,7 @@ namespace MirishitaMusicPlayer
             rgbPluginContext?.DisposeAllAssemblies();
         }
 
-        public static IRgbManager CreateRgbManager()
+        public static RgbManager CreateRgbManager(string songID, IEnumerable<int> targets)
         {
             string[] pluginPaths = Directory.GetFiles(Directory.GetCurrentDirectory(), "*Plugin.dll");
 
@@ -86,9 +86,9 @@ namespace MirishitaMusicPlayer
             Assembly assembly = rgbPluginContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginPaths[0])));
             foreach (var type in assembly.GetTypes())
             {
-                if (typeof(IRgbManager).IsAssignableFrom(type))
+                if (typeof(RgbManager).IsAssignableFrom(type))
                 {
-                    return (IRgbManager)Activator.CreateInstance(type);
+                    return (RgbManager)Activator.CreateInstance(type, songID, targets);
                 }
             }
 

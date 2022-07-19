@@ -8,7 +8,7 @@ using Timer = System.Timers.Timer;
 
 namespace OpenRgbPlugin
 {
-    public class OpenRgbManager : IRgbManager
+    public class OpenRgbManager : RgbManager
     {
         private readonly Timer updateTimer;
         private OpenRGBClient? rgbClient;
