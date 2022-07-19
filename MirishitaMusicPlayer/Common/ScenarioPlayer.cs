@@ -193,11 +193,13 @@ namespace MirishitaMusicPlayer.Common
                     {
                         if (currentMainScenario.Layer == Layer)
                         {
+                            bool on = currentMainScenario.On > 0;
+
                             LightsChanged?.Invoke(new LightPayload
                             {
-                                Color = currentMainScenario.Col,
-                                Color2 = currentMainScenario.Col2,
-                                Color3 = currentMainScenario.Col3,
+                                Color = on ? currentMainScenario.Col : new ColorRGBA(0, 0, 0, 0),
+                                Color2 = on ? currentMainScenario.Col2 : new ColorRGBA(0, 0, 0, 0),
+                                Color3 = on ? currentMainScenario.Col3 : new ColorRGBA(0, 0, 0, 0),
                                 Duration = (float)(currentMainScenario.AbsEndTime - currentMainScenario.AbsTime) * 1000f,
                                 Target = currentMainScenario.Target
                             });

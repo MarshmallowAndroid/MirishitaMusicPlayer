@@ -9,7 +9,17 @@ namespace MirishitaMusicPlayer.Imas
 {
     public class ColorRGBA
     {
-        public float A { get; set; }
+        public ColorRGBA()
+        {
+        }
+
+        public ColorRGBA(float r, float g, float b, float a)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
 
         public float R { get; set; }
 
@@ -17,12 +27,14 @@ namespace MirishitaMusicPlayer.Imas
 
         public float B { get; set; }
 
+        public float A { get; set; }
+
         public Color ToColor()
         {
-            int a = 255;
             int r = (int)Math.Clamp(255 * R, 0, 255);
             int g = (int)Math.Clamp(255 * G, 0, 255);
             int b = (int)Math.Clamp(255 * B, 0, 255);
+            int a = 255;
 
             return System.Drawing.Color.FromArgb(a, r, g, b);
         }
