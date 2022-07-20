@@ -90,7 +90,7 @@ namespace MirishitaMusicPlayer.Forms
             if (Song.Singers.Length > 0 || Configuration.Modes.HasFlag(SongMode.OngenSentaku))
                 ShowDialog();
             else
-                Task.Run(() => InitializeAssetsAsync()).Wait();
+                Task.Run(async () => await InitializeAssetsAsync()).Wait();
 
             return shouldPlaySong;
         }

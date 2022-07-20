@@ -41,7 +41,7 @@ namespace MirishitaMusicPlayer.Forms
                 Task.Run(async () =>
                 {
                     await InitializeDatabaseAsync();
-                    await InitializeSong(songId);
+                    await InitializeSongAsync(songId);
                 }).Wait();
             }
 
@@ -170,7 +170,7 @@ namespace MirishitaMusicPlayer.Forms
                         UpdateList();
                     }
 
-                    await InitializeSong(songId);
+                    await InitializeSongAsync(songId);
                 }
                 else
                 {
@@ -184,10 +184,10 @@ namespace MirishitaMusicPlayer.Forms
         private async void SongJacket_Click(object sender, EventArgs e)
         {
             PictureBox jacket = sender as PictureBox;
-            await InitializeSong(jacket.Tag.ToString());
+            await InitializeSongAsync(jacket.Tag.ToString());
         }
 
-        private async Task InitializeSong(string songId)
+        private async Task InitializeSongAsync(string songId)
         {
             LoadingMode(true);
 
