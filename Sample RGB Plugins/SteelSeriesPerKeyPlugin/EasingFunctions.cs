@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteelSeriesMsiPerKeyPlugin.Animation
+namespace SteelSeriesPerKeyPlugin.Animation
 {
     public static class EasingFunctions
     {

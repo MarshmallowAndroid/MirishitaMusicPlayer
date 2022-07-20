@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriWareFormats", "CriWareTo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RGB Plugins", "RGB Plugins", "{FFA7A0B8-E0B5-414A-8DA3-1B24800824DB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteelSeriesMsiPerKeyPlugin", "Sample RGB Plugins\SteelSeriesMsiPerKeyPlugin\SteelSeriesMsiPerKeyPlugin.csproj", "{7D5506EA-AB3F-4C7D-A6B7-A3CFFF7B9009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteelSeriesPerKeyPlugin", "Sample RGB Plugins\SteelSeriesPerKeyPlugin\SteelSeriesPerKeyPlugin.csproj", "{7D5506EA-AB3F-4C7D-A6B7-A3CFFF7B9009}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenRgbPlugin", "Sample RGB Plugins\OpenRgbPlugin\OpenRgbPlugin.csproj", "{382B9AB8-9EF3-4C85-9950-899AB572B63B}"
 EndProject

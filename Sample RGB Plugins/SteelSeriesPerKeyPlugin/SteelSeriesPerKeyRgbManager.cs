@@ -1,11 +1,11 @@
-﻿using SteelSeriesMsiPerKeyPlugin.Animation;
+﻿using SteelSeriesPerKeyPlugin.Animation;
 using MirishitaMusicPlayer.RgbPluginBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SteelSeriesMsiPerKeyPlugin
+namespace SteelSeriesPerKeyPlugin
 {
-    public class SteelSeriesMsiPerKeyRgbManager : RgbManager
+    public class SteelSeriesPerKeyRgbManager : RgbManager
     {
         private readonly HttpClient httpClient;
         private readonly System.Timers.Timer updateTimer = new(1000f / 60f);
@@ -14,7 +14,7 @@ namespace SteelSeriesMsiPerKeyPlugin
 
         private readonly object formLockObject = new();
 
-        public SteelSeriesMsiPerKeyRgbManager(string songID, IEnumerable<int> targets) : base(songID, targets)
+        public SteelSeriesPerKeyRgbManager(string songID, IEnumerable<int> targets) : base(songID, targets)
         {
             var programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var coreProps = Path.Combine(programData, "SteelSeries\\SteelSeries Engine 3\\coreProps.json");

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteelSeriesMsiPerKeyPlugin
+namespace SteelSeriesPerKeyPlugin
 {
-    internal class NearestNeoighborPictureBox : PictureBox
+    internal class NearestNeighborPictureBox : PictureBox
     {
         protected override void OnPaint(PaintEventArgs pe)
         {

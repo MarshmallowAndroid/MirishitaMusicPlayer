@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SteelSeriesMsiPerKeyPlugin
+namespace SteelSeriesPerKeyPlugin
 {
     public partial class RgbSettingsForm : Form
     {

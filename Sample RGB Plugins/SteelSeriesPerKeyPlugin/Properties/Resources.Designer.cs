@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MirishitaMusicPlayer.Properties {
+namespace SteelSeriesPerKeyPlugin.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MirishitaMusicPlayer.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SteelSeriesMsiPerKeyPlugin.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SteelSeriesPerKeyPlugin.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -1,4 +1,4 @@
-﻿namespace SteelSeriesMsiPerKeyPlugin
+﻿namespace SteelSeriesPerKeyPlugin
 {
     partial class RgbSettingsForm
     {
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RgbSettingsForm));
-            this.preview = new SteelSeriesMsiPerKeyPlugin.NearestNeoighborPictureBox();
+            this.preview = new SteelSeriesPerKeyPlugin.NearestNeighborPictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.zone0Target = new System.Windows.Forms.ComboBox();
             this.zone1Target = new System.Windows.Forms.ComboBox();
@@ -208,7 +208,7 @@
 
         #endregion
 
-        private NearestNeoighborPictureBox preview;
+        private NearestNeighborPictureBox preview;
         private Label label1;
         private ComboBox zone0Target;
         private ComboBox zone1Target;
