@@ -27,7 +27,8 @@ namespace MirishitaMusicPlayer.Common
         private readonly List<EventScenarioData> lightScenarios;
 
         private bool stopRequested = false;
-        private bool seeked = false;
+        private bool scenarioSeeked = false;
+        private bool lightsSeeked = false;
 
         public ScenarioPlayer(Song selectedSong)
         {
@@ -66,7 +67,8 @@ namespace MirishitaMusicPlayer.Common
 
         public void UpdatePosition()
         {
-            seeked = true;
+            scenarioSeeked = true;
+            lightsSeeked = true;
         }
 
         private void DoScenarioPlayback()
@@ -93,7 +95,7 @@ namespace MirishitaMusicPlayer.Common
 
             while (!songMixer.HasEnded && !stopRequested)
             {
-                if (seeked)
+                if (scenarioSeeked)
                 {
                     muteScenarioIndex = 0;
                     expressionScenarioIndex = 0;
@@ -155,9 +157,14 @@ namespace MirishitaMusicPlayer.Common
                         //currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
                         //currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
                         //currentOrientScenario = orientScenario.Scenario[orientScenarioIndex];
+
+                        MuteChanged?.Invoke(currentMuteScenario.Mute);
+                        ExpressionChanged?.Invoke(currentExpressionScenario.Param, currentExpressionScenario.EyeClose == 1);
+                        LipSyncChanged?.Invoke(currentMainScenario.Param);
+                        LyricsChanged?.Invoke(currentMainScenario.Str);
                     }
 
-                    seeked = false;
+                    scenarioSeeked = false;
                 }
 
                 if (secondsElapsed == songMixer.CurrentTime.TotalSeconds)
@@ -180,13 +187,10 @@ namespace MirishitaMusicPlayer.Common
 
                 while (secondsElapsed >= currentExpressionScenario.AbsTime)
                 {
-                    if (currentExpressionScenario.Type == ScenarioType.Expression)
-                    {
-                        if ((currentExpressionScenario.Idol == Idol ||
-                            currentExpressionScenario.Idol == Idol + 100)
-                            && currentExpressionScenario.Layer == Layer)
-                            ExpressionChanged?.Invoke(currentExpressionScenario.Param, currentExpressionScenario.EyeClose == 1);
-                    }
+                    if ((currentExpressionScenario.Idol == Idol ||
+                        currentExpressionScenario.Idol == Idol + 100)
+                        && currentExpressionScenario.Layer == Layer)
+                        ExpressionChanged?.Invoke(currentExpressionScenario.Param, currentExpressionScenario.EyeClose == 1);
 
                     if (expressionScenarioIndex < expressionScenarios.Count - 1) expressionScenarioIndex++;
                     else break;
@@ -262,7 +266,7 @@ namespace MirishitaMusicPlayer.Common
 
             while (!songMixer.HasEnded && !stopRequested)
             {
-                if (seeked)
+                if (lightsSeeked)
                 {
                     lightScenarioIndex = 0;
                     currentLightScenario = lightScenarios[lightScenarioIndex];
@@ -277,9 +281,20 @@ namespace MirishitaMusicPlayer.Common
                             else break;
                             currentLightScenario = lightScenarios[lightScenarioIndex];
                         }
+
+                        bool on = currentLightScenario.On > 0;
+
+                        LightsChanged?.Invoke(new LightPayload
+                        {
+                            Color = on ? currentLightScenario.Col : new ColorRGBA(0, 0, 0, 0),
+                            Color2 = on ? currentLightScenario.Col2 : new ColorRGBA(0, 0, 0, 0),
+                            Color3 = on ? currentLightScenario.Col3 : new ColorRGBA(0, 0, 0, 0),
+                            Duration = (float)(currentLightScenario.AbsEndTime - currentLightScenario.AbsTime) * 1000f,
+                            Target = currentLightScenario.Target
+                        });
                     }
 
-                    seeked = false;
+                    lightsSeeked = false;
                 }
 
                 if (secondsElapsed == songMixer.CurrentTime.TotalSeconds)
