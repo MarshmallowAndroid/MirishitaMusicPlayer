@@ -97,9 +97,11 @@ namespace MirishitaMusicPlayer.Forms
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
-            for (int i = 0; i < Song.Singers.Length; i++)
+            Idol[] singers = ReadConfig() ?? Song.Singers;
+
+            for (int i = 0; i < singers.Length; i++)
             {
-                Idol idol = Song.Singers[i];
+                Idol idol = singers[i];
 
                 Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
                 if (idolImage == null)
@@ -142,7 +144,7 @@ namespace MirishitaMusicPlayer.Forms
                     idolPosition++;
                 }
 
-                for (int i = Scenario.StageMemberCount; i < Song.Singers.Length; i++)
+                for (int i = Scenario.StageMemberCount; i < singers.Length; i++)
                 {
                     CheckBox checkBox = idolCheckBoxes[i];
                     checkBox.Dock = DockStyle.None;
@@ -226,7 +228,59 @@ namespace MirishitaMusicPlayer.Forms
                 Close();
             }
 
+            Idol[] orderConfig = new Idol[idolCheckBoxes.Count];
+            foreach (var item in idolCheckBoxes)
+            {
+                int index = (int)item.Tag;
+                orderConfig[index] = new((string)item.BackgroundImage.Tag);
+            }
+            await WriteConfigAsync(orderConfig);
+
             LoadingMode(false);
+        }
+
+        private Idol[] ReadConfig()
+        {
+            string fileName = "Config\\" + Song.SongID + ".ord";
+
+            if (!File.Exists(fileName)) return null;
+
+            using FileStream file = new(fileName, FileMode.Open);
+            BinaryReader reader = new(file);
+
+            int idolCount = reader.ReadInt32();
+
+            Idol[] configOrder = new Idol[idolCount];
+            for (int i = 0; i < idolCount; i++)
+            {
+                string idolNameID = reader.ReadString();
+                configOrder[i] = new Idol(idolNameID);
+            }
+
+            return configOrder;
+        }
+
+        private Task WriteConfigAsync(Idol[] order)
+        {
+            if (order is null) return Task.CompletedTask;
+
+            string fileName = "Config\\" + Song.SongID + ".ord";
+
+            if (!File.Exists(fileName))
+            {
+                Directory.CreateDirectory("Config");
+            }
+
+            using FileStream file = new(fileName, FileMode.OpenOrCreate);
+            BinaryWriter writer = new(file);
+
+            writer.Write(order.Length);
+            foreach (var idol in order)
+            {
+                writer.Write(idol.IdolNameId);
+            }
+
+            return Task.CompletedTask;
         }
 
         private async Task<bool> ResolveMissingAssetsAsync(List<Asset> requiredAssets)
