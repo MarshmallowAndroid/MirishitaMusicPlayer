@@ -13,17 +13,18 @@ namespace SteelSeriesPerKeyPlugin
 {
     public partial class RgbSettingsForm : Form
     {
-
         private readonly Bitmap previewBitmap;
-        private readonly DeviceConfiguration device;
+        private readonly DeviceConfiguration? device;
+        private readonly SteelSeriesPerKeyRgbManager? manager;
 
-        public RgbSettingsForm(IEnumerable<int> targets, byte[] previewData, DeviceConfiguration deviceConfiguration)
+        public RgbSettingsForm(IEnumerable<int> targets, byte[] previewData, SteelSeriesPerKeyRgbManager rgbManager)
         {
             InitializeComponent();
 
             IntPtr previewDataPointer = GCHandle.Alloc(previewData, GCHandleType.Pinned).AddrOfPinnedObject();
             previewBitmap = new(22, 6, 22 * 4, System.Drawing.Imaging.PixelFormat.Format32bppArgb, previewDataPointer);
-            device = deviceConfiguration;
+            device = (DeviceConfiguration?)rgbManager?.DeviceConfigurations?[0];
+            manager = rgbManager ?? null;
 
             AddTargets(targets, Controls["zone0Target"] as ComboBox);
             AddTargets(targets, Controls["zone1Target"] as ComboBox);
@@ -46,41 +47,62 @@ namespace SteelSeriesPerKeyPlugin
                 comboBox.Items.Add(target);
             }
 
-            comboBox.SelectedItem = GetZoneConfiguration(comboBox).PreferredTarget;
+            comboBox.SelectedItem = GetZoneConfiguration(comboBox)?.PreferredTarget;
         }
 
-        private void ZoneTarget_SelectedIndexChanged(object sender, EventArgs e)
+        private async void ZoneTarget_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (manager is null || device is null) return;
+
             if (sender is ComboBox zoneTarget)
             {
-                ZoneConfiguration zoneConfiguration = GetZoneConfiguration(zoneTarget);
+                ZoneConfiguration? zoneConfiguration = GetZoneConfiguration(zoneTarget);
+                if (zoneConfiguration is null) return;
 
                 if (zoneTarget.SelectedIndex == 0)
                     zoneConfiguration.PreferredTarget = -1;
                 else
                     zoneConfiguration.PreferredTarget = (int)zoneTarget.SelectedItem;
             }
+
+            await manager.UpdateConfigAsync();
         }
 
-        private void ZoneSource_SelectedIndexChanged(object sender, EventArgs e)
+        private async void ZoneSource_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (manager is null || device is null) return;
+
             if (sender is ComboBox zoneSource)
             {
-                GetZoneConfiguration(zoneSource).PreferredSource = zoneSource.SelectedIndex;
+                ZoneConfiguration? zoneConfiguration = GetZoneConfiguration(zoneSource);
+                if (zoneConfiguration is null) return;
+
+                zoneConfiguration.PreferredSource = zoneSource.SelectedIndex;
             }
+
+            await manager.UpdateConfigAsync();
         }
 
-        private void ZoneTarget_TextUpdate(object sender, EventArgs e)
+        private async void ZoneTarget_TextUpdate(object sender, EventArgs e)
         {
+            if (manager is null || device is null) return;
+
             if (sender is ComboBox zoneTarget)
             {
+                ZoneConfiguration? zoneConfiguration = GetZoneConfiguration(zoneTarget);
+                if (zoneConfiguration is null) return;
+
                 if (!int.TryParse(zoneTarget.Text, out int target)) return;
-                GetZoneConfiguration(zoneTarget).PreferredTarget = target;
+                zoneConfiguration.PreferredTarget = target;
             }
+
+            await manager.UpdateConfigAsync();
         }
 
-        private ZoneConfiguration GetZoneConfiguration(Control control)
+        private ZoneConfiguration? GetZoneConfiguration(Control control)
         {
+            if (device is null) return null;
+
             ZoneConfiguration zoneConfiguration;
             if (control.Name.StartsWith("zone0"))
                 zoneConfiguration = (ZoneConfiguration)device.ColorConfigurations[0];

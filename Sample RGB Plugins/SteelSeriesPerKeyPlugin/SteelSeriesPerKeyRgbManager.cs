@@ -32,7 +32,7 @@ namespace SteelSeriesPerKeyPlugin
 
         public override async Task<bool> InitializeAsync()
         {
-            HttpResponseMessage? response = null;
+            HttpResponseMessage? response;
 
             try
             {
@@ -43,6 +43,7 @@ namespace SteelSeriesPerKeyPlugin
             }
             catch (Exception)
             {
+                return false;
             }
 
             bool isSuccess = response?.IsSuccessStatusCode ?? false;
@@ -69,6 +70,8 @@ namespace SteelSeriesPerKeyPlugin
                     DeviceConfigurations[0].ColorConfigurations[3].PreferredTarget = 10;
                 }
 
+                await LoadConfigAsync();
+
                 updateTimer.Start();
             }
 
@@ -87,7 +90,7 @@ namespace SteelSeriesPerKeyPlugin
         {
             if (DeviceConfigurations is null) return null;
 
-            RgbSettingsForm settingsForm = new(Targets, previewBitmapData, (DeviceConfiguration)DeviceConfigurations[0]);
+            RgbSettingsForm settingsForm = new(Targets, previewBitmapData, this);
             form = settingsForm;
             return settingsForm;
         }
@@ -136,6 +139,49 @@ namespace SteelSeriesPerKeyPlugin
             }
 
             return true;
+        }
+
+        public Task UpdateConfigAsync()
+        {
+            if (DeviceConfigurations is null) return Task.CompletedTask;
+
+            string fileName = "Config\\" + SongID + ".rgb";
+
+            if (!File.Exists(fileName))
+            {
+                Directory.CreateDirectory("Config\\");
+            }
+
+            using FileStream configFile = new(fileName, FileMode.OpenOrCreate);
+            BinaryWriter writer = new(configFile);
+
+            for (int i = 0; i < DeviceConfigurations[0].ColorConfigurations.Length; i++)
+            {
+                writer.Write(DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget);
+                writer.Write(DeviceConfigurations[0].ColorConfigurations[i].PreferredSource);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task LoadConfigAsync()
+        {
+            if (DeviceConfigurations is null) return Task.CompletedTask;
+
+            string fileName = "Config\\" + SongID + ".rgb";
+
+            if (!File.Exists(fileName)) return Task.CompletedTask;
+            using FileStream configFile = new(fileName, FileMode.Open);
+
+            BinaryReader reader = new(configFile);
+
+            for (int i = 0; i < DeviceConfigurations[0].ColorConfigurations.Length; i++)
+            {
+                DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget = reader.ReadInt32();
+                DeviceConfigurations[0].ColorConfigurations[i].PreferredSource = reader.ReadInt32();
+            }
+
+            return Task.CompletedTask;
         }
     }
 
@@ -198,12 +244,12 @@ namespace SteelSeriesPerKeyPlugin
             {
                 for (int column = start; column <= end; column++)
                 {
-                    int bitmapIndex = column + row * 22;
+                    int bitmapIndex = column + (row * 22);
                     bitmapData[bitmapIndex, 0] = value.R;
                     bitmapData[bitmapIndex, 1] = value.G;
                     bitmapData[bitmapIndex, 2] = value.B;
 
-                    int previewIndex = (column * 4) + row * (22 * 4);
+                    int previewIndex = (column * 4) + (row * 22 * 4);
                     previewData[previewIndex + 0] = value.B;
                     previewData[previewIndex + 1] = value.G;
                     previewData[previewIndex + 2] = value.R;
