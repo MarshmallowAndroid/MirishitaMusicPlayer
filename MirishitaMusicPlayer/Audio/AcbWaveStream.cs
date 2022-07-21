@@ -21,7 +21,10 @@ namespace MirishitaMusicPlayer.Audio
             sourceStream = stream;
             acbReader = new(stream);
             awbReader = acbReader.GetAwb();
-            waveStream = new HcaWaveStream(awbReader.GetWaveSubfileStream(awbReader.Waves[^1]), 765765765765765);
+            waveStream = new HcaWaveStream(
+                awbReader.GetWaveSubfileStream(
+                    awbReader.Waves.Count > 2 ? awbReader.Waves[^1] : awbReader.Waves[0]),
+                    765765765765765);
         }
 
         public AcbWaveStream(Stream stream, string waveName)
