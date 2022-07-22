@@ -1,4 +1,6 @@
-# MirishitaMusicPlayer
+# ミリシタ Music Player
+
+Music player for THE iDOLM@STER Million Live! Theater Days (アイドルマスター ミリオンライブ！ シアターデイズ).
 
 Plays songs directly from the game assets via [AssetStudio](https://github.com/Perfare/AssetStudio).
 Supports per-idol singing (歌い分け / utaiwake) songs.
