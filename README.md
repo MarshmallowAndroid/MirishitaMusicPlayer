@@ -21,6 +21,13 @@ When extras are shown in the player, there is a visualizer for lipsync and expre
 You can set the face by adding a `face.zip` in the program's directory.
 Example faces can be found [here](https://mega.nz/folder/4RYxlYja#naA1Ojt0Axp1b8-OTRc05w).
 
+## RGB Plugins
+The player reads stage lights event data, and can send them to plugins that implement
+the `RgbManager` class from the `MirishitaMusicPlayer.RgbPluginBase` project.
+
+Only the first RGB plugin in the program directory will be loaded for now. Load order is alphabetical,
+and will only load plugins that end with `*Plugin.dll` e.g. `SampleRgbPlugin.dll`.
+
 ## Known issues
 UNION!! utaiwake is broken, until I figure out how the mutes work in that song.
 
