@@ -1,79 +1,34 @@
-# MLTDMusicExperiments
-My music experiment/s for [THE iDOLM@STER Million Live! Theater Days](https://millionlive.idolmaster.jp/theaterdays/).
-Supposedly plural, but I have only done one so far.
+# MirishitaMusicPlayer
 
-## MirishitaMusicPlayer
 Plays songs directly from the game assets via [AssetStudio](https://github.com/Perfare/AssetStudio).
 Supports per-idol singing (歌い分け / utaiwake) songs.
 
-### Usage
+![Song select](Images/SongSelect.png)
+
+## Usage
+The program can be launched directly or via the command line:
 ```
-MirishitaMusicPlayer.exe <path-to-assets>
+MirishitaMusicPlayer.exe [song ID]
 ```
-Required assets include:
-* `scrobj`: Scenario files used for "mute" events (which idols should be singing), facial expressions, lipsync, and timing.
-* `song3`: Files that contain the CRIWARE audio banks for the actual audio.
+...where the song ID is the six-character song ID of the song you wish to play.
 
-You can either grab the assets from your device and painstakingly rename them yourself,
-or you can download them with the **Manifest Tools** project from [OpenMLTD](https://github.com/OpenMLTD/MLTDTools).
+## Faces
+When extras are shown in the player, there is a visualizer for lipsync and expressions.
+![Player extras with face](Images/PlayerExtrasWithFace.png)
 
-For songs with swappable singers, there will be a prompt for you to select an order:
-```
-Available singers:
- 0 Chihaya
- 1 Sayoko
- 2 Arisa
- 3 Noriko
- 4 Reika
+You can set the face by adding a `face.zip` in the program's directory.
+Example faces can be found [here](https://mega.nz/folder/4RYxlYja#naA1Ojt0Axp1b8-OTRc05w).
 
-Select in order (5 max): 3 1 2 0 4
-```
-Pictured above: default order for `sspens` (紙・心・ペン・心 - SHISHINPENSHIN -).
+## Known issues
+UNION!! utaiwake is broken, until I figure out how the mutes work in that song.
 
-When only 1 singer is selected, behavior will be identical to a solo. Otherwise, any count less than the available ones will result in no singing for unused positions.
-Let's say only two singers were selected. Iori is in position 0, and Mirai in position 1. During position 2-4's parts, only the background music will be heard.
-
-NOTE: Putting the same idol on different positions is not supported (for now at least).
-
-Visualization for mute events, facial expression, lipsync, and lyrics will be shown during playback.
-
-For best results for lyrics, use the [Windows Terminal](https://github.com/microsoft/terminal) as it supports Asian characters along with the Consolas/Cascadia fonts.
-To force `cmd.exe` to do the same, see the **Font linking** section on [this](https://docs.microsoft.com/en-us/globalization/input/font-technology) page.
-```
- 104.9850s elapsed
-
- [1]  [2]  [3]  [4]  [5]
-
-   ___        ___
- --              --
-  ___          ___
- -   -        -   -
-
-
-       ______
-       |    |
-       |____|
-
-
-
-
- ねーだってだってだって好きなんだもん
-```
-If used in the Windows Terminal, the window must be resized to fit the contents of the output.
-Otherwise, it will crash with an out-of-range exception due to the buffer height being too small.
-
-### Keyboard shortcuts
-* `V` to mute the voices
-* `B` to mute the background music
-* `R` to reset to the beginning
-* `S` to return to setup prompt
-* `Space` to pause
-* `Left Arrow` to rewind 3 seconds
-* `Right Arrow` to fast forward 3 seconds
-
+## Libraries used
+* [NAudio](https://github.com/naudio/NAudio) for audio playback and backend.
+* The [AssetStudio](https://github.com/Perfare/AssetStudio) library for reading Unity AssetBundles.
+ 
 ## Credits
-* The [NAudio](https://github.com/naudio/NAudio) library for main functionality.
 * The [vgmstream](https://github.com/vgmstream/vgmstream) project for the CRIWARE UTF and ACB/AWB reader code.
 * The [HCADecoder](https://github.com/Nyagamon/HCADecoder) project and by extension, vgmstream, for the HCA decoder code.
-* The [AssetStudio](https://github.com/Perfare/AssetStudio) library for reading Unity AssetBundles.
+* The [MLTDTools](https://github.com/OpenMLTD/MLTDTools) project for the asset downloader code,
+  and [matsurihi.me](https://matsurihi.me)'s Princess API for providing updated asset manifests.
 * BANDAI NAMCO for the iDOLM@STER series and for giving me SSRs.
