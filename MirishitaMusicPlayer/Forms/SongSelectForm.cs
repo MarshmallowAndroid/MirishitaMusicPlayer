@@ -23,6 +23,10 @@ namespace MirishitaMusicPlayer.Forms
         private ResourceVersionInfo resourceVersionInfo;
         private AssetList assetList;
 
+        private int bytesToDownload = 0;
+        private int bytesDownloaded = 0;
+        private IProgress<int> progressBarProgress;
+
         private Song song = null;
 
         public SongSelectForm(AssetsManager assetsManager)
@@ -30,6 +34,17 @@ namespace MirishitaMusicPlayer.Forms
             InitializeComponent();
 
             _assetsManager = assetsManager;
+
+            progressBarProgress = new Progress<int>(p =>
+            {
+                if (bytesToDownload > 0)
+                {
+                    bytesDownloaded += p;
+                    progressBar.Value = (int)((float)bytesDownloaded / bytesToDownload * 100.0f);
+                }
+                else
+                    progressBar.Value = p;
+            });
         }
 
         public Song ProcessSong(string songId = "")
@@ -62,6 +77,18 @@ namespace MirishitaMusicPlayer.Forms
                 DialogResult result = MessageBox.Show(
                     "Database has not been downloaded. Download?",
                     "Database not found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                    await UpdateDatabaseAsync();
+                else return;
+            }
+            else if (databaseFiles.Length == 1 && databaseFiles[0].Length == 0)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Database is empty. Download new database?",
+                    "Invalid database",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
@@ -214,13 +241,14 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
+            bytesToDownload = (int)assetsToDownload.Sum(a => a.Size);
+            bytesDownloaded = 0;
             foreach (var asset in assetsToDownload)
             {
                 try
                 {
-                    await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
+                    await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, progressBarProgress);
                     completed++;
-                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                 }
                 catch (Exception e)
                 {
@@ -232,6 +260,7 @@ namespace MirishitaMusicPlayer.Forms
                     return false;
                 }
             }
+            bytesToDownload = 0;
 
             progressBar.Value = 0;
 
@@ -244,7 +273,7 @@ namespace MirishitaMusicPlayer.Forms
             Invoke(() => LoadingMode(true));
 
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
-            Progress.Default = new AssetStudioProgress(loadingBackgroundWorker.ReportProgress);
+            Progress.Default = progressBarProgress;
 
             if (jacketFiles.Length > 0)
                 UnityTextureHelpers.Assets.LoadFiles(jacketFiles);
@@ -272,19 +301,12 @@ namespace MirishitaMusicPlayer.Forms
                 songJacket.Click += SongJacket_Click;
                 jackets.Add(songJacket);
 
-                loadingBackgroundWorker.ReportProgress((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
+                progressBarProgress.Report((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
             }
 
             UnityTextureHelpers.Assets.Clear();
 
-            Progress.Default = new Progress<int>();
-
             e.Result = jackets;
-        }
-
-        private void LoadingBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            progressBar.Value = e.ProgressPercentage;
         }
 
         private void LoadingBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -302,7 +324,7 @@ namespace MirishitaMusicPlayer.Forms
             LoadingMode(true);
             _assetsClient = null;
             await InitializeAssetClientAsync();
-            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache");
+            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache", progressBarProgress);
             MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             LoadingMode(false);
         }

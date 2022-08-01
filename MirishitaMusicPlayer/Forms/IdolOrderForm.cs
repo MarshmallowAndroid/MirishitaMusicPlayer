@@ -29,6 +29,10 @@ namespace MirishitaMusicPlayer.Forms
 
         private TDAssetsClient assetsClient;
 
+        private int bytesToDownload = 0;
+        private int bytesDownloaded = 0;
+        private IProgress<int> downloadProgress;
+
         private readonly List<CheckBox> idolCheckBoxes = new();
         private CheckBox sourceCheckBox;
 
@@ -37,6 +41,19 @@ namespace MirishitaMusicPlayer.Forms
         public IdolOrderForm(Song selectedSong)
         {
             InitializeComponent();
+
+            downloadProgress = new Progress<int>(p =>
+            {
+                if (!Visible) return;
+
+                if (bytesToDownload > 0)
+                {
+                    bytesDownloaded += p;
+                    progressBar.Value = (int)((float)bytesDownloaded / bytesToDownload * 100.0f);
+                }
+                else
+                    progressBar.Value = p;
+            });
 
             Song = selectedSong;
             selectedSong.LoadScenario(selectedSong.ScenarioAsset, Program.SongsPath);
@@ -328,13 +345,14 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
+            bytesToDownload = (int)assetsToDownload.Sum(a => a.Size);
+            bytesDownloaded = 0;
             foreach (var asset in assetsToDownload)
             {
                 try
                 {
-                    await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory);
+                    await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, downloadProgress);
                     completed++;
-                    progressBar.Value = (int)((float)completed / assetsToDownload.Count * 100.0f);
                 }
 
                 catch (Exception e)
@@ -349,6 +367,7 @@ namespace MirishitaMusicPlayer.Forms
                     return false;
                 }
             }
+            bytesToDownload = 0;
 
             progressBar.Value = 0;
 

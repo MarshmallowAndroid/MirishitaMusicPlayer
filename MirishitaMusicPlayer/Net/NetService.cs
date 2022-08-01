@@ -20,6 +20,11 @@ namespace MirishitaMusicPlayer.Net
 
         public static HttpClient HttpClient => httpClient;
 
+        public static async Task<HttpResponseMessage> GetAsync(string url)
+        {
+            return await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+        }
+
         public static async Task<string> GetStringAsync(string url)
         {
             return await httpClient.GetStringAsync(url);
