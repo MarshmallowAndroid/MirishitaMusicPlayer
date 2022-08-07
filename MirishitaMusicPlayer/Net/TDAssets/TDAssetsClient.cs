@@ -29,7 +29,7 @@ namespace MirishitaMusicPlayer.Net.TDAssets
             outputFile.Flush();
         }
 
-        public async Task DownloadAssetAsync(string assetName, string outputFileName, string outputDirectory, IProgress<int> progress)
+        public async Task DownloadAssetAsync(string assetName, string outputFileName, string outputDirectory, IProgress<int> progress, bool relativeProgress = false)
         {
             using FileStream outputFile = File.Create(Path.Combine(outputDirectory, outputFileName));
             using HttpResponseMessage response = await NetService.GetAsync($"{baseAddress}/{assetName}");
@@ -45,12 +45,15 @@ namespace MirishitaMusicPlayer.Net.TDAssets
             byte[] buffer = new byte[81920];
             int bytesRead;
             int totalBytesRead = 0;
-            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, Math.Min(buffer.Length, (int)contentLength - totalBytesRead))) != 0)
             {
                 totalBytesRead += bytesRead;
-                progress.Report(bytesRead);
-                await outputFile.WriteAsync(buffer, 0, bytesRead);
+                progress.Report(relativeProgress ? (int)((float)totalBytesRead / contentLength * 100.0f) : bytesRead);
+                await outputFile.WriteAsync(buffer.AsMemory(0, bytesRead));
             }
+
+            if (totalBytesRead != contentLength)
+                throw new Exception("Incorrect total bytes read.");
         }
     }
 }

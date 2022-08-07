@@ -43,7 +43,10 @@ namespace MirishitaMusicPlayer.Forms
                     progressBar.Value = (int)((float)bytesDownloaded / bytesToDownload * 100.0f);
                 }
                 else
-                    progressBar.Value = p;
+                {
+                    if (p > progressBar.Maximum) progressBar.Value = 0;
+                    else progressBar.Value = p;
+                }
             });
         }
 
@@ -261,6 +264,7 @@ namespace MirishitaMusicPlayer.Forms
                 }
             }
             bytesToDownload = 0;
+            bytesDownloaded = 0;
 
             progressBar.Value = 0;
 
@@ -273,6 +277,7 @@ namespace MirishitaMusicPlayer.Forms
             Invoke(() => LoadingMode(true));
 
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
+            IProgress<int> defaultProgress = Progress.Default;
             Progress.Default = progressBarProgress;
 
             if (jacketFiles.Length > 0)
@@ -305,6 +310,7 @@ namespace MirishitaMusicPlayer.Forms
             }
 
             UnityTextureHelpers.Assets.Clear();
+            Progress.Default = defaultProgress;
 
             e.Result = jackets;
         }
@@ -324,7 +330,7 @@ namespace MirishitaMusicPlayer.Forms
             LoadingMode(true);
             _assetsClient = null;
             await InitializeAssetClientAsync();
-            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache", progressBarProgress);
+            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache", progressBarProgress, true);
             MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             LoadingMode(false);
         }
