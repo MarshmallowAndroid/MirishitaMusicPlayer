@@ -253,6 +253,7 @@ namespace MirishitaMusicPlayer.Forms
             rgbManager = null;
             Program.UnloadPlugin();
 
+            faceVisualizer.FaceSource.Dispose();
             faceVisualizer.Dispose();
         }
         #endregion
