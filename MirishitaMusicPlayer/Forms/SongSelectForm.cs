@@ -23,10 +23,6 @@ namespace MirishitaMusicPlayer.Forms
         private ResourceVersionInfo resourceVersionInfo;
         private AssetList assetList;
 
-        private int bytesToDownload = 0;
-        private int bytesDownloaded = 0;
-        private IProgress<int> progressBarProgress;
-
         private Song song = null;
 
         public SongSelectForm(AssetsManager assetsManager)
@@ -34,20 +30,6 @@ namespace MirishitaMusicPlayer.Forms
             InitializeComponent();
 
             _assetsManager = assetsManager;
-
-            progressBarProgress = new Progress<int>(p =>
-            {
-                if (bytesToDownload > 0)
-                {
-                    bytesDownloaded += p;
-                    progressBar.Value = (int)((float)bytesDownloaded / bytesToDownload * 100.0f);
-                }
-                else
-                {
-                    if (p > progressBar.Maximum) progressBar.Value = 0;
-                    else progressBar.Value = p;
-                }
-            });
         }
 
         public Song ProcessSong(string songId = "")
@@ -222,14 +204,24 @@ namespace MirishitaMusicPlayer.Forms
             LoadingMode(true);
 
             var selectedSong = new Song(assetList, songId, _assetsManager);
-            var scenarioAsset = selectedSong.ScenarioAsset;
 
-            bool shouldContinue;
-            if (!File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
+            List<Asset> scenarioAssets = new()
             {
-                shouldContinue = await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
+                selectedSong.ScenarioAsset,
+                selectedSong.ScenarioPlusAsset,
+                selectedSong.ScenarioThirtyNineAsset
+            };
+
+            bool shouldContinue = false;
+
+            foreach (var scenarioAsset in scenarioAssets)
+            {
+                if (scenarioAsset is not null && !File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
+                {
+                    shouldContinue = await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
+                }
+                else shouldContinue = true;
             }
-            else shouldContinue = true;
 
             song = selectedSong;
 
@@ -244,17 +236,18 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
-            bytesToDownload = (int)assetsToDownload.Sum(a => a.Size);
-            bytesDownloaded = 0;
+            LoadingProgress progress = new((int)assetsToDownload.Sum(a => a.Size), false, progressBar);
             foreach (var asset in assetsToDownload)
             {
                 try
                 {
-                    await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, progressBarProgress);
+                    await _assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, progress);
                     completed++;
                 }
                 catch (Exception e)
                 {
+                    progressBar.Value = 0;
+
                     MessageBox.Show("Unable to download assets. Try updating the database.\n\n" +
                         $"Error message:\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -263,9 +256,6 @@ namespace MirishitaMusicPlayer.Forms
                     return false;
                 }
             }
-            bytesToDownload = 0;
-            bytesDownloaded = 0;
-
             progressBar.Value = 0;
 
             if (completed == assetsToDownload.Count) return true;
@@ -278,7 +268,7 @@ namespace MirishitaMusicPlayer.Forms
 
             string[] jacketFiles = Directory.GetFiles("Cache\\Jackets");
             IProgress<int> defaultProgress = Progress.Default;
-            Progress.Default = progressBarProgress;
+            Progress.Default = new LoadingProgress(100, true, progressBar);
 
             if (jacketFiles.Length > 0)
                 UnityTextureHelpers.Assets.LoadFiles(jacketFiles);
@@ -306,7 +296,7 @@ namespace MirishitaMusicPlayer.Forms
                 songJacket.Click += SongJacket_Click;
                 jackets.Add(songJacket);
 
-                progressBarProgress.Report((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
+                Progress.Default.Report((int)((float)itemNumber++ / UnityTextureHelpers.Assets.assetsFileList.Count * 100.0f));
             }
 
             UnityTextureHelpers.Assets.Clear();
@@ -330,8 +320,9 @@ namespace MirishitaMusicPlayer.Forms
             LoadingMode(true);
             _assetsClient = null;
             await InitializeAssetClientAsync();
-            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache", progressBarProgress, true);
+            await _assetsClient.DownloadAssetAsync(resourceVersionInfo.IndexName, resourceVersionInfo.IndexName, "Cache", new LoadingProgress(100, true, progressBar), true);
             MessageBox.Show("Database download complete.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progressBar.Value = 0;
             LoadingMode(false);
         }
 

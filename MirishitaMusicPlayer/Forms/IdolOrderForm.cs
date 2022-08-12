@@ -27,11 +27,11 @@ namespace MirishitaMusicPlayer.Forms
             2, 1, 3, 0, 4, 8, 9, 7, 10, 6, 11, 5, 12
         };
 
-        private TDAssetsClient assetsClient;
+        private readonly Song song;
+        private SongScenario scenario;
+        private SongScenarioConfiguration configuration;
 
-        private int bytesToDownload = 0;
-        private int bytesDownloaded = 0;
-        private IProgress<int> downloadProgress;
+        private TDAssetsClient assetsClient;
 
         private readonly List<CheckBox> idolCheckBoxes = new();
         private CheckBox sourceCheckBox;
@@ -42,69 +42,13 @@ namespace MirishitaMusicPlayer.Forms
         {
             InitializeComponent();
 
-            downloadProgress = new Progress<int>(p =>
-            {
-                if (!Visible) return;
-
-                if (bytesToDownload > 0)
-                {
-                    bytesDownloaded += p;
-                    progressBar.Value = (int)((float)bytesDownloaded / bytesToDownload * 100.0f);
-                }
-                else
-                    progressBar.Value = p;
-            });
-
-            Song = selectedSong;
-            selectedSong.LoadScenario(selectedSong.ScenarioAsset, Program.SongsPath);
-            Scenario = selectedSong.Scenario;
-            Configuration = Scenario.Configuration;
-
-            if (Scenario.StageMemberCount == 0)
-            {
-                centerLabel.Visible = false;
-                Height = 166;
-            }
-
-            if (Scenario.StageMemberCount > 0)
-            {
-                fiveIdolPanel.Visible = true;
-                Height = 302;
-            }
-
-            if (Scenario.StageMemberCount > 6)
-            {
-                eightIdolPanel.Visible = true;
-                Height = 417;
-            }
-
-            if (Scenario.StageMemberCount > 13 || Song.Singers.Length > Scenario.StageMemberCount)
-            {
-                stashedIdolsPanel.Visible = true;
-                Height = 777;
-            }
-
-            if (Configuration.Modes.HasFlag(SongMode.Normal))
-                originalBgmRadioButton.Enabled = true;
-
-            if (Configuration.Modes.HasFlag(SongMode.Utaiwake))
-            {
-                utaiwakeRadioButton.Enabled = true;
-            }
-
-            if (Configuration.Modes.HasFlag(SongMode.OngenSentaku))
-                ongenSentakuRadioButton.Enabled = true;
+            song = selectedSong;
+            LoadSongConfigAsync(song.ScenarioAsset);
         }
-
-        private Song Song { get; }
-
-        private SongScenario Scenario { get; }
-
-        private SongScenarioConfiguration Configuration { get; }
 
         public bool ProcessSong()
         {
-            if (Song.Singers.Length > 0 || Configuration.Modes.HasFlag(SongMode.OngenSentaku))
+            if (song.Singers.Length > 0 || configuration.Modes.HasFlag(SongMode.OngenSentaku))
                 ShowDialog();
             else
                 Task.Run(async () => await InitializeAssetsAsync()).Wait();
@@ -114,63 +58,31 @@ namespace MirishitaMusicPlayer.Forms
 
         private void IdolOrderForm_Load(object sender, EventArgs e)
         {
-            Idol[] singers = ReadConfig() ?? Song.Singers;
-
-            for (int i = 0; i < singers.Length; i++)
-            {
-                Idol idol = singers[i];
-
-                Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
-                if (idolImage == null)
-                    idolImage = Resources.ResourceManager.GetObject($"icon_butterfly") as Bitmap;
-
-                CheckBox checkBox = new();
-                checkBox.Appearance = Appearance.Button;
-                checkBox.Anchor = AnchorStyles.None;
-                checkBox.BackgroundImageLayout = ImageLayout.Zoom;
-                checkBox.BackgroundImage = idolImage;
-                checkBox.BackgroundImage.Tag = idol.IdolNameId;
-                checkBox.Dock = DockStyle.Fill;
-                checkBox.FlatAppearance.BorderSize = 0;
-                checkBox.FlatStyle = FlatStyle.Flat;
-                checkBox.Font = new System.Drawing.Font(checkBox.Font.FontFamily, 20.0f, FontStyle.Bold);
-                checkBox.Height = 100;
-                checkBox.Tag = i;
-                checkBox.TextAlign = ContentAlignment.MiddleCenter;
-                checkBox.Width = 100;
-
-                checkBox.CheckedChanged += CheckBox_CheckedChanged;
-
-                idolCheckBoxes.Add(checkBox);
-            }
-
-            if (idolCheckBoxes.Count > 0)
-            {
-                int idolPosition = 0;
-                for (int i = 0; i < Scenario.StageMemberCount; i++)
-                {
-                    CheckBox checkBox = idolCheckBoxes[i];
-
-                    int column = positionToIndexTable[(int)checkBox.Tag];
-
-                    if (idolPosition < 5)
-                        fiveIdolPanel.Controls.Add(checkBox, column, 0);
-                    else if (idolPosition >= 5 && idolPosition < 13)
-                        eightIdolPanel.Controls.Add(checkBox, column - 5, 0);
-
-                    idolPosition++;
-                }
-
-                for (int i = Scenario.StageMemberCount; i < singers.Length; i++)
-                {
-                    CheckBox checkBox = idolCheckBoxes[i];
-                    checkBox.Dock = DockStyle.None;
-                    stashedIdolsPanel.Controls.Add(checkBox);
-                }
-            }
         }
 
-        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        private void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            bool checkedState = utaiwakeRadioButton.Checked;
+            soloCheckBox.Enabled = checkedState;
+            soloCheckBox.Visible = checkedState;
+        }
+
+        private async void BgmRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+
+            if (radioButton.Checked is false) return;
+
+            Asset scenarioAsset;
+            if (radioButton == ongenSentakuRadioButton && song.ScenarioPlusAsset is not null)
+                scenarioAsset = song.ScenarioPlusAsset;
+            else
+                scenarioAsset = song.ScenarioAsset;
+
+            await LoadSongConfigAsync(scenarioAsset);
+        }
+
+        private void IdolCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
             if (checkBox.Checked)
@@ -205,21 +117,127 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetsAsync();
         }
 
+        private Task LoadSongConfigAsync(Asset scenarioAsset)
+        {
+            song.LoadScenario(scenarioAsset, Program.SongsPath);
+            scenario = song.Scenario;
+            configuration = scenario.Configuration;
+
+            if (scenario.StageMemberCount == 0)
+            {
+                centerLabel.Visible = false;
+                Height = 166;
+            }
+
+            if (scenario.StageMemberCount > 0)
+            {
+                fiveIdolPanel.Visible = true;
+                Height = 302;
+            }
+
+            if (scenario.StageMemberCount > 6)
+            {
+                eightIdolPanel.Visible = true;
+                Height = 417;
+            }
+
+            if (scenario.StageMemberCount > 13 || song.Singers.Length > scenario.StageMemberCount)
+            {
+                stashedIdolsPanel.Visible = true;
+                Height = 777;
+            }
+
+            if (configuration.Modes.HasFlag(SongMode.Normal))
+                originalBgmRadioButton.Enabled = true;
+
+            if (configuration.Modes.HasFlag(SongMode.Utaiwake))
+            {
+                utaiwakeRadioButton.Enabled = true;
+            }
+
+            if (configuration.Modes.HasFlag(SongMode.OngenSentaku))
+                ongenSentakuRadioButton.Enabled = true;
+
+            idolCheckBoxes.Clear();
+            fiveIdolPanel.Controls.Clear();
+            eightIdolPanel.Controls.Clear();
+            stashedIdolsPanel.Controls.Clear();
+
+            Idol[] singers = ReadConfig() ?? song.Singers;
+
+            for (int i = 0; i < singers.Length; i++)
+            {
+                Idol idol = singers[i];
+
+                Image idolImage = Resources.ResourceManager.GetObject($"icon_{idol.IdolNameId}") as Bitmap;
+                if (idolImage == null)
+                    idolImage = Resources.ResourceManager.GetObject($"icon_butterfly") as Bitmap;
+
+                CheckBox checkBox = new()
+                {
+                    Appearance = Appearance.Button,
+                    Anchor = AnchorStyles.None,
+                    BackgroundImageLayout = ImageLayout.Zoom,
+                    BackgroundImage = idolImage,
+                    Dock = DockStyle.Fill,
+                    FlatStyle = FlatStyle.Flat,
+                    Height = 100,
+                    Tag = i,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Width = 100
+                };
+                checkBox.BackgroundImage.Tag = idol.IdolNameId;
+                checkBox.FlatAppearance.BorderSize = 0;
+                checkBox.Font = new System.Drawing.Font(checkBox.Font.FontFamily, 20.0f, FontStyle.Bold);
+
+                checkBox.CheckedChanged += IdolCheckBox_CheckedChanged;
+
+                idolCheckBoxes.Add(checkBox);
+            }
+
+            if (idolCheckBoxes.Count > 0)
+            {
+                int idolPosition = 0;
+                for (int i = 0; i < scenario.StageMemberCount; i++)
+                {
+                    CheckBox checkBox = idolCheckBoxes[i];
+
+                    int column = positionToIndexTable[(int)checkBox.Tag];
+
+                    if (idolPosition < 5)
+                        fiveIdolPanel.Controls.Add(checkBox, column, 0);
+                    else if (idolPosition >= 5 && idolPosition < 13)
+                        eightIdolPanel.Controls.Add(checkBox, column - 5, 0);
+
+                    idolPosition++;
+                }
+
+                for (int i = scenario.StageMemberCount; i < singers.Length; i++)
+                {
+                    CheckBox checkBox = idolCheckBoxes[i];
+                    checkBox.Dock = DockStyle.None;
+                    stashedIdolsPanel.Controls.Add(checkBox);
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
         private async Task InitializeAssetsAsync()
         {
             LoadingMode(true);
 
             if (originalBgmRadioButton.Checked)
-                Configuration.Mode = SongMode.Normal;
+                configuration.Mode = SongMode.Normal;
             else if (utaiwakeRadioButton.Checked)
             {
-                Configuration.Mode = SongMode.Utaiwake;
+                configuration.Mode = SongMode.Utaiwake;
 
-                int orderLength = soloCheckBox.Checked ? 1 : Scenario.StageMemberCount;
+                int orderLength = soloCheckBox.Checked ? 1 : scenario.StageMemberCount;
 
                 if (orderLength > 0 && !originalBgmRadioButton.Checked)
                 {
-                    Configuration.Order = new Idol[orderLength];
+                    configuration.Order = new Idol[orderLength];
 
                     foreach (var checkBox in idolCheckBoxes)
                     {
@@ -228,20 +246,20 @@ namespace MirishitaMusicPlayer.Forms
                         if (index < orderLength)
                         {
                             Idol idol = new((string)checkBox.BackgroundImage.Tag);
-                            Configuration.Order[index] = idol;
+                            configuration.Order[index] = idol;
                         }
                     }
                 }
             }
             else if (ongenSentakuRadioButton.Checked)
-                Configuration.Mode = SongMode.OngenSentaku;
+                configuration.Mode = SongMode.OngenSentaku;
 
-            var requiredAssets = Configuration.GetRequiredAssets();
+            var requiredAssets = configuration.GetRequiredAssets();
 
             if (await ResolveMissingAssetsAsync(requiredAssets))
             {
-                Configuration.Load(requiredAssets, "Cache\\Songs");
-                Program.OutputDevice.Init(Configuration.SongMixer);
+                configuration.Load(requiredAssets, "Cache\\Songs");
+                Program.OutputDevice.Init(configuration.SongMixer);
                 Close();
             }
 
@@ -258,7 +276,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private Idol[] ReadConfig()
         {
-            string fileName = "Config\\" + Song.SongID + ".ord";
+            string fileName = "Config\\" + song.SongID + ".ord";
 
             if (!File.Exists(fileName)) return null;
 
@@ -281,7 +299,7 @@ namespace MirishitaMusicPlayer.Forms
         {
             if (order is null) return Task.CompletedTask;
 
-            string fileName = "Config\\" + Song.SongID + ".ord";
+            string fileName = "Config\\" + song.SongID + ".ord";
 
             if (!File.Exists(fileName))
             {
@@ -345,13 +363,12 @@ namespace MirishitaMusicPlayer.Forms
             await InitializeAssetClientAsync();
 
             int completed = 0;
-            bytesToDownload = (int)assetsToDownload.Sum(a => a.Size);
-            bytesDownloaded = 0;
+            LoadingProgress progress = new((int)assetsToDownload.Sum(a => a.Size), false, progressBar);
             foreach (var asset in assetsToDownload)
             {
                 try
                 {
-                    await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, downloadProgress);
+                    await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, progress);
                     completed++;
                 }
 
@@ -367,8 +384,6 @@ namespace MirishitaMusicPlayer.Forms
                     return false;
                 }
             }
-            bytesToDownload = 0;
-
             progressBar.Value = 0;
 
             if (completed == assetsToDownload.Count)
@@ -389,13 +404,6 @@ namespace MirishitaMusicPlayer.Forms
         {
             Cursor = loading ? Cursors.WaitCursor : Cursors.Default;
             startButton.Enabled = !loading;
-        }
-
-        private void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            bool checkedState = utaiwakeRadioButton.Checked;
-            soloCheckBox.Enabled = checkedState;
-            soloCheckBox.Visible = checkedState;
         }
     }
 }

@@ -132,6 +132,7 @@
             this.ongenSentakuRadioButton.TabIndex = 2;
             this.ongenSentakuRadioButton.Text = "Ongen Sentaku";
             this.ongenSentakuRadioButton.UseVisualStyleBackColor = true;
+            this.ongenSentakuRadioButton.CheckedChanged += new System.EventHandler(this.BgmRadioButton_CheckedChanged);
             // 
             // originalBgmRadioButton
             // 
@@ -147,6 +148,7 @@
             this.originalBgmRadioButton.TabStop = true;
             this.originalBgmRadioButton.Text = "Original";
             this.originalBgmRadioButton.UseVisualStyleBackColor = true;
+            this.originalBgmRadioButton.CheckedChanged += new System.EventHandler(this.BgmRadioButton_CheckedChanged);
             // 
             // centerLabel
             // 
