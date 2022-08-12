@@ -9,6 +9,6 @@ namespace MirishitaMusicPlayer.AssetStudio
 {
     static class AssetStudioGlobal
     {
-        public static readonly AssetsManager AssetsManager = new();
+        public static AssetsManager AssetsManager { get; } = new();
     }
 }
