@@ -33,6 +33,9 @@ namespace MirishitaMusicPlayer.Net.TDAssets
         {
             using FileStream outputFile = File.Create(Path.Combine(outputDirectory, outputFileName));
             using HttpResponseMessage response = await NetService.GetAsync($"{baseAddress}/{assetName}");
+            
+            if (!response.IsSuccessStatusCode) throw new Exception("Server returned " + response.StatusCode);
+
             long? contentLength = response.Content.Headers.ContentLength;
             using Stream contentStream = await response.Content.ReadAsStreamAsync();
 
