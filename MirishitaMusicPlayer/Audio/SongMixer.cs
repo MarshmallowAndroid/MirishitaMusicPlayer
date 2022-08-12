@@ -176,7 +176,7 @@ namespace MirishitaMusicPlayer.Audio
                     if (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers == 1)
                         multiplier = (1.0f / 2.0f);
                     else
-                        multiplier = 1.0f / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.10f;
+                        multiplier = 1.0f / (volumeTriggers[nextVolumeTriggerIndex].ActiveSingers + 1) + 0.075f;
 
                     if (nextVolumeTriggerIndex < volumeTriggers.Count - 1) nextVolumeTriggerIndex++;
                     else break;
