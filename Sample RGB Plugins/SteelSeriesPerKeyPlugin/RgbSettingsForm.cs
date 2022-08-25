@@ -31,6 +31,11 @@ namespace SteelSeriesPerKeyPlugin
             AddTargets(targets, Controls["zone2Target"] as ComboBox);
             AddTargets(targets, Controls["zone3Target"] as ComboBox);
 
+            AddSources(targets, Controls["zone0Source"] as ComboBox);
+            AddSources(targets, Controls["zone1Source"] as ComboBox);
+            AddSources(targets, Controls["zone2Source"] as ComboBox);
+            AddSources(targets, Controls["zone3Source"] as ComboBox);
+
             zone0Source.SelectedIndex = 0;
             zone1Source.SelectedIndex = 0;
             zone2Source.SelectedIndex = 0;
@@ -48,6 +53,19 @@ namespace SteelSeriesPerKeyPlugin
             }
 
             comboBox.SelectedItem = GetZoneConfiguration(comboBox)?.PreferredTarget;
+        }
+
+        private void AddSources(IEnumerable<int> targets, ComboBox? comboBox)
+        {
+            if (comboBox is null) return;
+
+            comboBox.Items.Add("Disabled");
+            foreach (var target in targets)
+            {
+                comboBox.Items.Add(target);
+            }
+
+            comboBox.SelectedItem = GetZoneConfiguration(comboBox)?.PreferredSource;
         }
 
         private async void ZoneTarget_SelectedIndexChanged(object sender, EventArgs e)
