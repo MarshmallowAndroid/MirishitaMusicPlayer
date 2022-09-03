@@ -7,3 +7,6 @@
 [submodule "CriWareTools"]
 	path = CriWareTools
 	url = https://github.com/MarshmallowAndroid/CriWareTools
+[submodule "CriWareLibrary"]
+	path = CriWareLibrary
+	url = https://github.com/MarshmallowAndroid/CriWareLibrary
