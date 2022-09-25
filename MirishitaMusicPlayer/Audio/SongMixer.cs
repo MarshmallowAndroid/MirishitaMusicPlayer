@@ -40,7 +40,7 @@ namespace MirishitaMusicPlayer.Audio
             backgroundSampleProvider = bgmAcb.ToSampleProvider();
 
             // Add the extra BGM, if any
-            if (bgmExAcb != null)
+            if (bgmExAcb is not null)
             {
                 backgroundExWaveStream = bgmExAcb;
                 backgroundExSampleProvider = backgroundExWaveStream.ToSampleProvider();
@@ -48,7 +48,7 @@ namespace MirishitaMusicPlayer.Audio
 
             // Add our voice SampleProviders
             voiceSampleProviders = new();
-            if (voiceAcbs != null)
+            if (voiceAcbs is not null)
             {
                 int voiceIndex = 0;
 
@@ -56,13 +56,13 @@ namespace MirishitaMusicPlayer.Audio
                 {
                     foreach (var voiceAcb in voiceAcbs)
                     {
-                        if (voiceAcb != null)
+                        if (voiceAcb is not null)
                             voiceSampleProviders.Add(new VoiceTrack(voiceAcb, muteScenarios, voiceIndex++));
                     }
                 }
                 else if (voiceAcbs.Length == 1)
                 {
-                    if (voiceAcbs[0] != null)
+                    if (voiceAcbs[0] is not null)
                         voiceSampleProviders.Add(new VoiceTrack(voiceAcbs[0], muteScenarios, -1));
                 }
             }
@@ -72,7 +72,7 @@ namespace MirishitaMusicPlayer.Audio
             {
                 volumeTriggers.Add((AbsTimeToSamples(muteScenario.AbsTime), GetActiveSingers(muteScenario.Mute)));
 
-                if (backgroundExSampleProvider != null)
+                if (backgroundExSampleProvider is not null)
                 {
                     exTriggers.Add((AbsTimeToSamples(muteScenario.AbsTime), muteScenario.Mute[^1] == 1));
                 }
@@ -112,7 +112,7 @@ namespace MirishitaMusicPlayer.Audio
                 HasEnded = false;
                 backgroundWaveStream.Position = value;
 
-                if (backgroundExWaveStream != null)
+                if (backgroundExWaveStream is not null)
                     backgroundExWaveStream.Position = backgroundWaveStream.Position;
 
                 foreach (var voice in voiceSampleProviders)
@@ -196,7 +196,7 @@ namespace MirishitaMusicPlayer.Audio
             // If available, read from extra (secondary) background music
             float[] bufferEx = new float[count];
             int backgroundExRead = 0;
-            if (backgroundExSampleProvider != null)
+            if (backgroundExSampleProvider is not null)
             {
                 backgroundExRead = backgroundExSampleProvider.Read(bufferEx, offset, count);
             }
@@ -211,7 +211,7 @@ namespace MirishitaMusicPlayer.Audio
             {
                 if (MuteBackground) break;
 
-                if (backgroundExWaveStream != null)
+                if (backgroundExWaveStream is not null)
                 {
                     while (currentExSample >= exTriggers[nextExTriggerIndex].Sample)
                     {
@@ -246,12 +246,12 @@ namespace MirishitaMusicPlayer.Audio
 
             backgroundWaveStream.Dispose();
 
-            if (backgroundExWaveStream != null)
+            if (backgroundExWaveStream is not null)
                 backgroundExWaveStream.Dispose();
 
             foreach (var voice in voiceSampleProviders)
             {
-                if (voice != null)
+                if (voice is not null)
                     voice.Dispose();
             }
 

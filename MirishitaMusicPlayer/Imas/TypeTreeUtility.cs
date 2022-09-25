@@ -22,7 +22,7 @@ namespace MirishitaMusicPlayer.Imas
 
                 object propertyValue = dataProperty.Value;
 
-                if (matchingProperty != null)
+                if (matchingProperty is not null)
                 {
                     object value = null;
 

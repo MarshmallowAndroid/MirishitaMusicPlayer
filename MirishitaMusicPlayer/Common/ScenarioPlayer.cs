@@ -49,7 +49,7 @@ namespace MirishitaMusicPlayer.Common
 
         public void Start()
         {
-            if (scenarioThread != null) return;
+            if (scenarioThread is not null) return;
 
             lightsThread = new Thread(DoLightsPlayback);
             lightsThread.IsBackground = true;

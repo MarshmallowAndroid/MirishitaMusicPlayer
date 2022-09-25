@@ -192,13 +192,13 @@ namespace MirishitaMusicPlayer.Common
 
         public SongScenarioConfiguration(Song song, SongScenario songScenario, AssetsManager assetsManager)
         {
-            if (song.OriginalBgmAsset != null)
+            if (song.OriginalBgmAsset is not null)
                 Modes |= SongMode.Normal;
 
             if (song.VoiceAssets.Count > 0)
                 Modes |= SongMode.Utaiwake;
 
-            if (song.ExtraAsset != null)
+            if (song.ExtraAsset is not null)
                 Modes |= SongMode.OngenSentaku;
 
             _song = song;
@@ -228,7 +228,7 @@ namespace MirishitaMusicPlayer.Common
             }
             else
             {
-                if (_song.OriginalBgmAsset != null && (UseOriginalBgm || Mode != SongMode.Utaiwake))
+                if (_song.OriginalBgmAsset is not null && (UseOriginalBgm || Mode != SongMode.Utaiwake))
                 {
                     assets.Add(_song.OriginalBgmAsset);
                 }
@@ -244,12 +244,12 @@ namespace MirishitaMusicPlayer.Common
                 foreach (var idol in Order)
                 {
                     var matchingAsset = _song.VoiceAssets.FirstOrDefault(va => va.Name.Contains(idol.IdolAudioNameId));
-                    if (matchingAsset != null) assets.Add(matchingAsset);
+                    if (matchingAsset is not null) assets.Add(matchingAsset);
                 }
             }
 
             // Extra
-            if (_song.ExtraAsset != null && Mode != SongMode.OngenSentaku)
+            if (_song.ExtraAsset is not null && Mode != SongMode.OngenSentaku)
                 assets.Add(_song.ExtraAsset);
 
             return assets;
@@ -292,7 +292,7 @@ namespace MirishitaMusicPlayer.Common
                 }
             }
 
-            if (_song.ExtraAsset != null && _songScenario.StageMemberCount > 13)
+            if (_song.ExtraAsset is not null && _songScenario.StageMemberCount > 13)
             {
                 // Same as for the BGM and voices
                 //

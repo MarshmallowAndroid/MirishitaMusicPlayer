@@ -174,7 +174,7 @@ namespace MirishitaMusicPlayer.Forms
 
                 Asset songJacketAsset = assetList.Assets.FirstOrDefault(a => a.Name == $"jacket_{songId}.unity3d");
 
-                if (songJacketAsset != null)
+                if (songJacketAsset is not null)
                 {
                     if (!File.Exists(Path.Combine("Cache\\Jackets", songJacketAsset.Name)))
                     {
