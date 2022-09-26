@@ -48,7 +48,7 @@ namespace MirishitaMusicPlayer.Forms
 
         public bool ProcessSong()
         {
-            if (song.Singers.Length > 0 || configuration.Modes.HasFlag(SongMode.OngenSentaku))
+            if (song.Singers.Length > 0 || configuration.Modes.HasFlag(SongMode.OngenSentaku) || configuration.Modes.HasFlag(SongMode.Instrumental))
                 ShowDialog();
             else
                 Task.Run(async () => await InitializeAssetsAsync()).Wait();
