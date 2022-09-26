@@ -157,8 +157,8 @@ namespace SteelSeriesPerKeyPlugin
 
             for (int i = 0; i < DeviceConfigurations[0].ColorConfigurations.Length; i++)
             {
-                writer.Write(DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget);
-                writer.Write(DeviceConfigurations[0].ColorConfigurations[i].PreferredSource);
+                writer.Write((byte)DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget);
+                writer.Write((byte)DeviceConfigurations[0].ColorConfigurations[i].PreferredSource);
             }
 
             return Task.CompletedTask;
@@ -177,8 +177,8 @@ namespace SteelSeriesPerKeyPlugin
 
             for (int i = 0; i < DeviceConfigurations[0].ColorConfigurations.Length; i++)
             {
-                DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget = reader.ReadInt32();
-                DeviceConfigurations[0].ColorConfigurations[i].PreferredSource = reader.ReadInt32();
+                DeviceConfigurations[0].ColorConfigurations[i].PreferredTarget = reader.ReadByte();
+                DeviceConfigurations[0].ColorConfigurations[i].PreferredSource = reader.ReadByte();
             }
 
             return Task.CompletedTask;
