@@ -59,6 +59,8 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         private RgbManager rgbManager = Program.RgbManager;
+        private System.Timers.Timer inactiveTimer;
+        private long previousPosition = 0;
 
         public PlayerForm(Song selectedSong)
         {
@@ -200,6 +202,12 @@ namespace MirishitaMusicPlayer.Forms
                 SynchronizingObject = this
             };
             extrasShowTimer.Elapsed += ExtrasShowTimer_Tick;
+            #endregion
+
+            #region Inactivity timer
+            inactiveTimer = new(3000);
+            inactiveTimer.Elapsed += InactiveTimer_Elapsed;
+            inactiveTimer.Start();
             #endregion
         }
 
@@ -369,6 +377,27 @@ namespace MirishitaMusicPlayer.Forms
             else
                 lightsForm.Focus();
         }
+
+        private async void InactiveTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (songMixer.Position == previousPosition)
+            {
+                foreach (var item in targetComboBox.Items)
+                {
+                    if (int.TryParse(item.ToString(), out int target))
+                    {
+                        await (rgbManager?.UpdateRgbAsync(
+                            target,
+                            new Color(),
+                            new Color(),
+                            new Color(),
+                            0.0f) ?? Task.CompletedTask);
+                    }
+                }
+            }
+
+            previousPosition = songMixer.Position;
+        }
         #endregion
 
         #region Player controls
@@ -504,7 +533,7 @@ namespace MirishitaMusicPlayer.Forms
 
         private void TryCreateRgbManager()
         {
-            if (rgbManager == null)
+            if (rgbManager is null)
             {
                 List<int> targets = new();
                 for (int i = 2; i < targetComboBox.Items.Count; i++)
