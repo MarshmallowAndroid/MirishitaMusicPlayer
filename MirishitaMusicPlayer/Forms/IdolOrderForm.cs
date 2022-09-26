@@ -60,18 +60,20 @@ namespace MirishitaMusicPlayer.Forms
         {
         }
 
-        private void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
+        private async void UtaiwakeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             bool checkedState = utaiwakeRadioButton.Checked;
             soloCheckBox.Enabled = checkedState;
             soloCheckBox.Visible = checkedState;
+
+            await LoadSongConfigAsync(song.ScenarioAsset);
         }
 
         private async void BgmRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
 
-            if (radioButton.Checked is false) return;
+            if (!radioButton.Checked) return;
 
             Asset scenarioAsset;
             if (radioButton == ongenSentakuRadioButton && song.ScenarioPlusAsset is not null)
@@ -123,6 +125,18 @@ namespace MirishitaMusicPlayer.Forms
             scenario = song.Scenario;
             configuration = scenario.Configuration;
 
+            if (configuration.Modes.HasFlag(SongMode.Normal))
+                originalBgmRadioButton.Enabled = true;
+
+            if (configuration.Modes.HasFlag(SongMode.Utaiwake))
+                utaiwakeRadioButton.Enabled = true;
+
+            if (configuration.Modes.HasFlag(SongMode.OngenSentaku))
+                ongenSentakuRadioButton.Enabled = true;
+
+            if (configuration.Modes.HasFlag(SongMode.Instrumental))
+                instrumentalRadioButton.Enabled = true;
+
             if (scenario.StageMemberCount == 0)
             {
                 centerLabel.Visible = false;
@@ -135,33 +149,24 @@ namespace MirishitaMusicPlayer.Forms
                 Height = 302;
             }
 
-            if (scenario.StageMemberCount > 6)
+            if (scenario.StageMemberCount > 6 && !originalBgmRadioButton.Checked)
             {
                 eightIdolPanel.Visible = true;
                 Height = 417;
             }
 
-            if (scenario.StageMemberCount > 13 || song.Singers.Length > scenario.StageMemberCount)
+            if ((scenario.StageMemberCount > 13 || song.Singers.Length > scenario.StageMemberCount) && !originalBgmRadioButton.Checked)
             {
                 stashedIdolsPanel.Visible = true;
                 Height = 777;
             }
 
-            if (configuration.Modes.HasFlag(SongMode.Normal))
-                originalBgmRadioButton.Enabled = true;
-
-            if (configuration.Modes.HasFlag(SongMode.Utaiwake))
-            {
-                utaiwakeRadioButton.Enabled = true;
-            }
-
-            if (configuration.Modes.HasFlag(SongMode.OngenSentaku))
-                ongenSentakuRadioButton.Enabled = true;
-
             idolCheckBoxes.Clear();
             fiveIdolPanel.Controls.Clear();
             eightIdolPanel.Controls.Clear();
             stashedIdolsPanel.Controls.Clear();
+
+            if (originalBgmRadioButton.Checked || instrumentalRadioButton.Checked) return Task.CompletedTask;
 
             Idol[] singers = ReadConfig() ?? song.Singers;
 
@@ -202,6 +207,8 @@ namespace MirishitaMusicPlayer.Forms
                 {
                     CheckBox checkBox = idolCheckBoxes[i];
 
+                    if (i > 13) break;
+
                     int column = positionToIndexTable[(int)checkBox.Tag];
 
                     if (idolPosition < 5)
@@ -235,6 +242,9 @@ namespace MirishitaMusicPlayer.Forms
 
                 int orderLength = soloCheckBox.Checked ? 1 : scenario.StageMemberCount;
 
+                if (orderLength == 6 || orderLength == 14)
+                    orderLength -= 1;
+
                 if (orderLength > 0 && !originalBgmRadioButton.Checked)
                 {
                     configuration.Order = new Idol[orderLength];
@@ -253,6 +263,8 @@ namespace MirishitaMusicPlayer.Forms
             }
             else if (ongenSentakuRadioButton.Checked)
                 configuration.Mode = SongMode.OngenSentaku;
+            else
+                configuration.Mode = SongMode.Instrumental;
 
             var requiredAssets = configuration.GetRequiredAssets();
 

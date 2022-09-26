@@ -27,6 +27,7 @@ namespace MirishitaMusicPlayer.Common
             // Late files
             string originalBgmString = $"song3_{songId}.acb.unity3d";
             string bgmString = $"song3_{songId}_bgm.acb.unity3d";
+            string instrumentalString = $"bgm_inst_{songId}.acb.unity3d";
             Regex voiceRegex = new($"song3_{songId}_([0-9]{{3}})([a-z]{{3}}).acb.unity3d");
             string allString = $"song3_{songId}_all.acb.unity3d";
             string extraString = $"song3_{songId}_ex.acb.unity3d";
@@ -45,6 +46,8 @@ namespace MirishitaMusicPlayer.Common
                     OriginalBgmAsset = asset;
                 else if (bgmString.Equals(asset.Name))
                     BgmAsset = asset;
+                else if (instrumentalString.Equals(asset.Name))
+                    InstrumentalAsset = asset;
                 else if (voiceRegex.IsMatch(asset.Name))
                     VoiceAssets.Add(asset);
                 else if (allString.Equals(asset.Name))
@@ -79,6 +82,8 @@ namespace MirishitaMusicPlayer.Common
         public Asset OriginalBgmAsset { get; }
 
         public Asset BgmAsset { get; }
+
+        public Asset InstrumentalAsset { get; }
 
         public List<Asset> VoiceAssets { get; } = new();
 
@@ -181,7 +186,8 @@ namespace MirishitaMusicPlayer.Common
     {
         Normal = 0x1,
         Utaiwake = 0x2,
-        OngenSentaku = 0x4
+        OngenSentaku = 0x4,
+        Instrumental = 0x8
     }
 
     public class SongScenarioConfiguration
@@ -198,8 +204,11 @@ namespace MirishitaMusicPlayer.Common
             if (song.VoiceAssets.Count > 0)
                 Modes |= SongMode.Utaiwake;
 
-            if (song.ExtraAsset is not null)
+            if (song.VoiceAssets.Count == 0 && song.ExtraAsset is not null)
                 Modes |= SongMode.OngenSentaku;
+
+            if (song.InstrumentalAsset is not null)
+                Modes |= SongMode.Instrumental;
 
             _song = song;
             _songScenario = songScenario;
@@ -212,8 +221,6 @@ namespace MirishitaMusicPlayer.Common
 
         public SongMode Mode { get; set; }
 
-        public bool UseOriginalBgm { get; set; }
-
         public SongMixer SongMixer { get; private set; }
 
         public List<Asset> GetRequiredAssets()
@@ -221,25 +228,20 @@ namespace MirishitaMusicPlayer.Common
             var assets = new List<Asset>();
 
             // BGM
-            if (Modes.HasFlag(Mode)
-                && Mode == SongMode.OngenSentaku)
-            {
+            if (Mode == SongMode.OngenSentaku)
                 assets.Add(_song.ExtraAsset);
-            }
             else
             {
-                if (_song.OriginalBgmAsset is not null && (UseOriginalBgm || Mode != SongMode.Utaiwake))
-                {
+                if (Mode == SongMode.Normal)
                     assets.Add(_song.OriginalBgmAsset);
-                }
+                else if (Mode == SongMode.Instrumental)
+                    assets.Add(_song.InstrumentalAsset);
                 else
-                {
                     assets.Add(_song.BgmAsset);
-                }
             }
 
             // Voices
-            if (Modes.HasFlag(Mode) && Mode == SongMode.Utaiwake)
+            if (Mode == SongMode.Utaiwake)
             {
                 foreach (var idol in Order)
                 {
@@ -249,7 +251,7 @@ namespace MirishitaMusicPlayer.Common
             }
 
             // Extra
-            if (_song.ExtraAsset is not null && Mode != SongMode.OngenSentaku)
+            if (_song.ExtraAsset is not null && Mode == SongMode.Utaiwake)
                 assets.Add(_song.ExtraAsset);
 
             return assets;
@@ -279,25 +281,28 @@ namespace MirishitaMusicPlayer.Common
             AcbWaveStream[] voiceAcbs = null;
             AcbWaveStream extraAcb = null;
 
-            // If order is not null
-            if (Mode == SongMode.Utaiwake)
+            if (Mode != SongMode.Instrumental)
             {
-                // Get voice ACB streams and initialize their WaveStreams
-                voiceAcbs = new AcbWaveStream[Order.Length];
-
-                for (int i = 0; i < Order.Length; i++)
+                // If order is not null
+                if (Mode == SongMode.Utaiwake)
                 {
-                    // Voices are after BGM and before extra (if any)
-                    voiceAcbs[i] = new(GetStreamFromAsset(_assetsManager.assetsFileList[i + 1]));
-                }
-            }
+                    // Get voice ACB streams and initialize their WaveStreams
+                    voiceAcbs = new AcbWaveStream[Order.Length];
 
-            if (_song.ExtraAsset is not null && _songScenario.StageMemberCount > 13)
-            {
-                // Same as for the BGM and voices
-                //
-                // Extra ACB is always the last
-                extraAcb = new(GetStreamFromAsset(_assetsManager.assetsFileList[^1]));
+                    for (int i = 0; i < Order.Length; i++)
+                    {
+                        // Voices are after BGM and before extra (if any)
+                        voiceAcbs[i] = new(GetStreamFromAsset(_assetsManager.assetsFileList[i + 1]));
+                    }
+                }
+
+                if (_song.ExtraAsset is not null && _songScenario.StageMemberCount == 6 || _songScenario.StageMemberCount > 14)
+                {
+                    // Same as for the BGM and voices
+                    //
+                    // Extra ACB is always the last
+                    extraAcb = new(GetStreamFromAsset(_assetsManager.assetsFileList[^1]));
+                }
             }
 
             // We got what we wanted (their MemoryStreams) so no need to keep them loaded

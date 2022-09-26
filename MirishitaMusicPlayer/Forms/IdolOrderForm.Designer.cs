@@ -38,6 +38,7 @@
             this.originalBgmRadioButton = new System.Windows.Forms.RadioButton();
             this.centerLabel = new System.Windows.Forms.Label();
             this.soloCheckBox = new System.Windows.Forms.CheckBox();
+            this.instrumentalRadioButton = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // fiveIdolPanel
@@ -95,7 +96,7 @@
             this.utaiwakeRadioButton.AutoSize = true;
             this.utaiwakeRadioButton.Enabled = false;
             this.utaiwakeRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.utaiwakeRadioButton.Location = new System.Drawing.Point(531, 694);
+            this.utaiwakeRadioButton.Location = new System.Drawing.Point(409, 694);
             this.utaiwakeRadioButton.Name = "utaiwakeRadioButton";
             this.utaiwakeRadioButton.Size = new System.Drawing.Size(92, 25);
             this.utaiwakeRadioButton.TabIndex = 2;
@@ -117,7 +118,7 @@
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.progressBar.Location = new System.Drawing.Point(12, 694);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(267, 25);
+            this.progressBar.Size = new System.Drawing.Size(188, 25);
             this.progressBar.TabIndex = 4;
             // 
             // ongenSentakuRadioButton
@@ -126,7 +127,7 @@
             this.ongenSentakuRadioButton.AutoSize = true;
             this.ongenSentakuRadioButton.Enabled = false;
             this.ongenSentakuRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ongenSentakuRadioButton.Location = new System.Drawing.Point(629, 694);
+            this.ongenSentakuRadioButton.Location = new System.Drawing.Point(507, 694);
             this.ongenSentakuRadioButton.Name = "ongenSentakuRadioButton";
             this.ongenSentakuRadioButton.Size = new System.Drawing.Size(135, 25);
             this.ongenSentakuRadioButton.TabIndex = 2;
@@ -141,7 +142,7 @@
             this.originalBgmRadioButton.Checked = true;
             this.originalBgmRadioButton.Enabled = false;
             this.originalBgmRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.originalBgmRadioButton.Location = new System.Drawing.Point(441, 694);
+            this.originalBgmRadioButton.Location = new System.Drawing.Point(319, 694);
             this.originalBgmRadioButton.Name = "originalBgmRadioButton";
             this.originalBgmRadioButton.Size = new System.Drawing.Size(84, 25);
             this.originalBgmRadioButton.TabIndex = 2;
@@ -166,13 +167,27 @@
             this.soloCheckBox.AutoSize = true;
             this.soloCheckBox.Enabled = false;
             this.soloCheckBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.soloCheckBox.Location = new System.Drawing.Point(375, 695);
+            this.soloCheckBox.Location = new System.Drawing.Point(253, 695);
             this.soloCheckBox.Name = "soloCheckBox";
             this.soloCheckBox.Size = new System.Drawing.Size(60, 25);
             this.soloCheckBox.TabIndex = 6;
             this.soloCheckBox.Text = "Solo";
             this.soloCheckBox.UseVisualStyleBackColor = true;
             this.soloCheckBox.Visible = false;
+            // 
+            // instrumentalRadioButton
+            // 
+            this.instrumentalRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrumentalRadioButton.AutoSize = true;
+            this.instrumentalRadioButton.Enabled = false;
+            this.instrumentalRadioButton.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.instrumentalRadioButton.Location = new System.Drawing.Point(648, 694);
+            this.instrumentalRadioButton.Name = "instrumentalRadioButton";
+            this.instrumentalRadioButton.Size = new System.Drawing.Size(116, 25);
+            this.instrumentalRadioButton.TabIndex = 2;
+            this.instrumentalRadioButton.Text = "Instrumental";
+            this.instrumentalRadioButton.UseVisualStyleBackColor = true;
+            this.instrumentalRadioButton.CheckedChanged += new System.EventHandler(this.BgmRadioButton_CheckedChanged);
             // 
             // IdolOrderForm
             // 
@@ -182,6 +197,7 @@
             this.Controls.Add(this.soloCheckBox);
             this.Controls.Add(this.centerLabel);
             this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.instrumentalRadioButton);
             this.Controls.Add(this.ongenSentakuRadioButton);
             this.Controls.Add(this.originalBgmRadioButton);
             this.Controls.Add(this.utaiwakeRadioButton);
@@ -212,5 +228,6 @@
         private System.Windows.Forms.RadioButton originalBgmRadioButton;
         private System.Windows.Forms.Label centerLabel;
         private System.Windows.Forms.CheckBox soloCheckBox;
+        private System.Windows.Forms.RadioButton instrumentalRadioButton;
     }
 }

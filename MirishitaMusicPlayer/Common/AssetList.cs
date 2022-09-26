@@ -15,7 +15,7 @@ namespace MirishitaMusicPlayer.Common
                 a =>
                 {
                     string fileName = a.Key.ToString();
-                    return fileName.StartsWith("jacket") || fileName.StartsWith("scrobj") || fileName.StartsWith("song3");
+                    return fileName.StartsWith("jacket") || fileName.StartsWith("scrobj") || fileName.StartsWith("song3") || fileName.StartsWith("bgm_inst");
                 });
 
             Assets = new Asset[fileDictionary.Count()];
