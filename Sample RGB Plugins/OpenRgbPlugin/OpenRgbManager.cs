@@ -13,20 +13,18 @@ namespace OpenRgbPlugin
         private readonly Timer updateTimer;
         private OpenRGBClient? rgbClient;
 
-        public OpenRgbManager()
+        public OpenRgbManager(string songID, IEnumerable<int> targets) : base(songID, targets)
         {
             updateTimer = new(1000f / 60f);
             updateTimer.Elapsed += UpdateTimer_Elapsed;
         }
 
-        public IDeviceConfiguration[]? DeviceConfigurations { get; private set; }
-
-        public Form GetSettingsForm(IEnumerable<int> targets)
+        public override Form? GetSettingsForm()
         {
-            return new RgbSettingsForm(this, targets);
+            return new RgbSettingsForm(this, Targets);
         }
 
-        public async Task<bool> InitializeAsync()
+        public override async Task<bool> InitializeAsync()
         {
             if (rgbClient == null || !rgbClient.Connected)
             {
@@ -38,7 +36,7 @@ namespace OpenRgbPlugin
                 }
                 catch (Exception)
                 {
-                    CloseAsync();
+                    await CloseAsync();
 
                     MessageBox.Show("Could not connect to OpenRGB server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
@@ -65,7 +63,7 @@ namespace OpenRgbPlugin
             return true;
         }
 
-        public Task CloseAsync()
+        public override Task CloseAsync()
         {
             updateTimer.Stop();
 
@@ -88,7 +86,7 @@ namespace OpenRgbPlugin
             }
         }
 
-        public async Task UpdateRgbAsync(
+        public override async Task UpdateRgbAsync(
             int target,
             Color color,
             Color color2,
