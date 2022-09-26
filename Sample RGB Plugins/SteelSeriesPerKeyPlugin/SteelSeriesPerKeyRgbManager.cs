@@ -282,11 +282,8 @@ namespace SteelSeriesPerKeyPlugin
 
         public async Task UpdateColorsAsync()
         {
-            await Task.Run(async () =>
-            {
-                var eventDataJson = JsonConvert.SerializeObject(payload);
-                await httpClient.PostJson("game_event", eventDataJson);
-            });
+            var eventDataJson = JsonConvert.SerializeObject(payload);
+            await httpClient.PostJson("game_event", eventDataJson);
         }
     }
 
