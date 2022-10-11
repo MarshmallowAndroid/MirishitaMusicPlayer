@@ -43,7 +43,7 @@ namespace MirishitaMusicPlayer.Imas
 
                                 for (int i = 0; i < newArray.Length; i++)
                                 {
-                                    newArray.SetValue(TypeTreeToType(matchingProperty.PropertyType.GetElementType(), list[0]), i);
+                                    newArray.SetValue(TypeTreeToType(matchingProperty.PropertyType.GetElementType(), list[i]), i);
                                 }
                             }
                             else
