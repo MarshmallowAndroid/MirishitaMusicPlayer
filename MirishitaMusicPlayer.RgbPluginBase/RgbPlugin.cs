@@ -43,7 +43,7 @@ namespace MirishitaMusicPlayer.RgbPluginBase
         /// <summary>
         /// Initializes the RGB plugin.
         /// </summary>
-        /// <returns>True if successful initialization, otherwise false.</returns>
+        /// <returns><c>true</c> on successful initialization, otherwise <c>false</c>.</returns>
         public abstract Task<bool> InitializeAsync();
         
         /// <summary>
@@ -59,7 +59,7 @@ namespace MirishitaMusicPlayer.RgbPluginBase
         /// <param name="color">The light's first color.</param>
         /// <param name="color2">The light's second color.</param>
         /// <param name="color3">The light's third color.</param>
-        /// <param name="duration">Light color fade duration.</param>
+        /// <param name="duration">Light color fade duration in milliseconds.</param>
         /// <returns>The completed Task.</returns>
         public abstract Task UpdateRgbAsync(int target, Color color, Color color2, Color color3, float duration);
     }
