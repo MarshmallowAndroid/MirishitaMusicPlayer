@@ -8,6 +8,7 @@
     <OutputType>Library</OutputType>
     <UseWindowsForms>True</UseWindowsForms>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

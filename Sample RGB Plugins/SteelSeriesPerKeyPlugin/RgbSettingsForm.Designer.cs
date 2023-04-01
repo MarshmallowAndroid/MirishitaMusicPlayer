@@ -29,181 +29,168 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RgbSettingsForm));
-            this.preview = new SteelSeriesPerKeyPlugin.NearestNeighborPictureBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.zone0Target = new System.Windows.Forms.ComboBox();
-            this.zone1Target = new System.Windows.Forms.ComboBox();
-            this.zone2Target = new System.Windows.Forms.ComboBox();
-            this.zone3Target = new System.Windows.Forms.ComboBox();
-            this.zone0Source = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.zone1Source = new System.Windows.Forms.ComboBox();
-            this.zone2Source = new System.Windows.Forms.ComboBox();
-            this.zone3Source = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.preview)).BeginInit();
-            this.SuspendLayout();
+            preview = new NearestNeighborPictureBox();
+            label1 = new Label();
+            zone0Target = new ComboBox();
+            zone1Target = new ComboBox();
+            zone2Target = new ComboBox();
+            zone3Target = new ComboBox();
+            zone0Source = new ComboBox();
+            label2 = new Label();
+            label3 = new Label();
+            zone1Source = new ComboBox();
+            zone2Source = new ComboBox();
+            zone3Source = new ComboBox();
+            ((System.ComponentModel.ISupportInitialize)preview).BeginInit();
+            SuspendLayout();
             // 
             // preview
             // 
-            this.preview.Image = ((System.Drawing.Image)(resources.GetObject("preview.Image")));
-            this.preview.Location = new System.Drawing.Point(93, 12);
-            this.preview.Name = "preview";
-            this.preview.Size = new System.Drawing.Size(700, 190);
-            this.preview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.preview.TabIndex = 0;
-            this.preview.TabStop = false;
+            preview.Image = (Image)resources.GetObject("preview.Image");
+            preview.Location = new Point(93, 12);
+            preview.Name = "preview";
+            preview.Size = new Size(700, 190);
+            preview.SizeMode = PictureBoxSizeMode.StretchImage;
+            preview.TabIndex = 0;
+            preview.TabStop = false;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Preview";
+            label1.AutoSize = true;
+            label1.Location = new Point(39, 12);
+            label1.Name = "label1";
+            label1.Size = new Size(48, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Preview";
             // 
             // zone0Target
             // 
-            this.zone0Target.FormattingEnabled = true;
-            this.zone0Target.Location = new System.Drawing.Point(93, 223);
-            this.zone0Target.Name = "zone0Target";
-            this.zone0Target.Size = new System.Drawing.Size(121, 23);
-            this.zone0Target.TabIndex = 2;
-            this.zone0Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
-            this.zone0Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
+            zone0Target.FormattingEnabled = true;
+            zone0Target.Location = new Point(93, 223);
+            zone0Target.Name = "zone0Target";
+            zone0Target.Size = new Size(121, 23);
+            zone0Target.TabIndex = 2;
+            zone0Target.SelectedIndexChanged += ZoneTarget_SelectedIndexChanged;
+            zone0Target.TextUpdate += ZoneTarget_TextUpdate;
             // 
             // zone1Target
             // 
-            this.zone1Target.FormattingEnabled = true;
-            this.zone1Target.Location = new System.Drawing.Point(252, 223);
-            this.zone1Target.Name = "zone1Target";
-            this.zone1Target.Size = new System.Drawing.Size(121, 23);
-            this.zone1Target.TabIndex = 3;
-            this.zone1Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
-            this.zone1Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
+            zone1Target.FormattingEnabled = true;
+            zone1Target.Location = new Point(252, 223);
+            zone1Target.Name = "zone1Target";
+            zone1Target.Size = new Size(121, 23);
+            zone1Target.TabIndex = 3;
+            zone1Target.SelectedIndexChanged += ZoneTarget_SelectedIndexChanged;
+            zone1Target.TextUpdate += ZoneTarget_TextUpdate;
             // 
             // zone2Target
             // 
-            this.zone2Target.FormattingEnabled = true;
-            this.zone2Target.Location = new System.Drawing.Point(411, 223);
-            this.zone2Target.Name = "zone2Target";
-            this.zone2Target.Size = new System.Drawing.Size(121, 23);
-            this.zone2Target.TabIndex = 4;
-            this.zone2Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
-            this.zone2Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
+            zone2Target.FormattingEnabled = true;
+            zone2Target.Location = new Point(411, 223);
+            zone2Target.Name = "zone2Target";
+            zone2Target.Size = new Size(121, 23);
+            zone2Target.TabIndex = 4;
+            zone2Target.SelectedIndexChanged += ZoneTarget_SelectedIndexChanged;
+            zone2Target.TextUpdate += ZoneTarget_TextUpdate;
             // 
             // zone3Target
             // 
-            this.zone3Target.FormattingEnabled = true;
-            this.zone3Target.Location = new System.Drawing.Point(601, 223);
-            this.zone3Target.Name = "zone3Target";
-            this.zone3Target.Size = new System.Drawing.Size(121, 23);
-            this.zone3Target.TabIndex = 5;
-            this.zone3Target.SelectedIndexChanged += new System.EventHandler(this.ZoneTarget_SelectedIndexChanged);
-            this.zone3Target.TextUpdate += new System.EventHandler(this.ZoneTarget_TextUpdate);
+            zone3Target.FormattingEnabled = true;
+            zone3Target.Location = new Point(601, 223);
+            zone3Target.Name = "zone3Target";
+            zone3Target.Size = new Size(121, 23);
+            zone3Target.TabIndex = 5;
+            zone3Target.SelectedIndexChanged += ZoneTarget_SelectedIndexChanged;
+            zone3Target.TextUpdate += ZoneTarget_TextUpdate;
             // 
             // zone0Source
             // 
-            this.zone0Source.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.zone0Source.FormattingEnabled = true;
-            this.zone0Source.Items.AddRange(new object[] {
-            "Color",
-            "Color2",
-            "Color3"});
-            this.zone0Source.Location = new System.Drawing.Point(93, 252);
-            this.zone0Source.Name = "zone0Source";
-            this.zone0Source.Size = new System.Drawing.Size(121, 23);
-            this.zone0Source.TabIndex = 7;
-            this.zone0Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
+            zone0Source.DropDownStyle = ComboBoxStyle.DropDownList;
+            zone0Source.FormattingEnabled = true;
+            zone0Source.Items.AddRange(new object[] { "Color", "Color2", "Color3" });
+            zone0Source.Location = new Point(93, 252);
+            zone0Source.Name = "zone0Source";
+            zone0Source.Size = new Size(121, 23);
+            zone0Source.TabIndex = 7;
+            zone0Source.SelectedIndexChanged += ZoneSource_SelectedIndexChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 226);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Color Target";
+            label2.AutoSize = true;
+            label2.Location = new Point(16, 226);
+            label2.Name = "label2";
+            label2.Size = new Size(71, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Color Target";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 255);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 15);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Color Source";
+            label3.AutoSize = true;
+            label3.Location = new Point(12, 255);
+            label3.Name = "label3";
+            label3.Size = new Size(75, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Color Source";
             // 
             // zone1Source
             // 
-            this.zone1Source.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.zone1Source.FormattingEnabled = true;
-            this.zone1Source.Items.AddRange(new object[] {
-            "Color",
-            "Color2",
-            "Color3"});
-            this.zone1Source.Location = new System.Drawing.Point(252, 252);
-            this.zone1Source.Name = "zone1Source";
-            this.zone1Source.Size = new System.Drawing.Size(121, 23);
-            this.zone1Source.TabIndex = 8;
-            this.zone1Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
+            zone1Source.DropDownStyle = ComboBoxStyle.DropDownList;
+            zone1Source.FormattingEnabled = true;
+            zone1Source.Items.AddRange(new object[] { "Color", "Color2", "Color3" });
+            zone1Source.Location = new Point(252, 252);
+            zone1Source.Name = "zone1Source";
+            zone1Source.Size = new Size(121, 23);
+            zone1Source.TabIndex = 8;
+            zone1Source.SelectedIndexChanged += ZoneSource_SelectedIndexChanged;
             // 
             // zone2Source
             // 
-            this.zone2Source.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.zone2Source.FormattingEnabled = true;
-            this.zone2Source.Items.AddRange(new object[] {
-            "Color",
-            "Color2",
-            "Color3"});
-            this.zone2Source.Location = new System.Drawing.Point(411, 252);
-            this.zone2Source.Name = "zone2Source";
-            this.zone2Source.Size = new System.Drawing.Size(121, 23);
-            this.zone2Source.TabIndex = 9;
-            this.zone2Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
+            zone2Source.DropDownStyle = ComboBoxStyle.DropDownList;
+            zone2Source.FormattingEnabled = true;
+            zone2Source.Items.AddRange(new object[] { "Color", "Color2", "Color3" });
+            zone2Source.Location = new Point(411, 252);
+            zone2Source.Name = "zone2Source";
+            zone2Source.Size = new Size(121, 23);
+            zone2Source.TabIndex = 9;
+            zone2Source.SelectedIndexChanged += ZoneSource_SelectedIndexChanged;
             // 
             // zone3Source
             // 
-            this.zone3Source.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.zone3Source.FormattingEnabled = true;
-            this.zone3Source.Items.AddRange(new object[] {
-            "Color",
-            "Color2",
-            "Color3"});
-            this.zone3Source.Location = new System.Drawing.Point(601, 252);
-            this.zone3Source.Name = "zone3Source";
-            this.zone3Source.Size = new System.Drawing.Size(121, 23);
-            this.zone3Source.TabIndex = 10;
-            this.zone3Source.SelectedIndexChanged += new System.EventHandler(this.ZoneSource_SelectedIndexChanged);
+            zone3Source.DropDownStyle = ComboBoxStyle.DropDownList;
+            zone3Source.FormattingEnabled = true;
+            zone3Source.Items.AddRange(new object[] { "Color", "Color2", "Color3" });
+            zone3Source.Location = new Point(601, 252);
+            zone3Source.Name = "zone3Source";
+            zone3Source.Size = new Size(121, 23);
+            zone3Source.TabIndex = 10;
+            zone3Source.SelectedIndexChanged += ZoneSource_SelectedIndexChanged;
             // 
             // RgbSettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(805, 287);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.zone3Target);
-            this.Controls.Add(this.zone2Target);
-            this.Controls.Add(this.zone1Target);
-            this.Controls.Add(this.zone3Source);
-            this.Controls.Add(this.zone2Source);
-            this.Controls.Add(this.zone1Source);
-            this.Controls.Add(this.zone0Source);
-            this.Controls.Add(this.zone0Target);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.preview);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "RgbSettingsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "RgbSettingsForm";
-            ((System.ComponentModel.ISupportInitialize)(this.preview)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(805, 287);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(zone3Target);
+            Controls.Add(zone2Target);
+            Controls.Add(zone1Target);
+            Controls.Add(zone3Source);
+            Controls.Add(zone2Source);
+            Controls.Add(zone1Source);
+            Controls.Add(zone0Source);
+            Controls.Add(zone0Target);
+            Controls.Add(label1);
+            Controls.Add(preview);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "RgbSettingsForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "SteelSeries Per-Key RGB Settings";
+            ((System.ComponentModel.ISupportInitialize)preview).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

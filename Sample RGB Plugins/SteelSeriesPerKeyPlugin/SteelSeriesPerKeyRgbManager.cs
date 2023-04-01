@@ -2,6 +2,12 @@
 using MirishitaMusicPlayer.RgbPluginBase;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Drawing.Drawing2D;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Text;
 
 namespace SteelSeriesPerKeyPlugin
 {
@@ -189,17 +195,18 @@ namespace SteelSeriesPerKeyPlugin
     {
         private readonly int zoneIndex;
         private readonly ColorAnimator animator;
-        private readonly byte[,] bitmapData;
-        private readonly byte[] previewData;
+        private readonly FrameDrawData drawData;
 
-        public ZoneConfiguration(int zone, FrameBitmap dataBitmap, byte[] previewBitmapData)
+        public ZoneConfiguration(int zone, FrameDrawData frameDrawData)
         {
             zoneIndex = zone;
-            bitmapData = dataBitmap.Bitmap;
+            drawData = frameDrawData;
 
             animator = new(Color.Black);
-            animator.ValueAnimate += Animator_ValueAnimate;
-            previewData = previewBitmapData;
+            animator.ValueAnimate += (sender, value) =>
+            {
+                drawData.Colors[zoneIndex] = value;
+            };
         }
 
         public int PreferredTarget { get; set; } = -1;
@@ -209,53 +216,7 @@ namespace SteelSeriesPerKeyPlugin
         public Task AnimateColorAsync(Color color, float duration)
         {
             animator.Animate(color, duration);
-
             return Task.CompletedTask;
-        }
-
-        private void Animator_ValueAnimate(IAnimator<Color> sender, Color value)
-        {
-            int start;
-            int end;
-
-            if (zoneIndex == 0)
-            {
-                start = 0;
-                end = 4;
-            }
-            else if (zoneIndex == 1)
-            {
-                start = 5;
-                end = 9;
-            }
-            else if (zoneIndex == 2)
-            {
-                start = 10;
-                end = 15;
-            }
-            else if (zoneIndex == 3)
-            {
-                start = 16;
-                end = 21;
-            }
-            else return;
-
-            for (int row = 0; row < 6; row++)
-            {
-                for (int column = start; column <= end; column++)
-                {
-                    int bitmapIndex = column + (row * 22);
-                    bitmapData[bitmapIndex, 0] = value.R;
-                    bitmapData[bitmapIndex, 1] = value.G;
-                    bitmapData[bitmapIndex, 2] = value.B;
-
-                    int previewIndex = (column * 4) + (row * 22 * 4);
-                    previewData[previewIndex + 0] = value.B;
-                    previewData[previewIndex + 1] = value.G;
-                    previewData[previewIndex + 2] = value.R;
-                    previewData[previewIndex + 3] = 255;
-                }
-            }
         }
     }
 
@@ -263,18 +224,21 @@ namespace SteelSeriesPerKeyPlugin
     {
         private readonly HttpClient httpClient;
         private readonly GameEventPayload payload;
+        private readonly FrameDrawData drawData = new();
+        private byte[] previewData;
 
         public DeviceConfiguration(HttpClient client, byte[] previewBitmapData)
         {
             httpClient = client;
             payload = new();
+            previewData = previewBitmapData;
 
             ColorConfigurations = new ZoneConfiguration[]
             {
-                new ZoneConfiguration(0, payload.Data.Frame, previewBitmapData),
-                new ZoneConfiguration(1, payload.Data.Frame, previewBitmapData),
-                new ZoneConfiguration(2, payload.Data.Frame, previewBitmapData),
-                new ZoneConfiguration(3, payload.Data.Frame, previewBitmapData),
+                new ZoneConfiguration(0, drawData),
+                new ZoneConfiguration(1, drawData),
+                new ZoneConfiguration(2, drawData),
+                new ZoneConfiguration(3, drawData),
             };
         }
 
@@ -282,8 +246,113 @@ namespace SteelSeriesPerKeyPlugin
 
         public async Task UpdateColorsAsync()
         {
-            var eventDataJson = JsonConvert.SerializeObject(payload);
+            drawData.Render(payload.Data.Frame.Bitmap);
+
+            var eventDataJson = BuildJson(payload.Data.Frame.Bitmap);
+            //var eventDataJson = JsonConvert.SerializeObject(payload);
             await httpClient.PostJson("game_event", eventDataJson);
+
+            await Task.Run(() =>
+            {
+                for (int row = 0; row < 6; row++)
+                {
+                    for (int column = 0; column < 22; column++)
+                    {
+                        int bitmapIndex = column + (row * 22);
+                        int previewIndex = (column * 4) + (row * 22 * 4);
+                        previewData[previewIndex + 0] = payload.Data.Frame.Bitmap[bitmapIndex, 2];
+                        previewData[previewIndex + 1] = payload.Data.Frame.Bitmap[bitmapIndex, 1];
+                        previewData[previewIndex + 2] = payload.Data.Frame.Bitmap[bitmapIndex, 0];
+                        previewData[previewIndex + 3] = 255;
+                    }
+                }
+            });
+        }
+
+        private static string BuildJson(byte[,] data)
+        {
+            StringBuilder jsonStringBuilder = new();
+            string start = "{\"game\":\"MIRISHITA_MUSIC_PLAYER\",\"event\":\"COLOR\",\"data\":{\r\n\"frame\":{\"bitmap\":[";
+            string end = "]}}}";
+
+            jsonStringBuilder.Append(start);
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                jsonStringBuilder.Append($"[{data[i, 0]},{data[i, 1]},{data[i, 2]}]");
+
+                if (i + 1 < data.GetLength(0))
+                    jsonStringBuilder.Append(',');
+            }
+
+            jsonStringBuilder.Append(end);
+
+            return jsonStringBuilder.ToString();
+        }
+    }
+
+    public class FrameDrawData
+    {
+        public static Rectangle bitmapRectangle = new(0, 0, 22, 6);
+        private readonly object lockObject = new();
+
+        public FrameDrawData()
+        {
+            OutputBitmap = new(22, 6, PixelFormat.Format32bppArgb);
+            Graphics = Graphics.FromImage(OutputBitmap);
+            Brush = new(bitmapRectangle, Color.White, Color.White, LinearGradientMode.Horizontal);
+
+            int colorCount = Colors.Length;
+            float[] positions = new float[colorCount];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = i / (float)(positions.Length - 1);
+            }
+
+            ColorBlend.Positions = positions;
+            ColorBlend.Colors = Colors;
+        }
+
+        public Bitmap OutputBitmap { get; set; }
+
+        public Graphics Graphics { get; set; }
+
+        public LinearGradientBrush Brush { get; set; } = new(bitmapRectangle, Color.White, Color.White, LinearGradientMode.Horizontal);
+
+        public ColorBlend ColorBlend { get; set; } = new();
+
+        public Color[] Colors { get; set; } = new Color[4];
+
+        public void Render(byte[,] renderTarget)
+        {
+            lock (lockObject)
+            {
+                Brush.InterpolationColors = ColorBlend;
+
+                Graphics.Clear(Color.Black);
+                Graphics.FillRectangle(Brush, bitmapRectangle);
+
+                BitmapData data = OutputBitmap.LockBits(bitmapRectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                unsafe
+                {
+                    byte* dataBytes = (byte*)data.Scan0.ToPointer();
+
+                    for (int row = 0; row < 6; row++)
+                    {
+                        for (int column = 0; column < 22; column++)
+                        {
+                            int renderTargetIndex = column + (row * 22);
+                            int dataIndex = row * data.Stride + column * 4;
+
+                            renderTarget[renderTargetIndex, 0] = dataBytes[dataIndex + 2];
+                            renderTarget[renderTargetIndex, 1] = dataBytes[dataIndex + 1];
+                            renderTarget[renderTargetIndex, 2] = dataBytes[dataIndex + 0];
+                        }
+                    }
+                }
+
+                OutputBitmap.UnlockBits(data);
+            }
         }
     }
 
