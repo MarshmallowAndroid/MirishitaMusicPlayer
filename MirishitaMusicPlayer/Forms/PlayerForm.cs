@@ -59,6 +59,7 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         private RgbManager rgbManager = Program.RgbManager;
+        
         private System.Timers.Timer inactiveTimer;
         private long previousPosition = 0;
 
@@ -80,6 +81,8 @@ namespace MirishitaMusicPlayer.Forms
             stageMemberCount = selectedSong.Scenario.StageMemberCount;
             songMixer = selectedSong.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
+
+            outputDevice.Init(songMixer);
 
             Text = selectedSong.SongID;
 
@@ -261,7 +264,7 @@ namespace MirishitaMusicPlayer.Forms
             rgbManager = null;
             Program.UnloadPlugin();
 
-            faceVisualizer.FaceSource.Dispose();
+            faceVisualizer.FaceSource?.Dispose();
             faceVisualizer.Dispose();
         }
         #endregion
@@ -391,7 +394,7 @@ namespace MirishitaMusicPlayer.Forms
                             new Color(),
                             new Color(),
                             new Color(),
-                            0.0f) ?? Task.CompletedTask);
+                            5000F) ?? Task.CompletedTask);
                     }
                 }
             }

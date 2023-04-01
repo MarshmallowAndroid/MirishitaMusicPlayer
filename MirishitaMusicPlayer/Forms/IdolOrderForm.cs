@@ -166,7 +166,7 @@ namespace MirishitaMusicPlayer.Forms
             eightIdolPanel.Controls.Clear();
             stashedIdolsPanel.Controls.Clear();
 
-            if (originalBgmRadioButton.Checked || instrumentalRadioButton.Checked) return Task.CompletedTask;
+            //if (originalBgmRadioButton.Checked || instrumentalRadioButton.Checked) return Task.CompletedTask;
 
             Idol[] singers = ReadConfig() ?? song.Singers;
 
@@ -196,6 +196,9 @@ namespace MirishitaMusicPlayer.Forms
                 checkBox.Font = new System.Drawing.Font(checkBox.Font.FontFamily, 20.0f, FontStyle.Bold);
 
                 checkBox.CheckedChanged += IdolCheckBox_CheckedChanged;
+
+                if (originalBgmRadioButton.Checked || instrumentalRadioButton.Checked)
+                    checkBox.Visible = false;
 
                 idolCheckBoxes.Add(checkBox);
             }
@@ -271,7 +274,6 @@ namespace MirishitaMusicPlayer.Forms
             if (await ResolveMissingAssetsAsync(requiredAssets))
             {
                 configuration.Load(requiredAssets, "Cache\\Songs");
-                Program.OutputDevice.Init(configuration.SongMixer);
                 Close();
             }
 
