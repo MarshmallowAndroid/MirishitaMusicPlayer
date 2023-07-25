@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net7.0-windows</TargetFramework>
 		<StartupObject>MirishitaMusicPlayer.Program</StartupObject>
 		<AssemblyVersion>1.7.0.0</AssemblyVersion>
 		<FileVersion>1.7.0.0</FileVersion>
@@ -26,21 +26,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Forms\CustomControls\LightLabel.cs">
-	    <SubType>Component</SubType>
-	  </Compile>
-	  <Compile Update="Properties\Resources.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Resources.resx</DependentUpon>
-	  </Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Properties\Resources.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
+
+	<Target Name="CopyDllsBuild" AfterTargets="AfterBuild">
+		<Copy SourceFiles="$(ProjectDir)..\AssetStudio\Texture2DDecoderNative\bin\x64\$(Configuration)\Texture2DDecoderNative.dll" DestinationFolder="$(OutDir)x64" />
+	</Target>
+
+	<Target Name="CopyDllsPublish" AfterTargets="Publish">
+		<Copy SourceFiles="$(ProjectDir)..\AssetStudio\Texture2DDecoderNative\bin\x64\$(Configuration)\Texture2DDecoderNative.dll" DestinationFolder="$(PublishDir)x64" />
+	</Target>
 
 </Project>
