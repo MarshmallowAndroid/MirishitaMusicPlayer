@@ -147,6 +147,7 @@ namespace MirishitaMusicPlayer.Common
 
             ExpressionScenarios = FindScenarios(ScenarioType.Expression);
             MuteScenarios = FindScenarios(ScenarioType.Mute);
+            LipSyncScenarios = FindScenarios(ScenarioType.LipSync);
             LightScenarios = FindScenarios(ScenarioType.Lights);
 
             StageMemberCount = MuteScenarios[0].Mute.Length;
@@ -175,6 +176,8 @@ namespace MirishitaMusicPlayer.Common
         public List<EventScenarioData> ExpressionScenarios { get; }
 
         public List<EventScenarioData> MuteScenarios { get; }
+
+        public List<EventScenarioData> LipSyncScenarios { get; }
 
         public List<EventScenarioData> LightScenarios { get; }
 

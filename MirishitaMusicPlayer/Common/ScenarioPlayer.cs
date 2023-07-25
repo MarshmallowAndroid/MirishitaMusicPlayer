@@ -23,6 +23,7 @@ namespace MirishitaMusicPlayer.Common
         private readonly ScenarioScrObject mainScenario;
         private readonly ScenarioScrObject orientScenario;
         private readonly List<EventScenarioData> muteScenarios;
+        private readonly List<EventScenarioData> lipSyncScenarios;
         private readonly List<EventScenarioData> expressionScenarios;
         private readonly List<EventScenarioData> lightScenarios;
 
@@ -39,6 +40,7 @@ namespace MirishitaMusicPlayer.Common
             mainScenario = song.Scenario.MainScenario;
             orientScenario = song.Scenario.OrientationScenario;
             muteScenarios = song.Scenario.MuteScenarios;
+            lipSyncScenarios = song.Scenario.LipSyncScenarios;
             expressionScenarios = song.Scenario.ExpressionScenarios;
             lightScenarios = song.Scenario.LightScenarios;
         }
@@ -74,6 +76,7 @@ namespace MirishitaMusicPlayer.Common
         private void DoScenarioPlayback()
         {
             int muteScenarioIndex = 0;
+            int lipSyncScenarioIndex = 0;
             int expressionScenarioIndex = 0;
             //int lightScenarioIndex = 0;
             int mainScenarioIndex = 0;
@@ -82,12 +85,14 @@ namespace MirishitaMusicPlayer.Common
             double secondsElapsed = 0;
 
             EventScenarioData currentMuteScenario;
+            EventScenarioData currentLipSyncScenario;
             EventScenarioData currentExpressionScenario;
             //EventScenarioData currentLightScenario;
             EventScenarioData currentMainScenario;
             EventScenarioData currentOrientScenario;
 
             currentMuteScenario = muteScenarios[muteScenarioIndex];
+            currentLipSyncScenario = lipSyncScenarios[expressionScenarioIndex];
             currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
             //currentLightScenario = lightScenarios[lightScenarioIndex];
             currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
@@ -98,12 +103,14 @@ namespace MirishitaMusicPlayer.Common
                 if (scenarioSeeked)
                 {
                     muteScenarioIndex = 0;
+                    lipSyncScenarioIndex = 0;   
                     expressionScenarioIndex = 0;
                     //lightScenarioIndex = 0;
                     mainScenarioIndex = 0;
                     orientScenarioIndex = 0;
 
                     currentMuteScenario = muteScenarios[muteScenarioIndex];
+                    currentLipSyncScenario = lipSyncScenarios[lipSyncScenarioIndex];
                     currentExpressionScenario = expressionScenarios[expressionScenarioIndex];
                     //currentLightScenario = lightScenarios[lightScenarioIndex];
                     currentMainScenario = mainScenario.Scenario[mainScenarioIndex];
@@ -118,6 +125,13 @@ namespace MirishitaMusicPlayer.Common
                             if (muteScenarioIndex < muteScenarios.Count - 1) muteScenarioIndex++;
                             else break;
                             currentMuteScenario = muteScenarios[muteScenarioIndex];
+                        }
+
+                        while (secondsElapsed >= currentLipSyncScenario.AbsTime)
+                        {
+                            if (lipSyncScenarioIndex < lipSyncScenarios.Count - 1) lipSyncScenarioIndex++;
+                            else break;
+                            currentLipSyncScenario = lipSyncScenarios[lipSyncScenarioIndex];
                         }
 
                         while (secondsElapsed >= currentExpressionScenario.AbsTime)
@@ -185,6 +199,16 @@ namespace MirishitaMusicPlayer.Common
                     currentMuteScenario = muteScenarios[muteScenarioIndex];
                 }
 
+                while (secondsElapsed >= currentLipSyncScenario.AbsTime)
+                {
+                    if (currentLipSyncScenario.Idol == Idol && currentLipSyncScenario.Layer == Layer)
+                        LipSyncChanged?.Invoke(currentLipSyncScenario.Param);
+
+                    if (lipSyncScenarioIndex < lipSyncScenarios.Count - 1) lipSyncScenarioIndex++;
+                    else break;
+                    currentLipSyncScenario = lipSyncScenarios[lipSyncScenarioIndex];
+                }
+
                 while (secondsElapsed >= currentExpressionScenario.AbsTime)
                 {
                     if ((currentExpressionScenario.Idol == Idol ||
@@ -220,11 +244,11 @@ namespace MirishitaMusicPlayer.Common
 
                 while (secondsElapsed >= currentMainScenario.AbsTime)
                 {
-                    if (currentMainScenario.Type == ScenarioType.LipSync)
-                    {
-                        if (currentMainScenario.Idol == Idol && currentMainScenario.Layer == Layer)
-                            LipSyncChanged?.Invoke(currentMainScenario.Param);
-                    }
+                    //if (currentMainScenario.Type == ScenarioType.LipSync)
+                    //{
+                    //    if (currentMainScenario.Idol == Idol && currentMainScenario.Layer == Layer)
+                    //        LipSyncChanged?.Invoke(currentMainScenario.Param);
+                    //}
 
                     if (currentMainScenario.Type == ScenarioType.ShowLyrics || currentMainScenario.Type == ScenarioType.HideLyrics)
                     {
@@ -241,6 +265,12 @@ namespace MirishitaMusicPlayer.Common
 
                 while (secondsElapsed >= currentOrientScenario.AbsTime)
                 {
+                    //if (currentOrientScenario.Type == ScenarioType.LipSync)
+                    //{
+                    //    if (currentOrientScenario.Idol == Idol && currentOrientScenario.Layer == Layer)
+                    //        LipSyncChanged?.Invoke(currentOrientScenario.Param);
+                    //}
+
                     ScenarioTriggered?.Invoke(currentOrientScenario);
 
                     if (orientScenarioIndex < orientScenario.Scenario.Count - 1) orientScenarioIndex++;
