@@ -429,7 +429,7 @@ namespace MirishitaMusicPlayer.Forms
         private void ResetButton_Click(object sender, EventArgs e)
         {
             songMixer.Position = 0;
-            scenarioPlayer.UpdatePosition();
+            scenarioPlayer.Reset();
             scenarioPlayer.Start();
         }
 
