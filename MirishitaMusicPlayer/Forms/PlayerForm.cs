@@ -81,7 +81,6 @@ namespace MirishitaMusicPlayer.Forms
             stageMemberCount = selectedSong.Scenario.StageMemberCount;
             songMixer = selectedSong.Scenario.Configuration.SongMixer;
             outputDevice = Program.OutputDevice;
-
             outputDevice.Init(songMixer);
 
             Text = selectedSong.SongID;
@@ -341,7 +340,7 @@ namespace MirishitaMusicPlayer.Forms
             foreach (var eventLabel in eventLabels)
             {
                 if ((int)eventLabel.Tag == (int)scenarioData.Type)
-                    await TryInvoke(() => eventLabel.Flash());
+                    await TryInvoke(eventLabel.Flash);
             }
         }
         #endregion
@@ -546,9 +545,11 @@ namespace MirishitaMusicPlayer.Forms
 
                 rgbManager = Program.CreateRgbManager(song.SongID, targets);
 
+                if (rgbManager is null) return;
+
                 Task.Run(async () =>
                 {
-                    if (!await rgbManager?.InitializeAsync())
+                    if (!await rgbManager.InitializeAsync())
                         MessageBox.Show("Failed to initialize RGB manager.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 });
             }
