@@ -219,6 +219,7 @@ namespace MirishitaMusicPlayer.Forms
                 if (scenarioAsset is not null && !File.Exists(Path.Combine("Cache\\Songs", scenarioAsset.Name)))
                 {
                     shouldContinue = await DownloadAssetsAsync(new[] { scenarioAsset }.ToList(), "Cache\\Songs");
+                    if (!shouldContinue) break;
                 }
                 else shouldContinue = true;
             }
