@@ -32,7 +32,6 @@ namespace MirishitaMusicPlayer
         private static void Main(string[] args)
         {
             Application.EnableVisualStyles();
-            Console.OutputEncoding = Encoding.UTF8;
 
             AssetsManager assetsManager = AssetStudioGlobal.AssetsManager;
             SongSelectForm songSelectForm = new(assetsManager);
@@ -43,8 +42,6 @@ namespace MirishitaMusicPlayer
                 if (args.Length > 0) args[0] = "";
 
                 if (song == null) return;
-
-                Console.Title = song.SongID;
 
                 IdolOrderForm idolOrderForm = new(song);
 
