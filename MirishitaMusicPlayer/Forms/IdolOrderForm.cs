@@ -116,7 +116,16 @@ namespace MirishitaMusicPlayer.Forms
 
         private async void StartButton_Click(object sender, EventArgs e)
         {
-            await InitializeAssetsAsync();
+            try
+            {
+                await InitializeAssetsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            LoadingMode(false);
         }
 
         private Task LoadSongConfigAsync(Asset scenarioAsset)
@@ -385,7 +394,6 @@ namespace MirishitaMusicPlayer.Forms
                     await assetsClient.DownloadAssetAsync(asset.RemoteName, asset.Name, directory, progress);
                     completed++;
                 }
-
                 catch (Exception e)
                 {
                     progressBar.Value = 0;

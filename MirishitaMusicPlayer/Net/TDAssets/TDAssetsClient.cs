@@ -48,7 +48,7 @@ namespace MirishitaMusicPlayer.Net.TDAssets
             byte[] buffer = new byte[81920];
             int bytesRead;
             int totalBytesRead = 0;
-            while ((bytesRead = await contentStream.ReadAsync(buffer, 0, Math.Min(buffer.Length, (int)contentLength - totalBytesRead))) != 0)
+            while ((bytesRead = await contentStream.ReadAsync(buffer.AsMemory(0, Math.Min(buffer.Length, (int)contentLength - totalBytesRead)))) != 0)
             {
                 totalBytesRead += bytesRead;
                 progress.Report(relativeProgress ? (int)((float)totalBytesRead / contentLength * 100.0f) : bytesRead);
