@@ -4,17 +4,17 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net7.0-windows</TargetFramework>
 		<StartupObject>MirishitaMusicPlayer.Program</StartupObject>
-		<AssemblyVersion>1.7.0.0</AssemblyVersion>
-		<FileVersion>1.7.0.0</FileVersion>
-		<Version>1.7.0</Version>
+		<AssemblyVersion>1.8.0.0</AssemblyVersion>
+		<FileVersion>1.8.0.0</FileVersion>
+		<Version>1.8.0</Version>
 		<UseWindowsForms>True</UseWindowsForms>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MessagePack" Version="2.5.124" />
+		<PackageReference Include="MessagePack" Version="2.4.35" />
 		<PackageReference Include="NAudio.Wasapi" Version="2.1.0" />
 		<PackageReference Include="NAudio.WinMM" Version="2.1.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
