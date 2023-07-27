@@ -24,7 +24,7 @@ namespace MirishitaMusicPlayer.Common
 
         public void Update(double secondsElapsed)
         {
-            while (currentScenarioData.AbsTime < secondsElapsed)
+            while (currentScenarioData.AbsTime <= secondsElapsed)
             {
                 callback?.Invoke(currentScenarioData);
 
@@ -42,14 +42,14 @@ namespace MirishitaMusicPlayer.Common
 
             if (secondsElapsed > 0)
             {
-                while (currentScenarioData.AbsTime < secondsElapsed)
+                while (currentScenarioData.AbsTime <= secondsElapsed)
                 {
                     if (index < scenarioDatas.Count - 1) index++;
                     else break;
                     currentScenarioData = scenarioDatas[index];
                 }
 
-                callback?.Invoke(scenarioDatas[index - 1]);
+                callback?.Invoke(scenarioDatas[index - 1 > 0 ? index - 1 : 0]);
             }
             else
                 callback?.Invoke(scenarioDatas[index]);

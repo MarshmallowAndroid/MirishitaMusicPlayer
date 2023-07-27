@@ -66,16 +66,19 @@ namespace MirishitaMusicPlayer.Common
             };
             lightScenarioEvent = new(song.Scenario.LightScenarios, s =>
             {
-                bool on = s.On > 0;
-
-                LightsChanged?.Invoke(new LightPayload
+                if (s.Layer == Layer)
                 {
-                    Color = on ? s.Col : new ColorRGBA(0, 0, 0, 0),
-                    Color2 = on ? s.Col2 : new ColorRGBA(0, 0, 0, 0),
-                    Color3 = on ? s.Col3 : new ColorRGBA(0, 0, 0, 0),
-                    Duration = (float)(s.AbsEndTime - s.AbsTime) * 1000f,
-                    Target = s.Target
-                });
+                    bool on = s.On > 0;
+
+                    LightsChanged?.Invoke(new LightPayload
+                    {
+                        Color = on ? s.Col : new ColorRGBA(0, 0, 0, 0),
+                        Color2 = on ? s.Col2 : new ColorRGBA(0, 0, 0, 0),
+                        Color3 = on ? s.Col3 : new ColorRGBA(0, 0, 0, 0),
+                        Duration = (float)(s.AbsEndTime - s.AbsTime) * 1000f,
+                        Target = s.Target
+                    });
+                }
             });
         }
 
