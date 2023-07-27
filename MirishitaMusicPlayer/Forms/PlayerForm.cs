@@ -195,6 +195,11 @@ namespace MirishitaMusicPlayer.Forms
             targetComboBox.SelectedIndex = 0;
             #endregion
 
+            #region Face visualizer setup
+            if (File.Exists("face.zip"))
+                facePictureBox.FaceSource = new ZipFileFaceSource("face.zip");
+            #endregion
+
             #region Animation setup
             Width = defaultWidth;
             Height = defaultHeight;
@@ -263,8 +268,8 @@ namespace MirishitaMusicPlayer.Forms
             rgbManager = null;
             Program.UnloadPlugin();
 
-            faceVisualizer.FaceSource?.Dispose();
-            faceVisualizer.Dispose();
+            facePictureBox.FaceSource?.Dispose();
+            facePictureBox.Dispose();
         }
         #endregion
 
@@ -294,7 +299,7 @@ namespace MirishitaMusicPlayer.Forms
             {
                 debugEyesIdLabel.Text = "Expression : " + expressionId.ToString();
                 debugEyeCloseIdLabel.Text = $"Eye close  : " + eyeClose;
-                faceVisualizer.UpdateFace(expressionId, eyeClose);
+                facePictureBox.UpdateExpression(expressionId, eyeClose);
             });
         }
 
@@ -303,7 +308,7 @@ namespace MirishitaMusicPlayer.Forms
             await TryInvoke(() =>
             {
                 debugMouthIdLabel.Text = "Mouth      : " + lipSyncId.ToString();
-                faceVisualizer.UpdateMouth(lipSyncId);
+                facePictureBox.UpdateMouth(lipSyncId);
             });
         }
 
