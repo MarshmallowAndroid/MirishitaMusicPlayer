@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using MirishitaMusicPlayer.Animation;
 using MirishitaMusicPlayer.Imas;
 
-namespace MirishitaMusicPlayer.Forms
+namespace MirishitaMusicPlayer.Forms.CustomControls
 {
     public partial class LightTarget : UserControl
     {

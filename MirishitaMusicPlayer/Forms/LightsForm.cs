@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MirishitaMusicPlayer.Common;
+using MirishitaMusicPlayer.Forms.CustomControls;
 using Color = System.Drawing.Color;
 
 namespace MirishitaMusicPlayer.Forms

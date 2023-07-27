@@ -13,6 +13,8 @@ using MirishitaMusicPlayer.Forms.CustomControls;
 using MirishitaMusicPlayer.RgbPluginBase;
 using System.Threading.Tasks;
 using System.Threading;
+using MirishitaMusicPlayer.FaceSource;
+using System.IO;
 
 namespace MirishitaMusicPlayer.Forms
 {
@@ -59,7 +61,7 @@ namespace MirishitaMusicPlayer.Forms
         #endregion
 
         private RgbManager rgbManager = Program.RgbManager;
-        
+
         private System.Timers.Timer inactiveTimer;
         private long previousPosition = 0;
 
@@ -161,14 +163,16 @@ namespace MirishitaMusicPlayer.Forms
 
             foreach (var item in eventTypes)
             {
+                string eventName = Enum.GetName(typeof(ScenarioType), item);
+
                 EventLabel label = new();
-                label.Font = new Font(label.Font.FontFamily, 12.0f);
-                label.Height = 36;
+                label.Font = new Font(label.Font.FontFamily, string.IsNullOrEmpty(eventName) ? 10F : 8F);
+                label.Height = 32;
                 label.Margin = new Padding(0);
                 label.Tag = item;
-                label.Text = item.ToString();
+                label.Text = eventName ?? item.ToString();
                 label.TextAlign = ContentAlignment.MiddleCenter;
-                label.Width = 36;
+                label.Width = string.IsNullOrEmpty(eventName) ? 32 : 64;
 
                 eventLabels.Add(label);
             }

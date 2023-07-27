@@ -1,6 +1,4 @@
-﻿using MirishitaMusicPlayer.Forms.CustomControls;
-
-namespace MirishitaMusicPlayer.Forms
+﻿namespace MirishitaMusicPlayer.Forms.CustomControls
 {
     partial class LightTarget
     {
